@@ -1,4 +1,6 @@
-﻿namespace IISCleanup
+﻿using IISCleanup.Models;
+
+namespace IISCleanup
 {
     partial class Form
     {
@@ -30,9 +32,10 @@
         {
             components = new System.ComponentModel.Container();
             dataGridView = new DataGridView();
+            Id = new DataGridViewTextBoxColumn();
             Instance = new DataGridViewTextBoxColumn();
+            Active = new DataGridViewCheckBoxColumn();
             InstalledOn = new DataGridViewTextBoxColumn();
-            Junk = new DataGridViewCheckBoxColumn();
             pathDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             iISAppBindingSource1 = new BindingSource(components);
             iISAppBindingSource = new BindingSource(components);
@@ -52,13 +55,22 @@
             dataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView.AutoGenerateColumns = false;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Columns.AddRange(new DataGridViewColumn[] { Instance, InstalledOn, Junk, pathDataGridViewTextBoxColumn });
+            dataGridView.Columns.AddRange(new DataGridViewColumn[] { Id, Instance, Active, InstalledOn, pathDataGridViewTextBoxColumn });
             dataGridView.DataSource = iISAppBindingSource1;
             dataGridView.Location = new Point(12, 41);
             dataGridView.Name = "dataGridView";
             dataGridView.ReadOnly = true;
+            dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView.Size = new Size(760, 508);
             dataGridView.TabIndex = 2;
+            // 
+            // Id
+            // 
+            Id.DataPropertyName = "Id";
+            Id.HeaderText = "#";
+            Id.Name = "Id";
+            Id.ReadOnly = true;
+            Id.Width = 50;
             // 
             // Instance
             // 
@@ -68,6 +80,14 @@
             Instance.ReadOnly = true;
             Instance.Width = 150;
             // 
+            // Active
+            // 
+            Active.DataPropertyName = "Active";
+            Active.HeaderText = "Active";
+            Active.Name = "Active";
+            Active.ReadOnly = true;
+            Active.SortMode = DataGridViewColumnSortMode.Automatic;
+            // 
             // InstalledOn
             // 
             InstalledOn.DataPropertyName = "InstalledOn";
@@ -75,14 +95,6 @@
             InstalledOn.Name = "InstalledOn";
             InstalledOn.ReadOnly = true;
             InstalledOn.Width = 150;
-            // 
-            // Junk
-            // 
-            Junk.DataPropertyName = "Junk";
-            Junk.HeaderText = "Junk";
-            Junk.Name = "Junk";
-            Junk.ReadOnly = true;
-            Junk.Width = 50;
             // 
             // pathDataGridViewTextBoxColumn
             // 
@@ -172,9 +184,10 @@
         private Button buttonDeleteAll;
         private DateTimePicker dateTimePicker;
         private Label labelOlderThan;
+        private DataGridViewTextBoxColumn Id;
         private DataGridViewTextBoxColumn Instance;
+        private DataGridViewCheckBoxColumn Active;
         private DataGridViewTextBoxColumn InstalledOn;
-        private DataGridViewCheckBoxColumn Junk;
         private DataGridViewTextBoxColumn pathDataGridViewTextBoxColumn;
     }
 }
