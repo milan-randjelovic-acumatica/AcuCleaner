@@ -33,14 +33,6 @@ namespace IISCleanup
             iISAppBindingSource1.ResetBindings(false);
         }
 
-        private static void AddRowNumbers(ref IEnumerable<IISApp> allApps)
-        {
-            for (int i = 0; i < allApps.Count(); i++)
-            {
-                allApps.ElementAt(i).Id = i + 1;
-            }
-        }
-
         private async Task DeleteSelectedAppsAsync()
         {
             var selectedApps = new List<IISApp>();
