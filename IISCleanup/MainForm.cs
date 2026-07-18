@@ -82,6 +82,6 @@ namespace IISCleanup
         private void checkBoxJunk_CheckedChanged(object sender, EventArgs e)
         {
             RefreshAppList();
-        }
+        } 
     }
 }
