@@ -120,8 +120,8 @@ namespace IISCleanup
             // 
             // buttonDeleteSelected
             // 
-            buttonDeleteSelected.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonDeleteSelected.Location = new Point(666, 12);
+            buttonDeleteSelected.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            buttonDeleteSelected.Location = new Point(666, 8);
             buttonDeleteSelected.Name = "buttonDeleteSelected";
             buttonDeleteSelected.Size = new Size(75, 23);
             buttonDeleteSelected.TabIndex = 3;
@@ -131,8 +131,8 @@ namespace IISCleanup
             // 
             // buttonDeleteAll
             // 
-            buttonDeleteAll.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonDeleteAll.Location = new Point(747, 12);
+            buttonDeleteAll.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            buttonDeleteAll.Location = new Point(747, 8);
             buttonDeleteAll.Name = "buttonDeleteAll";
             buttonDeleteAll.Size = new Size(75, 23);
             buttonDeleteAll.TabIndex = 4;
@@ -142,7 +142,7 @@ namespace IISCleanup
             // 
             // dateTimePicker
             // 
-            dateTimePicker.Location = new Point(81, 12);
+            dateTimePicker.Location = new Point(84, 8);
             dateTimePicker.Name = "dateTimePicker";
             dateTimePicker.Size = new Size(210, 23);
             dateTimePicker.TabIndex = 5;
@@ -151,7 +151,7 @@ namespace IISCleanup
             // labelOlderThan
             // 
             labelOlderThan.AutoSize = true;
-            labelOlderThan.Location = new Point(12, 16);
+            labelOlderThan.Location = new Point(12, 12);
             labelOlderThan.Name = "labelOlderThan";
             labelOlderThan.Size = new Size(66, 15);
             labelOlderThan.TabIndex = 6;
@@ -162,7 +162,7 @@ namespace IISCleanup
             checkBoxActive.AutoSize = true;
             checkBoxActive.Checked = true;
             checkBoxActive.CheckState = CheckState.Checked;
-            checkBoxActive.Location = new Point(297, 15);
+            checkBoxActive.Location = new Point(300, 11);
             checkBoxActive.Name = "checkBoxActive";
             checkBoxActive.Size = new Size(59, 19);
             checkBoxActive.TabIndex = 7;
@@ -175,7 +175,7 @@ namespace IISCleanup
             checkBoxJunk.AutoSize = true;
             checkBoxJunk.Checked = true;
             checkBoxJunk.CheckState = CheckState.Checked;
-            checkBoxJunk.Location = new Point(362, 15);
+            checkBoxJunk.Location = new Point(365, 11);
             checkBoxJunk.Name = "checkBoxJunk";
             checkBoxJunk.Size = new Size(50, 19);
             checkBoxJunk.TabIndex = 8;
