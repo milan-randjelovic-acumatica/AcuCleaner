@@ -86,6 +86,13 @@ namespace IISCleanup.Services
             return result;
         }
 
+        public IEnumerable<IISApp> FilterByStatus(IEnumerable<IISApp> iisApps, bool isActive, bool junk)
+        {
+            var result = iisApps
+                .Where(x => x.Active == isActive || x.Active == !junk);
+            return result;
+        }
+
         public IEnumerable<IISApp> FilterByDate(IEnumerable<IISApp> iisApps, DateTime cutoff)
         {
             var result = iisApps

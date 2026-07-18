@@ -32,17 +32,19 @@ namespace IISCleanup
         {
             components = new System.ComponentModel.Container();
             dataGridView = new DataGridView();
-            Id = new DataGridViewTextBoxColumn();
-            Instance = new DataGridViewTextBoxColumn();
-            Active = new DataGridViewCheckBoxColumn();
-            InstalledOn = new DataGridViewTextBoxColumn();
-            pathDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             iISAppBindingSource1 = new BindingSource(components);
             iISAppBindingSource = new BindingSource(components);
             buttonDeleteSelected = new Button();
             buttonDeleteAll = new Button();
             dateTimePicker = new DateTimePicker();
             labelOlderThan = new Label();
+            checkBoxActive = new CheckBox();
+            checkBoxJunk = new CheckBox();
+            Id = new DataGridViewTextBoxColumn();
+            Instance = new DataGridViewTextBoxColumn();
+            Active = new DataGridViewCheckBoxColumn();
+            InstalledOn = new DataGridViewTextBoxColumn();
+            pathDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource).BeginInit();
@@ -63,46 +65,6 @@ namespace IISCleanup
             dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView.Size = new Size(760, 508);
             dataGridView.TabIndex = 2;
-            // 
-            // Id
-            // 
-            Id.DataPropertyName = "Id";
-            Id.HeaderText = "#";
-            Id.Name = "Id";
-            Id.ReadOnly = true;
-            Id.Width = 50;
-            // 
-            // Instance
-            // 
-            Instance.DataPropertyName = "Instance";
-            Instance.HeaderText = "Instance";
-            Instance.Name = "Instance";
-            Instance.ReadOnly = true;
-            Instance.Width = 150;
-            // 
-            // Active
-            // 
-            Active.DataPropertyName = "Active";
-            Active.HeaderText = "Active";
-            Active.Name = "Active";
-            Active.ReadOnly = true;
-            Active.SortMode = DataGridViewColumnSortMode.Automatic;
-            // 
-            // InstalledOn
-            // 
-            InstalledOn.DataPropertyName = "InstalledOn";
-            InstalledOn.HeaderText = "InstalledOn";
-            InstalledOn.Name = "InstalledOn";
-            InstalledOn.ReadOnly = true;
-            InstalledOn.Width = 150;
-            // 
-            // pathDataGridViewTextBoxColumn
-            // 
-            pathDataGridViewTextBoxColumn.DataPropertyName = "Path";
-            pathDataGridViewTextBoxColumn.HeaderText = "Path";
-            pathDataGridViewTextBoxColumn.Name = "pathDataGridViewTextBoxColumn";
-            pathDataGridViewTextBoxColumn.ReadOnly = true;
-            pathDataGridViewTextBoxColumn.Width = 335;
             // 
             // iISAppBindingSource1
             // 
@@ -151,11 +113,79 @@ namespace IISCleanup
             labelOlderThan.TabIndex = 6;
             labelOlderThan.Text = "Older than:";
             // 
+            // checkBoxActive
+            // 
+            checkBoxActive.AutoSize = true;
+            checkBoxActive.Checked = true;
+            checkBoxActive.CheckState = CheckState.Checked;
+            checkBoxActive.Location = new Point(297, 15);
+            checkBoxActive.Name = "checkBoxActive";
+            checkBoxActive.Size = new Size(59, 19);
+            checkBoxActive.TabIndex = 7;
+            checkBoxActive.Text = "Active";
+            checkBoxActive.UseVisualStyleBackColor = true;
+            checkBoxActive.CheckedChanged += checkBoxActive_CheckedChanged;
+            // 
+            // checkBoxJunk
+            // 
+            checkBoxJunk.AutoSize = true;
+            checkBoxJunk.Checked = true;
+            checkBoxJunk.CheckState = CheckState.Checked;
+            checkBoxJunk.Location = new Point(362, 15);
+            checkBoxJunk.Name = "checkBoxJunk";
+            checkBoxJunk.Size = new Size(50, 19);
+            checkBoxJunk.TabIndex = 8;
+            checkBoxJunk.Text = "Junk";
+            checkBoxJunk.UseVisualStyleBackColor = true;
+            checkBoxJunk.CheckedChanged += checkBoxJunk_CheckedChanged;
+            // 
+            // Id
+            // 
+            Id.DataPropertyName = "Id";
+            Id.HeaderText = "#";
+            Id.Name = "Id";
+            Id.ReadOnly = true;
+            Id.Width = 50;
+            // 
+            // Instance
+            // 
+            Instance.DataPropertyName = "Instance";
+            Instance.HeaderText = "Instance";
+            Instance.Name = "Instance";
+            Instance.ReadOnly = true;
+            Instance.Width = 150;
+            // 
+            // Active
+            // 
+            Active.DataPropertyName = "Active";
+            Active.HeaderText = "Active/Junk";
+            Active.Name = "Active";
+            Active.ReadOnly = true;
+            Active.SortMode = DataGridViewColumnSortMode.Automatic;
+            // 
+            // InstalledOn
+            // 
+            InstalledOn.DataPropertyName = "InstalledOn";
+            InstalledOn.HeaderText = "InstalledOn";
+            InstalledOn.Name = "InstalledOn";
+            InstalledOn.ReadOnly = true;
+            InstalledOn.Width = 150;
+            // 
+            // pathDataGridViewTextBoxColumn
+            // 
+            pathDataGridViewTextBoxColumn.DataPropertyName = "Path";
+            pathDataGridViewTextBoxColumn.HeaderText = "Path";
+            pathDataGridViewTextBoxColumn.Name = "pathDataGridViewTextBoxColumn";
+            pathDataGridViewTextBoxColumn.ReadOnly = true;
+            pathDataGridViewTextBoxColumn.Width = 335;
+            // 
             // Form
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(784, 561);
+            Controls.Add(checkBoxJunk);
+            Controls.Add(checkBoxActive);
             Controls.Add(labelOlderThan);
             Controls.Add(dateTimePicker);
             Controls.Add(buttonDeleteAll);
@@ -184,6 +214,8 @@ namespace IISCleanup
         private Button buttonDeleteAll;
         private DateTimePicker dateTimePicker;
         private Label labelOlderThan;
+        private CheckBox checkBoxActive;
+        private CheckBox checkBoxJunk;
         private DataGridViewTextBoxColumn Id;
         private DataGridViewTextBoxColumn Instance;
         private DataGridViewCheckBoxColumn Active;

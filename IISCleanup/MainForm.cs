@@ -26,6 +26,8 @@ namespace IISCleanup
             var allApps = iisApps.UnionBy(iisJunk, x => x.Path.NormalizePath());
             allApps = allApps.ExcludeStandardFolders();
 
+            allApps = _iisService.FilterByStatus(allApps, checkBoxActive.Checked, checkBoxJunk.Checked);
+
             allApps = _iisService.FilterByDate(allApps, dateTimePicker.Value.Date).ToList();
             for (int i = 0; i < allApps.Count(); i++)
             {
@@ -70,6 +72,16 @@ namespace IISCleanup
             dataGridView.SelectAll();
 
             DeleteSelectedApps();
+        }
+
+        private void checkBoxActive_CheckedChanged(object sender, EventArgs e)
+        {
+            RefreshAppList();
+        }
+
+        private void checkBoxJunk_CheckedChanged(object sender, EventArgs e)
+        {
+            RefreshAppList();
         }
     }
 }
