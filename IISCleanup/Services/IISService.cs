@@ -4,9 +4,11 @@ using System.ServiceProcess;
 
 namespace IISCleanup.Services
 {
-    internal class IISService
+    internal static class IISService
     {
-        public void StopIIS()
+        private const string TemporaryAspFiles = "TemporaryAspFiles";
+
+        public static void StopIIS()
         {
             var service = new ServiceController("W3SVC");
 
@@ -17,7 +19,7 @@ namespace IISCleanup.Services
             }
         }
 
-        public void StartIIS()
+        public static void StartIIS()
         {
             var service = new ServiceController("W3SVC");
             if (service.Status == ServiceControllerStatus.Stopped)
@@ -27,7 +29,22 @@ namespace IISCleanup.Services
             }
         }
 
-        public IEnumerable<IISApp> GetIISApps()
+        public static IEnumerable<IISApp> GetAllApps()
+        {
+            var iisApps = GetIISApps();
+
+            var iisRootFolders = iisApps.Select(x => x.RootPath).Distinct().ToList();
+
+            var iisJunk = GetIISJunk(iisRootFolders);
+
+            var allApps = iisApps
+                .UnionBy(iisJunk, x => x.Path.NormalizePath())
+                .ExcludeStandardFolders();
+
+            return allApps;
+        }
+
+        public static IEnumerable<IISApp> GetIISApps()
         {
             var result = new List<IISApp>();
             using (ServerManager serverManager = new ServerManager())
@@ -61,48 +78,80 @@ namespace IISCleanup.Services
                 }
             }
 
-            return result;
+            return result.DistinctBy(app => app.Path);
         }
 
-        public IEnumerable<IISApp> GetIISJunk(IEnumerable<IISApp> iisApps)
+        public static IEnumerable<IISApp> GetIISJunk(IEnumerable<string> rootFolders)
         {
             var result = new List<IISApp>();
-            var iisRootPaths = iisApps.Select(x => x.RootPath).Distinct().ToList();
-            foreach (var iisRootPath in iisRootPaths)
+
+            foreach (var rootFolder in rootFolders)
             {
-                var folders = Directory.GetDirectories(iisRootPath);
+                var folders = Directory.GetDirectories(rootFolder);
                 foreach (var folder in folders)
                 {
+                    string folderName = Path.GetFileName(folder).NormalizePath();
+
                     result.Add(new IISApp
                     {
-                        Instance = Path.GetFileName(folder).NormalizePath(),
+                        Instance = folderName,
                         Path = folder.NormalizePath(),
-                        RootPath = iisRootPath.NormalizePath(),
+                        RootPath = rootFolder.NormalizePath(),
                         Active = false,
                         InstalledOn = Directory.GetCreationTime(folder),
                     });
+
+                    if (folderName == TemporaryAspFiles)
+                    {
+                        var tmpASPApps = GetIISJunk(new List<string> { folder });
+                        foreach (var tmpApp in tmpASPApps)
+                        {
+                            string tmpAppfolderName = Path.GetFileName(tmpApp.Path).NormalizePath();
+
+                            result.Add(new IISApp
+                            {
+                                Instance = tmpAppfolderName,
+                                Path = tmpApp.Path.NormalizePath(),
+                                RootPath = folder.Normalize(),
+                                Active = false,
+                                InstalledOn = Directory.GetCreationTime(folder),
+                            });
+                        }
+                    }
                 }
             }
-            return result;
+
+            return result.DistinctBy(app => app.Path);
         }
 
-        public IEnumerable<IISApp> FilterByStatus(IEnumerable<IISApp> iisApps, bool isActive, bool junk)
+        public static IEnumerable<IISApp> FilterByStatus(this IEnumerable<IISApp> iisApps, bool isActive, bool junk)
         {
-            var result = iisApps
+            iisApps = iisApps
                 .Where(x => x.Active == isActive || x.Active == !junk);
-            return result;
+            
+            return iisApps;
         }
 
-        public IEnumerable<IISApp> FilterByDate(IEnumerable<IISApp> iisApps, DateTime cutoff)
+        public static IEnumerable<IISApp> FilterByDate(this IEnumerable<IISApp> iisApps, DateTime cutoff)
         {
-            var result = iisApps
+            iisApps = iisApps
                 .Where(x => x.InstalledOn.Date <= cutoff)
                 .OrderBy(x => x.InstalledOn);
-
-            return result;
+                
+            return iisApps;
         }
 
-        public void DeleteIISApps(List<IISApp> iisApps)
+        public static IEnumerable<IISApp> AddRowNumbers(this IEnumerable<IISApp> allApps)
+        {
+            for (int i = 0; i < allApps.Count(); i++)
+            {
+                allApps.ElementAt(i).Id = i + 1;
+            }
+
+            return allApps;
+        }
+
+        public static void DeleteIISApps(List<IISApp> iisApps)
         {
             using (ServerManager serverManager = new ServerManager())
             {
@@ -115,30 +164,33 @@ namespace IISCleanup.Services
                         site.Applications.Remove(app);
                     }
 
-                    //delete junk files
-                    foreach (var iisApp in iisApps)
-                    {
-                        if (Directory.Exists(iisApp.Path))
-                        {
-                            Directory.Delete(iisApp.Path, true);
-                        }
-                    }
-
                     serverManager.CommitChanges();
                 }
             }
         }
 
-        public void CeanupIISApps(List<IISApp> iisApps, DateTime cutoff)
+        public static void DeleteFiles(List<IISApp> iisApps)
+        {
+            foreach (var iisApp in iisApps)
+            {
+                if (Directory.Exists(iisApp.Path))
+                {
+                    Directory.Delete(iisApp.Path, true);
+                }
+            }
+        }
+
+        public static void CeanupIISApps(List<IISApp> iisApps, DateTime cutoff)
         {
             StopIIS();
 
             DeleteIISApps(iisApps);
+            DeleteFiles(iisApps);
 
             StartIIS();
         }
 
-        public List<Microsoft.Web.Administration.Application> FindAppsToRemove(Site site, List<IISApp> iisApps)
+        public static List<Microsoft.Web.Administration.Application> FindAppsToRemove(Site site, List<IISApp> iisApps)
         {
             var appsToRemove = new List<Microsoft.Web.Administration.Application>();
             foreach (var appInstance in iisApps.Select(app => app.Instance))

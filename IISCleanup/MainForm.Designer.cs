@@ -67,7 +67,7 @@ namespace IISCleanup
             dataGridView.Name = "dataGridView";
             dataGridView.ReadOnly = true;
             dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView.Size = new Size(854, 495);
+            dataGridView.Size = new Size(834, 495);
             dataGridView.TabIndex = 2;
             // 
             // Id
@@ -121,7 +121,7 @@ namespace IISCleanup
             // buttonDeleteSelected
             // 
             buttonDeleteSelected.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonDeleteSelected.Location = new Point(686, 12);
+            buttonDeleteSelected.Location = new Point(666, 12);
             buttonDeleteSelected.Name = "buttonDeleteSelected";
             buttonDeleteSelected.Size = new Size(75, 23);
             buttonDeleteSelected.TabIndex = 3;
@@ -132,7 +132,7 @@ namespace IISCleanup
             // buttonDeleteAll
             // 
             buttonDeleteAll.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonDeleteAll.Location = new Point(767, 12);
+            buttonDeleteAll.Location = new Point(747, 12);
             buttonDeleteAll.Name = "buttonDeleteAll";
             buttonDeleteAll.Size = new Size(75, 23);
             buttonDeleteAll.TabIndex = 4;
@@ -188,7 +188,7 @@ namespace IISCleanup
             statusStrip.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel, toolStripProgressBar });
             statusStrip.Location = new Point(0, 539);
             statusStrip.Name = "statusStrip";
-            statusStrip.Size = new Size(854, 22);
+            statusStrip.Size = new Size(834, 22);
             statusStrip.TabIndex = 9;
             statusStrip.Text = "statusStrip1";
             // 
@@ -208,7 +208,7 @@ namespace IISCleanup
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(854, 561);
+            ClientSize = new Size(834, 561);
             Controls.Add(statusStrip);
             Controls.Add(checkBoxJunk);
             Controls.Add(checkBoxActive);
