@@ -8,8 +8,6 @@ namespace IISCleanup.Services
 {
     internal static class IISService
     {
-        private const string TemporaryAspFiles = "TemporaryAspFiles";
-
         public static void StopIIS()
         {
             var service = new ServiceController("W3SVC");
@@ -60,8 +58,9 @@ namespace IISCleanup.Services
                             continue;
                         }
 
-                        var physicalPath = app.VirtualDirectories.First().PhysicalPath;
-                        var rootPath = new DirectoryInfo(physicalPath).Parent?.FullName ?? string.Empty;
+                        var path = app.VirtualDirectories.First().PhysicalPath;
+                        var rootPath = new DirectoryInfo(path).Parent?.FullName ?? string.Empty;
+                        var instanceName = app.Path.NormalizePath();
 
                         if (Directory.GetFiles(rootPath).Select(x => x.Split("\\").Last()).Contains("Pure.sln"))
                         {
@@ -70,11 +69,12 @@ namespace IISCleanup.Services
 
                         result.Add(new IISApp
                         {
-                            Instance = app.Path.NormalizePath(),
-                            Path = physicalPath.NormalizePath(),
+                            Instance = instanceName,
+                            Path = path.NormalizePath(),
                             RootPath = rootPath.NormalizePath(),
+                            AspFilesTempPath = Path.Combine(rootPath, Constants.TemporaryAspFiles, instanceName).NormalizePath(),
                             Active = true,
-                            InstalledOn = Directory.GetCreationTime(physicalPath),
+                            InstalledOn = Directory.GetCreationTime(path),
                         });
                     }
                 }
@@ -99,25 +99,35 @@ namespace IISCleanup.Services
                         Instance = folderName,
                         Path = folder.NormalizePath(),
                         RootPath = rootFolder.NormalizePath(),
+                        AspFilesTempPath = string.Empty,
                         Active = false,
                         InstalledOn = Directory.GetCreationTime(folder),
                     });
 
-                    if (folderName == TemporaryAspFiles)
+                    if (folderName == Constants.TemporaryAspFiles)
                     {
                         var tmpASPApps = GetIISJunk(new List<string> { folder });
                         foreach (var tmpApp in tmpASPApps)
                         {
-                            string tmpAppfolderName = Path.GetFileName(tmpApp.Path).NormalizePath();
+                            string tmpInstanceName = Path.GetFileName(tmpApp.Path).NormalizePath();
 
-                            result.Add(new IISApp
+                            var existingApp = result.FirstOrDefault(app => app.Instance == tmpInstanceName);
+                            if (existingApp != null)
                             {
-                                Instance = tmpAppfolderName,
-                                Path = tmpApp.Path.NormalizePath(),
-                                RootPath = folder.Normalize(),
-                                Active = false,
-                                InstalledOn = Directory.GetCreationTime(folder),
-                            });
+                                existingApp.AspFilesTempPath = tmpApp.Path.NormalizePath();
+                            }
+                            else
+                            {
+                                result.Add(new IISApp
+                                {
+                                    Instance = tmpInstanceName,
+                                    Path = string.Empty,
+                                    RootPath = folder.NormalizePath(),
+                                    AspFilesTempPath = tmpApp.Path.NormalizePath(),
+                                    Active = false,
+                                    InstalledOn = Directory.GetCreationTime(folder),
+                                });
+                            }
                         }
                     }
                 }
@@ -175,13 +185,17 @@ namespace IISCleanup.Services
         {
             foreach (var iisApp in iisApps)
             {
-                if (!Directory.Exists(iisApp.Path))
+                if (Directory.Exists(iisApp.Path))
                 {
-                    continue;
+                    PrepareDirectoryForDeletion(iisApp.Path);
+                    Directory.Delete(iisApp.Path, true);
                 }
-
-                PrepareDirectoryForDeletion(iisApp.Path);
-                Directory.Delete(iisApp.Path, true);
+               
+                if (Directory.Exists(iisApp.AspFilesTempPath))
+                {
+                    PrepareDirectoryForDeletion(iisApp.AspFilesTempPath);
+                    Directory.Delete(iisApp.AspFilesTempPath, true);
+                }       
             }
         }
 
