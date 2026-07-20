@@ -1,13 +1,13 @@
 using IISCleanup.Models;
 using IISCleanup.Services;
 
-namespace IISCleanup
+namespace IISCleanup.Forms
 {
-    public partial class Form : System.Windows.Forms.Form
+    public partial class MainForm : Form
     {
         private List<IISApp> _allApps = new List<IISApp>();
 
-        public Form()
+        public MainForm()
         {
             InitializeComponent();
         }
@@ -33,7 +33,7 @@ namespace IISCleanup
             iISAppBindingSource1.ResetBindings(false);
         }
 
-        private async Task DeleteSelectedAppsAsync(bool deleteAll = false)
+        private async Task DeleteSelectedAppsAsync()
         {
             var selectedApps = new List<IISApp>();
             foreach (DataGridViewRow selectedRow in dataGridView.SelectedRows)
@@ -50,9 +50,7 @@ namespace IISCleanup
                 return;
             }
 
-            var message = deleteAll
-                ? $"Delete all {selectedApps.Count} listed app(s)?"
-                : $"Delete {selectedApps.Count} selected app(s)?";
+            var message = $"Delete {selectedApps.Count} selected app(s)?";
 
             var confirmation = MessageBox.Show(
                 message,
@@ -97,13 +95,26 @@ namespace IISCleanup
 
         private async void buttonDeleteSelected_Click(object sender, EventArgs e)
         {
-            await DeleteSelectedAppsAsync();
+
+            DeleteConfirmationForm form = new DeleteConfirmationForm();
+            var result = form.ShowDialog();
+            if (result == DialogResult.Yes) 
+            {
+                await DeleteSelectedAppsAsync();
+            }
         }
 
         private async void buttonDeleteAll_Click(object sender, EventArgs e)
         {
             dataGridView.SelectAll();
-            await DeleteSelectedAppsAsync(deleteAll: true);
+
+            DeleteConfirmationForm form = new DeleteConfirmationForm();
+            var result = form.ShowDialog();
+
+            if (result == DialogResult.Yes)
+            {
+                await DeleteSelectedAppsAsync();
+            }
         }
 
         private void checkBoxActive_CheckedChanged(object sender, EventArgs e)

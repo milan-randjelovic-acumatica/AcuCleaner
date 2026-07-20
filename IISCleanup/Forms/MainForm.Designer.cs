@@ -1,8 +1,8 @@
 ﻿using IISCleanup.Models;
 
-namespace IISCleanup
+namespace IISCleanup.Forms
 {
-    partial class Form
+    partial class MainForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -31,8 +31,14 @@ namespace IISCleanup
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             dataGridView = new DataGridView();
+            Id = new DataGridViewTextBoxColumn();
+            Instance = new DataGridViewTextBoxColumn();
+            Active = new DataGridViewCheckBoxColumn();
+            InstalledOn = new DataGridViewTextBoxColumn();
+            pathDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            AspFilesTempPath = new DataGridViewTextBoxColumn();
             iISAppBindingSource1 = new BindingSource(components);
             iISAppBindingSource = new BindingSource(components);
             buttonDeleteSelected = new Button();
@@ -44,12 +50,6 @@ namespace IISCleanup
             statusStrip = new StatusStrip();
             toolStripStatusLabel = new ToolStripStatusLabel();
             toolStripProgressBar = new ToolStripProgressBar();
-            Id = new DataGridViewTextBoxColumn();
-            Instance = new DataGridViewTextBoxColumn();
-            Active = new DataGridViewCheckBoxColumn();
-            InstalledOn = new DataGridViewTextBoxColumn();
-            pathDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            AspFilesTempPath = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource).BeginInit();
@@ -71,6 +71,54 @@ namespace IISCleanup
             dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView.Size = new Size(1184, 495);
             dataGridView.TabIndex = 2;
+            // 
+            // Id
+            // 
+            Id.DataPropertyName = "Id";
+            Id.HeaderText = "#";
+            Id.Name = "Id";
+            Id.ReadOnly = true;
+            Id.Width = 50;
+            // 
+            // Instance
+            // 
+            Instance.DataPropertyName = "Instance";
+            Instance.HeaderText = "Instance";
+            Instance.Name = "Instance";
+            Instance.ReadOnly = true;
+            Instance.Width = 150;
+            // 
+            // Active
+            // 
+            Active.DataPropertyName = "Active";
+            Active.HeaderText = "Active/Junk";
+            Active.Name = "Active";
+            Active.ReadOnly = true;
+            Active.SortMode = DataGridViewColumnSortMode.Automatic;
+            // 
+            // InstalledOn
+            // 
+            InstalledOn.DataPropertyName = "InstalledOn";
+            InstalledOn.HeaderText = "Installed On";
+            InstalledOn.Name = "InstalledOn";
+            InstalledOn.ReadOnly = true;
+            InstalledOn.Width = 150;
+            // 
+            // pathDataGridViewTextBoxColumn
+            // 
+            pathDataGridViewTextBoxColumn.DataPropertyName = "Path";
+            pathDataGridViewTextBoxColumn.HeaderText = "Path";
+            pathDataGridViewTextBoxColumn.Name = "pathDataGridViewTextBoxColumn";
+            pathDataGridViewTextBoxColumn.ReadOnly = true;
+            pathDataGridViewTextBoxColumn.Width = 335;
+            // 
+            // AspFilesTempPath
+            // 
+            AspFilesTempPath.DataPropertyName = "AspFilesTempPath";
+            AspFilesTempPath.HeaderText = "Asp Temp Path";
+            AspFilesTempPath.Name = "AspFilesTempPath";
+            AspFilesTempPath.ReadOnly = true;
+            AspFilesTempPath.Width = 350;
             // 
             // iISAppBindingSource1
             // 
@@ -165,54 +213,6 @@ namespace IISCleanup
             toolStripProgressBar.Name = "toolStripProgressBar";
             toolStripProgressBar.Size = new Size(100, 16);
             toolStripProgressBar.Style = ProgressBarStyle.Marquee;
-            // 
-            // Id
-            // 
-            Id.DataPropertyName = "Id";
-            Id.HeaderText = "#";
-            Id.Name = "Id";
-            Id.ReadOnly = true;
-            Id.Width = 50;
-            // 
-            // Instance
-            // 
-            Instance.DataPropertyName = "Instance";
-            Instance.HeaderText = "Instance";
-            Instance.Name = "Instance";
-            Instance.ReadOnly = true;
-            Instance.Width = 150;
-            // 
-            // Active
-            // 
-            Active.DataPropertyName = "Active";
-            Active.HeaderText = "Active/Junk";
-            Active.Name = "Active";
-            Active.ReadOnly = true;
-            Active.SortMode = DataGridViewColumnSortMode.Automatic;
-            // 
-            // InstalledOn
-            // 
-            InstalledOn.DataPropertyName = "InstalledOn";
-            InstalledOn.HeaderText = "Installed On";
-            InstalledOn.Name = "InstalledOn";
-            InstalledOn.ReadOnly = true;
-            InstalledOn.Width = 150;
-            // 
-            // pathDataGridViewTextBoxColumn
-            // 
-            pathDataGridViewTextBoxColumn.DataPropertyName = "Path";
-            pathDataGridViewTextBoxColumn.HeaderText = "Path";
-            pathDataGridViewTextBoxColumn.Name = "pathDataGridViewTextBoxColumn";
-            pathDataGridViewTextBoxColumn.ReadOnly = true;
-            pathDataGridViewTextBoxColumn.Width = 335;
-            // 
-            // AspFilesTempPath
-            // 
-            AspFilesTempPath.DataPropertyName = "AspFilesTempPath";
-            AspFilesTempPath.HeaderText = "Asp Temp Path";
-            AspFilesTempPath.Name = "AspFilesTempPath";
-            AspFilesTempPath.ReadOnly = true;
-            AspFilesTempPath.Width = 350;
             // 
             // Form
             // 
