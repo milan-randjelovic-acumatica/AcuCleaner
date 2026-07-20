@@ -1,5 +1,7 @@
 ﻿using IISCleanup.Models;
 using Microsoft.Web.Administration;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.ServiceProcess;
 
 namespace IISCleanup.Services
@@ -128,7 +130,7 @@ namespace IISCleanup.Services
         {
             iisApps = iisApps
                 .Where(x => x.Active == isActive || x.Active == !junk);
-            
+
             return iisApps;
         }
 
@@ -137,7 +139,7 @@ namespace IISCleanup.Services
             iisApps = iisApps
                 .Where(x => x.InstalledOn.Date <= cutoff)
                 .OrderBy(x => x.InstalledOn);
-                
+
             return iisApps;
         }
 
@@ -173,10 +175,13 @@ namespace IISCleanup.Services
         {
             foreach (var iisApp in iisApps)
             {
-                if (Directory.Exists(iisApp.Path))
+                if (!Directory.Exists(iisApp.Path))
                 {
-                    Directory.Delete(iisApp.Path, true);
+                    continue;
                 }
+
+                PrepareDirectoryForDeletion(iisApp.Path);
+                Directory.Delete(iisApp.Path, true);
             }
         }
 
@@ -206,5 +211,55 @@ namespace IISCleanup.Services
 
             return appsToRemove;
         }
+
+        public static void PrepareDirectoryForDeletion(string path)
+        {
+            GrantFullControl(path);
+            File.SetAttributes(path, FileAttributes.Normal);
+
+            foreach (var directory in Directory.GetDirectories(path, "*", SearchOption.AllDirectories))
+            {
+                GrantFullControl(directory);
+                File.SetAttributes(directory, FileAttributes.Normal);
+            }
+
+            foreach (var file in Directory.GetFiles(path, "*", SearchOption.AllDirectories))
+            {
+                GrantFullControl(file);
+                File.SetAttributes(file, FileAttributes.Normal);
+            }
+        }
+
+        public static void GrantFullControl(string path)
+        {
+            var admins = new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null);
+            var rule = new FileSystemAccessRule(
+                admins,
+                FileSystemRights.FullControl,
+                InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
+                PropagationFlags.None,
+                AccessControlType.Allow);
+
+            if (Directory.Exists(path))
+            {
+                var dirInfo = new DirectoryInfo(path);
+                var security = dirInfo.GetAccessControl();
+                security.AddAccessRule(rule);
+                dirInfo.SetAccessControl(security);
+                return;
+            }
+
+            if (File.Exists(path))
+            {
+                var fileInfo = new FileInfo(path);
+                var security = fileInfo.GetAccessControl();
+                security.AddAccessRule(new FileSystemAccessRule(
+                    admins,
+                    FileSystemRights.FullControl,
+                    AccessControlType.Allow));
+                fileInfo.SetAccessControl(security);
+            }
+        }
+
     }
 }
