@@ -33,7 +33,7 @@ namespace IISCleanup
             iISAppBindingSource1.ResetBindings(false);
         }
 
-        private async Task DeleteSelectedAppsAsync()
+        private async Task DeleteSelectedAppsAsync(bool deleteAll = false)
         {
             var selectedApps = new List<IISApp>();
             foreach (DataGridViewRow selectedRow in dataGridView.SelectedRows)
@@ -47,6 +47,23 @@ namespace IISCleanup
             if (selectedApps.Count == 0)
             {
                 toolStripStatusLabel.Text = "No rows selected.";
+                return;
+            }
+
+            var message = deleteAll
+                ? $"Delete all {selectedApps.Count} listed app(s)?"
+                : $"Delete {selectedApps.Count} selected app(s)?";
+
+            var confirmation = MessageBox.Show(
+                message,
+                "Confirm delete",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning,
+                MessageBoxDefaultButton.Button2);
+
+            if (confirmation != DialogResult.Yes)
+            {
+                toolStripStatusLabel.Text = "Delete canceled.";
                 return;
             }
 
@@ -86,7 +103,7 @@ namespace IISCleanup
         private async void buttonDeleteAll_Click(object sender, EventArgs e)
         {
             dataGridView.SelectAll();
-            await DeleteSelectedAppsAsync();
+            await DeleteSelectedAppsAsync(deleteAll: true);
         }
 
         private void checkBoxActive_CheckedChanged(object sender, EventArgs e)
