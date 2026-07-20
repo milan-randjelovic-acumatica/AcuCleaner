@@ -33,7 +33,7 @@ namespace IISCleanup.Forms
             iISAppBindingSource1.ResetBindings(false);
         }
 
-        private async Task DeleteSelectedAppsAsync()
+        private async Task DeleteSelectedAppsAsync(CleanupParameters cleanupParameters)
         {
             var selectedApps = new List<IISApp>();
             foreach (DataGridViewRow selectedRow in dataGridView.SelectedRows)
@@ -72,7 +72,7 @@ namespace IISCleanup.Forms
 
             try
             {
-                await Task.Run(() => IISService.CeanupIISApps(selectedApps));
+                await Task.Run(() => IISService.CeanupIISApps(selectedApps, cleanupParameters));
                 toolStripStatusLabel.Text = $"Deleted {selectedApps.Count} app(s).";
                 RefreshAppList();
             }
@@ -95,12 +95,11 @@ namespace IISCleanup.Forms
 
         private async void buttonDeleteSelected_Click(object sender, EventArgs e)
         {
-
-            DeleteConfirmationForm form = new DeleteConfirmationForm();
-            var result = form.ShowDialog();
+            DeleteConfirmationForm confirmation = new DeleteConfirmationForm();
+            var result = confirmation.ShowDialog();
             if (result == DialogResult.Yes) 
             {
-                await DeleteSelectedAppsAsync();
+                await DeleteSelectedAppsAsync(confirmation.CleanupParameters);
             }
         }
 
@@ -108,12 +107,11 @@ namespace IISCleanup.Forms
         {
             dataGridView.SelectAll();
 
-            DeleteConfirmationForm form = new DeleteConfirmationForm();
-            var result = form.ShowDialog();
-
+            DeleteConfirmationForm confirmation = new DeleteConfirmationForm();
+            var result = confirmation.ShowDialog();
             if (result == DialogResult.Yes)
             {
-                await DeleteSelectedAppsAsync();
+                await DeleteSelectedAppsAsync(confirmation.CleanupParameters);
             }
         }
 

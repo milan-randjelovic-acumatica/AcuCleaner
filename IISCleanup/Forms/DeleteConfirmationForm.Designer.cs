@@ -31,7 +31,7 @@
             buttonCleanup = new Button();
             checkBoxCleanupFiles = new CheckBox();
             buttonCancel = new Button();
-            checkBoxRemoveIISApps = new CheckBox();
+            checkBoxcleanupIISApps = new CheckBox();
             checkBoxCleanupAspTemp = new CheckBox();
             SuspendLayout();
             // 
@@ -71,15 +71,15 @@
             // 
             // checkBoxRemoveIISApps
             // 
-            checkBoxRemoveIISApps.AutoSize = true;
-            checkBoxRemoveIISApps.Checked = true;
-            checkBoxRemoveIISApps.CheckState = CheckState.Checked;
-            checkBoxRemoveIISApps.Location = new Point(12, 12);
-            checkBoxRemoveIISApps.Name = "checkBoxRemoveIISApps";
-            checkBoxRemoveIISApps.Size = new Size(112, 19);
-            checkBoxRemoveIISApps.TabIndex = 8;
-            checkBoxRemoveIISApps.Text = "Remove IIS apps";
-            checkBoxRemoveIISApps.UseVisualStyleBackColor = true;
+            checkBoxcleanupIISApps.AutoSize = true;
+            checkBoxcleanupIISApps.Checked = true;
+            checkBoxcleanupIISApps.CheckState = CheckState.Checked;
+            checkBoxcleanupIISApps.Location = new Point(12, 12);
+            checkBoxcleanupIISApps.Name = "checkBoxRemoveIISApps";
+            checkBoxcleanupIISApps.Size = new Size(113, 19);
+            checkBoxcleanupIISApps.TabIndex = 8;
+            checkBoxcleanupIISApps.Text = "Cleanup IIS apps";
+            checkBoxcleanupIISApps.UseVisualStyleBackColor = true;
             // 
             // checkBoxCleanupAspTemp
             // 
@@ -88,9 +88,9 @@
             checkBoxCleanupAspTemp.CheckState = CheckState.Checked;
             checkBoxCleanupAspTemp.Location = new Point(12, 62);
             checkBoxCleanupAspTemp.Name = "checkBoxCleanupAspTemp";
-            checkBoxCleanupAspTemp.Size = new Size(149, 19);
+            checkBoxCleanupAspTemp.Size = new Size(140, 19);
             checkBoxCleanupAspTemp.TabIndex = 9;
-            checkBoxCleanupAspTemp.Text = "Cleanup ASP temp files";
+            checkBoxCleanupAspTemp.Text = "Cleanup IIS temp files";
             checkBoxCleanupAspTemp.UseVisualStyleBackColor = true;
             // 
             // DeleteConfirmationForm
@@ -99,10 +99,11 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(334, 124);
             Controls.Add(checkBoxCleanupAspTemp);
-            Controls.Add(checkBoxRemoveIISApps);
+            Controls.Add(checkBoxcleanupIISApps);
             Controls.Add(buttonCancel);
             Controls.Add(checkBoxCleanupFiles);
             Controls.Add(buttonCleanup);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
             Name = "DeleteConfirmationForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Confirm cleanup";
@@ -112,13 +113,12 @@
 
         #endregion
 
-        private CheckBox checkBox1;
         private Button button2;
         private Button buttonCleanup;
         private GroupBox groupBoxIISJunk;
         private CheckBox checkBoxCleanupFiles;
         private Button buttonCancel;
-        private CheckBox checkBoxRemoveIISApps;
+        private CheckBox checkBoxcleanupIISApps;
         private CheckBox checkBoxCleanupAspTemp;
     }
 }

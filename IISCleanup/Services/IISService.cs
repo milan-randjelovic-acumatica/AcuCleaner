@@ -138,10 +138,7 @@ namespace IISCleanup.Services
 
         public static IEnumerable<IISApp> FilterByStatus(this IEnumerable<IISApp> iisApps, bool isActive, bool junk)
         {
-            iisApps = iisApps
-                .Where(x => x.Active == isActive || x.Active == !junk);
-
-            return iisApps;
+            return iisApps.Where(x => x.Active == isActive || (junk == false && x.Active == false));
         }
 
         public static IEnumerable<IISApp> FilterByDate(this IEnumerable<IISApp> iisApps, DateTime cutoff)
@@ -190,21 +187,39 @@ namespace IISCleanup.Services
                     PrepareDirectoryForDeletion(iisApp.Path);
                     Directory.Delete(iisApp.Path, true);
                 }
-               
+            }
+        }
+
+        public static void DeleteAspTempFiles(List<IISApp> iisApps)
+        {
+            foreach (var iisApp in iisApps)
+            {
                 if (Directory.Exists(iisApp.AspFilesTempPath))
                 {
                     PrepareDirectoryForDeletion(iisApp.AspFilesTempPath);
                     Directory.Delete(iisApp.AspFilesTempPath, true);
-                }       
+                }
             }
         }
 
-        public static void CeanupIISApps(List<IISApp> iisApps)
+        public static void CeanupIISApps(List<IISApp> iisApps, CleanupParameters cleanupParameters)
         {
             StopIIS();
 
-            DeleteIISApps(iisApps);
-            DeleteFiles(iisApps);
+            if (cleanupParameters.CleanupIISApps)
+            {
+                DeleteIISApps(iisApps);
+            }
+
+            if (cleanupParameters.CleanupFiles)
+            {
+                DeleteFiles(iisApps);
+            }
+
+            if (cleanupParameters.CleanupAspTemp)
+            {
+                DeleteAspTempFiles(iisApps);
+            }
 
             StartIIS();
         }
@@ -274,6 +289,5 @@ namespace IISCleanup.Services
                 fileInfo.SetAccessControl(security);
             }
         }
-
     }
 }
