@@ -185,7 +185,7 @@ namespace IISCleanup.Services
             }
         }
 
-        public static void CeanupIISApps(List<IISApp> iisApps, DateTime cutoff)
+        public static void CeanupIISApps(List<IISApp> iisApps)
         {
             StopIIS();
 

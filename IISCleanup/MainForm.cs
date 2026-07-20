@@ -74,7 +74,7 @@ namespace IISCleanup
 
             try
             {
-                await Task.Run(() => IISService.CeanupIISApps(selectedApps, dateTimePicker.Value.Date));
+                await Task.Run(() => IISService.CeanupIISApps(selectedApps));
                 toolStripStatusLabel.Text = $"Deleted {selectedApps.Count} app(s).";
                 RefreshAppList();
             }
