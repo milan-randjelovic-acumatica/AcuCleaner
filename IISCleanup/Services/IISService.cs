@@ -8,8 +8,10 @@ namespace IISCleanup.Services
 {
     internal static class IISService
     {
-        public static void StopIIS()
+        public static void StopIIS(IProgress<string>? progressHandler = null)
         {
+            progressHandler?.Report("Stopping IIS...");
+
             var service = new ServiceController("W3SVC");
 
             if (service.Status == ServiceControllerStatus.Running)
@@ -17,16 +19,22 @@ namespace IISCleanup.Services
                 service.Stop();
                 service.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(30));
             }
+
+            progressHandler?.Report("IIS stopped.");
         }
 
-        public static void StartIIS()
+        public static void StartIIS(IProgress<string>? progressHandler = null)
         {
+            progressHandler?.Report("Starting IIS...");
+
             var service = new ServiceController("W3SVC");
             if (service.Status == ServiceControllerStatus.Stopped)
             {
                 service.Start();
                 service.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(30));
             }
+
+            progressHandler?.Report("IIS started.");
         }
 
         public static IEnumerable<IISApp> GetAllApps()
@@ -160,16 +168,17 @@ namespace IISCleanup.Services
             return allApps;
         }
 
-        public static void DeleteIISApps(List<IISApp> iisApps)
+        public static void DeleteIISApps(List<IISApp> iisApps, IProgress<string>? progressHandler = null)
         {
             using (ServerManager serverManager = new ServerManager())
             {
                 foreach (var site in serverManager.Sites)
                 {
-                    //delete selected apps from IIS
                     var appsToRemove = FindAppsToRemove(site, iisApps);
+                    int i = 1;
                     foreach (var app in appsToRemove)
                     {
+                        progressHandler?.Report($"Removing IIS entry {i++}/{appsToRemove.Count}: {app.Path}");
                         site.Applications.Remove(app);
                     }
 
@@ -178,47 +187,51 @@ namespace IISCleanup.Services
             }
         }
 
-        public static void DeleteFiles(List<IISApp> iisApps)
+        public static void CleanupAppFolders(List<IISApp> iisApps, IProgress<string>? progressHandler = null)
         {
+            int i = 1;
             foreach (var iisApp in iisApps)
             {
                 if (Directory.Exists(iisApp.Path))
                 {
+                    progressHandler?.Report($"Cleaning folders {i++}/{iisApps.Count}: {iisApp.Path}");
                     PrepareDirectoryForDeletion(iisApp.Path);
                     Directory.Delete(iisApp.Path, true);
                 }
             }
         }
 
-        public static void DeleteAspTempFiles(List<IISApp> iisApps)
+        public static void CleanupAspTempFolders(List<IISApp> iisApps, IProgress<string>? progressHandler = null)
         {
+            int i = 1;
             foreach (var iisApp in iisApps)
             {
                 if (Directory.Exists(iisApp.AspFilesTempPath))
                 {
+                    progressHandler?.Report($"Deleting ASP temp files: {i++}/{iisApps.Count} {iisApp.AspFilesTempPath}");
                     PrepareDirectoryForDeletion(iisApp.AspFilesTempPath);
                     Directory.Delete(iisApp.AspFilesTempPath, true);
                 }
             }
         }
 
-        public static void CeanupIISApps(List<IISApp> iisApps, CleanupParameters cleanupParameters)
+        public static void CeanupIISApps(List<IISApp> iisApps, CleanupParameters cleanupParameters, IProgress<string>? progressHandler = null)
         {
-            StopIIS();
+            StopIIS(progressHandler);
 
             if (cleanupParameters.CleanupIISApps)
             {
-                DeleteIISApps(iisApps);
+                DeleteIISApps(iisApps, progressHandler);
             }
 
             if (cleanupParameters.CleanupFiles)
             {
-                DeleteFiles(iisApps);
+                CleanupAppFolders(iisApps, progressHandler);
             }
 
             if (cleanupParameters.CleanupAspTemp)
             {
-                DeleteAspTempFiles(iisApps);
+                CleanupAspTempFolders(iisApps, progressHandler);
             }
 
             StartIIS();

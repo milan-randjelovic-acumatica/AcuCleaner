@@ -70,9 +70,11 @@ namespace IISCleanup.Forms
             toolStripProgressBar.Visible = true;
             toolStripStatusLabel.Text = $"Deleting {selectedApps.Count} app(s)...";
 
+            var progressHandler = new Progress<string>(message => toolStripStatusLabel.Text = message);
+
             try
             {
-                await Task.Run(() => IISService.CeanupIISApps(selectedApps, cleanupParameters));
+                await Task.Run(() => IISService.CeanupIISApps(selectedApps, cleanupParameters, progressHandler));
                 toolStripStatusLabel.Text = $"Deleted {selectedApps.Count} app(s).";
                 RefreshAppList();
             }
