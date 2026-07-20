@@ -31,6 +31,7 @@ namespace IISCleanup
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form));
             dataGridView = new DataGridView();
             Id = new DataGridViewTextBoxColumn();
             Instance = new DataGridViewTextBoxColumn();
@@ -217,9 +218,10 @@ namespace IISCleanup
             Controls.Add(buttonDeleteAll);
             Controls.Add(buttonDeleteSelected);
             Controls.Add(dataGridView);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Form";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "ISS Cleanup";
+            Text = "IIS Cleanup";
             Load += Form_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView).EndInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource1).EndInit();
