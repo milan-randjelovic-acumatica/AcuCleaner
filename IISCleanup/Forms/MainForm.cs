@@ -5,16 +5,31 @@ namespace IISCleanup.Forms
 {
     public partial class MainForm : Form
     {
+        private static MainForm? _instance;
+
         private List<IISApp> _allApps = new List<IISApp>();
         private readonly IProgress<string> _progressHandler;
-        private readonly CleanupService _cleanupService;
+        public CleanupService CleanupService { get; private set; }
 
         public MainForm()
         {
             InitializeComponent();
+            _instance = this;
 
             _progressHandler = new Progress<string>(message => this.toolStripStatusLabel.Text = message);
-            _cleanupService = new CleanupService(_progressHandler);
+            CleanupService = new CleanupService(_progressHandler);
+        }
+
+        public static void ShowError(string message)
+        {
+            if (_instance == null) return;
+
+            if (_instance.InvokeRequired)
+                _instance.Invoke(() => _instance.toolStripStatusLabel.Text = $"Error: {message}");
+            else
+                _instance.toolStripStatusLabel.Text = $"Error: {message}";
+
+            _instance.CleanupService.StartIIS();
         }
 
         private void Form_Load(object sender, EventArgs e)
@@ -27,7 +42,7 @@ namespace IISCleanup.Forms
 
         private void RefreshAppList()
         {
-            _allApps = _cleanupService
+            _allApps = CleanupService
                 .GetAllApps()
                 .FilterByStatus(checkBoxActive.Checked, checkBoxJunk.Checked)
                 .FilterByDate(dateTimePicker.Value.Date)
@@ -78,7 +93,7 @@ namespace IISCleanup.Forms
 
             try
             {
-                await Task.Run(() => _cleanupService.CeanupIISApps(selectedApps, cleanupParameters));
+                await Task.Run(() => CleanupService.CeanupIISApps(selectedApps, cleanupParameters));
                 toolStripStatusLabel.Text = $"Deleted {selectedApps.Count} app(s).";
                 RefreshAppList();
             }
@@ -103,7 +118,7 @@ namespace IISCleanup.Forms
         {
             DeleteConfirmationForm confirmation = new DeleteConfirmationForm();
             var result = confirmation.ShowDialog();
-            if (result == DialogResult.Yes) 
+            if (result == DialogResult.Yes)
             {
                 await DeleteSelectedAppsAsync(confirmation.CleanupParameters);
             }

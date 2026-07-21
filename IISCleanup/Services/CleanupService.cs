@@ -7,7 +7,7 @@ using System.ServiceProcess;
 
 namespace IISCleanup.Services
 {
-    internal class CleanupService
+    public class CleanupService
     {
         private readonly IProgress<string>? _progressHandler;
         private IEnumerable<IISApp> _apps = new List<IISApp>();
