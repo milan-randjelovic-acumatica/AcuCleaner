@@ -7,51 +7,24 @@ using System.ServiceProcess;
 
 namespace IISCleanup.Services
 {
-    public class CleanupService
+    public class CleanupService : ICleanupService, IAppsCollection
     {
         private readonly IProgress<string>? _progressHandler;
+        private readonly IISService? _iisService;
         private IEnumerable<IISApp> _apps = new List<IISApp>();
 
-        public CleanupService()
+        public CleanupService(IISService iISService)
         {
-            
+            _iisService = iISService;
         }
 
-        public CleanupService(IProgress<string>? progressHandler)
+        public CleanupService(IISService iISService, IProgress<string>? progressHandler)
         {
+            _iisService = iISService;
             _progressHandler = progressHandler;
         }
 
-        public void StopIIS()
-        {
-            _progressHandler?.Report("Stopping IIS...");
-
-            var service = new ServiceController("W3SVC");
-
-            if (service.Status == ServiceControllerStatus.Running)
-            {
-                service.Stop();
-                service.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(30));
-            }
-
-            _progressHandler?.Report("IIS stopped.");
-        }
-
-        public void StartIIS()
-        {
-            _progressHandler?.Report("Starting IIS...");
-
-            var service = new ServiceController("W3SVC");
-            if (service.Status == ServiceControllerStatus.Stopped)
-            {
-                service.Start();
-                service.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(30));
-            }
-
-            _progressHandler?.Report("IIS started.");
-        }
-
-        public CleanupService GetAllApps()
+        public IAppsCollection GetAllApps()
         {
             var iisApps = GetIISApps();
 
@@ -63,7 +36,7 @@ namespace IISCleanup.Services
                 .UnionBy(iisJunk, x => x.InstanceName)
                 .ExcludeStandardFolders();
 
-            var sqlDatabases = GetSqlDatabases(allApps);
+            var sqlDatabases = GetDatabasesForApps(allApps);
 
             allApps = allApps
                 .UnionBy(sqlDatabases, x => x.DatabaseName);
@@ -114,11 +87,11 @@ namespace IISCleanup.Services
             return result.DistinctBy(app => app.Path);
         }
 
-        public IEnumerable<IISApp> GetSqlDatabases(IEnumerable<IISApp> iisApps)
+        public IEnumerable<IISApp> GetDatabasesForApps(IEnumerable<IISApp> iisApps)
         {
             var result = new List<IISApp>();
 
-            var sqlDatabases = GetAllSqlDatabases()
+            var sqlDatabases = GetAllDatabases()
                               .ExcludeStandardSqlDatabases();
 
             foreach (var sqlDatabase in sqlDatabases)
@@ -148,7 +121,7 @@ namespace IISCleanup.Services
             return result;
         }
 
-        public IEnumerable<IISApp> GetAllSqlDatabases()
+        public IEnumerable<IISApp> GetAllDatabases()
         {
             var result = new List<IISApp>();
 
@@ -241,14 +214,14 @@ namespace IISCleanup.Services
             return result.DistinctBy(app => app.Path);
         }
 
-        public CleanupService FilterByStatus(bool isActive, bool junk)
+        public IAppsCollection FilterByStatus(bool isActive, bool junk)
         {
             _apps = _apps.Where(x => x.Active == isActive || (junk == true && x.Active == false));
-            
+
             return this;
         }
 
-        public CleanupService FilterByDate(DateTime cutoff)
+        public IAppsCollection FilterByDate(DateTime cutoff)
         {
             _apps = _apps
                 .Where(x => x.InstalledOn.Date <= cutoff)
@@ -257,13 +230,13 @@ namespace IISCleanup.Services
             return this;
         }
 
-        public CleanupService OrderBy(Func<IISApp, object> keySelector)
+        public IAppsCollection OrderBy(Func<IISApp, object> keySelector)
         {
             _apps = _apps.OrderBy(keySelector);
             return this;
         }
 
-        public CleanupService AddRowNumbers()
+        public IAppsCollection AddRowNumbers()
         {
             for (int i = 0; i < _apps.Count(); i++)
             {
@@ -297,9 +270,9 @@ namespace IISCleanup.Services
             }
         }
 
-        public void CeanupIISApps(List<IISApp> iisApps, CleanupParameters cleanupParameters)
+        public void Ceanup(List<IISApp> iisApps, CleanupParameters cleanupParameters)
         {
-            StopIIS();
+            _iisService?.Stop();
 
             if (cleanupParameters.CleanupIISApps)
             {
@@ -321,7 +294,7 @@ namespace IISCleanup.Services
                 CleanupDatabases(iisApps);
             }
 
-            StartIIS();
+            _iisService?.Start();
         }
 
         public void CleanupAppFolders(List<IISApp> iisApps)

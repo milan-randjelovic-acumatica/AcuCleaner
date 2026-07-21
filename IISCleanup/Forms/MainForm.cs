@@ -9,7 +9,8 @@ namespace IISCleanup.Forms
 
         private List<IISApp> _allApps = new List<IISApp>();
         private readonly IProgress<string> _progressHandler;
-        public CleanupService CleanupService { get; private set; }
+        public IISService IISService { get; private set; }
+        public ICleanupService CleanupService { get; private set; }
 
         public MainForm()
         {
@@ -17,7 +18,8 @@ namespace IISCleanup.Forms
             _instance = this;
 
             _progressHandler = new Progress<string>(message => this.toolStripStatusLabel.Text = message);
-            CleanupService = new CleanupService(_progressHandler);
+            IISService = new IISService(_progressHandler);
+            CleanupService = new CleanupService(IISService, _progressHandler);
         }
 
         public static void ShowError(string message)
@@ -29,7 +31,7 @@ namespace IISCleanup.Forms
             else
                 _instance.toolStripStatusLabel.Text = $"Error: {message}";
 
-            _instance.CleanupService.StartIIS();
+            _instance.IISService.Start();
         }
 
         private void Form_Load(object sender, EventArgs e)
@@ -93,7 +95,7 @@ namespace IISCleanup.Forms
 
             try
             {
-                await Task.Run(() => CleanupService.CeanupIISApps(selectedApps, cleanupParameters));
+                await Task.Run(() => CleanupService.Ceanup(selectedApps, cleanupParameters));
                 toolStripStatusLabel.Text = $"Deleted {selectedApps.Count} app(s).";
                 RefreshAppList();
             }
