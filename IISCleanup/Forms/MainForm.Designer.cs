@@ -48,7 +48,7 @@ namespace IISCleanup.Forms
             Instance = new DataGridViewTextBoxColumn();
             Active = new DataGridViewCheckBoxColumn();
             InstalledOn = new DataGridViewTextBoxColumn();
-            SqlInstanceName = new DataGridViewTextBoxColumn();
+            DatabaseName = new DataGridViewTextBoxColumn();
             pathDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             AspFilesTempPath = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
@@ -64,7 +64,7 @@ namespace IISCleanup.Forms
             dataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView.AutoGenerateColumns = false;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Columns.AddRange(new DataGridViewColumn[] { Id, Instance, Active, InstalledOn, SqlInstanceName, pathDataGridViewTextBoxColumn, AspFilesTempPath });
+            dataGridView.Columns.AddRange(new DataGridViewColumn[] { Id, Instance, Active, InstalledOn, DatabaseName, pathDataGridViewTextBoxColumn, AspFilesTempPath });
             dataGridView.DataSource = iISAppBindingSource1;
             dataGridView.Location = new Point(0, 41);
             dataGridView.Name = "dataGridView";
@@ -199,13 +199,13 @@ namespace IISCleanup.Forms
             InstalledOn.ReadOnly = true;
             InstalledOn.Width = 150;
             // 
-            // SqlInstanceName
+            // DatabaseName
             // 
-            SqlInstanceName.DataPropertyName = "SqlInstanceName";
-            SqlInstanceName.HeaderText = "Sql Instance";
-            SqlInstanceName.Name = "SqlInstanceName";
-            SqlInstanceName.ReadOnly = true;
-            SqlInstanceName.Width = 200;
+            DatabaseName.DataPropertyName = "DatabaseName";
+            DatabaseName.HeaderText = "Database";
+            DatabaseName.Name = "DatabaseName";
+            DatabaseName.ReadOnly = true;
+            DatabaseName.Width = 200;
             // 
             // pathDataGridViewTextBoxColumn
             // 
@@ -271,7 +271,7 @@ namespace IISCleanup.Forms
         private DataGridViewTextBoxColumn Instance;
         private DataGridViewCheckBoxColumn Active;
         private DataGridViewTextBoxColumn InstalledOn;
-        private DataGridViewTextBoxColumn SqlInstanceName;
+        private DataGridViewTextBoxColumn DatabaseName;
         private DataGridViewTextBoxColumn pathDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn AspFilesTempPath;
     }

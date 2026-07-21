@@ -33,12 +33,13 @@
             buttonCancel = new Button();
             checkBoxcleanupIISApps = new CheckBox();
             checkBoxCleanupAspTemp = new CheckBox();
+            checkBoxCleanupSqlDatabases = new CheckBox();
             SuspendLayout();
             // 
             // buttonCleanup
             // 
             buttonCleanup.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonCleanup.Location = new Point(166, 89);
+            buttonCleanup.Location = new Point(166, 111);
             buttonCleanup.Name = "buttonCleanup";
             buttonCleanup.Size = new Size(75, 23);
             buttonCleanup.TabIndex = 4;
@@ -61,7 +62,7 @@
             // buttonCancel
             // 
             buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonCancel.Location = new Point(247, 89);
+            buttonCancel.Location = new Point(247, 111);
             buttonCancel.Name = "buttonCancel";
             buttonCancel.Size = new Size(75, 23);
             buttonCancel.TabIndex = 7;
@@ -69,13 +70,13 @@
             buttonCancel.UseVisualStyleBackColor = true;
             buttonCancel.Click += buttonCancel_Click;
             // 
-            // checkBoxRemoveIISApps
+            // checkBoxcleanupIISApps
             // 
             checkBoxcleanupIISApps.AutoSize = true;
             checkBoxcleanupIISApps.Checked = true;
             checkBoxcleanupIISApps.CheckState = CheckState.Checked;
             checkBoxcleanupIISApps.Location = new Point(12, 12);
-            checkBoxcleanupIISApps.Name = "checkBoxRemoveIISApps";
+            checkBoxcleanupIISApps.Name = "checkBoxcleanupIISApps";
             checkBoxcleanupIISApps.Size = new Size(113, 19);
             checkBoxcleanupIISApps.TabIndex = 8;
             checkBoxcleanupIISApps.Text = "Cleanup IIS apps";
@@ -93,11 +94,24 @@
             checkBoxCleanupAspTemp.Text = "Cleanup IIS temp files";
             checkBoxCleanupAspTemp.UseVisualStyleBackColor = true;
             // 
+            // checkBoxCleanupSqlDatabases
+            // 
+            checkBoxCleanupSqlDatabases.AutoSize = true;
+            checkBoxCleanupSqlDatabases.Checked = true;
+            checkBoxCleanupSqlDatabases.CheckState = CheckState.Checked;
+            checkBoxCleanupSqlDatabases.Location = new Point(12, 87);
+            checkBoxCleanupSqlDatabases.Name = "checkBoxCleanupSqlDatabases";
+            checkBoxCleanupSqlDatabases.Size = new Size(149, 19);
+            checkBoxCleanupSqlDatabases.TabIndex = 10;
+            checkBoxCleanupSqlDatabases.Text = "Cleanup SQL databases";
+            checkBoxCleanupSqlDatabases.UseVisualStyleBackColor = true;
+            // 
             // DeleteConfirmationForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(334, 124);
+            ClientSize = new Size(334, 146);
+            Controls.Add(checkBoxCleanupSqlDatabases);
             Controls.Add(checkBoxCleanupAspTemp);
             Controls.Add(checkBoxcleanupIISApps);
             Controls.Add(buttonCancel);
@@ -120,5 +134,6 @@
         private Button buttonCancel;
         private CheckBox checkBoxcleanupIISApps;
         private CheckBox checkBoxCleanupAspTemp;
+        private CheckBox checkBoxCleanupSqlDatabases;
     }
 }

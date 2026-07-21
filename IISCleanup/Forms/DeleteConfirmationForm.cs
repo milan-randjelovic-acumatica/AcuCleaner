@@ -4,9 +4,6 @@ namespace IISCleanup.Forms
 {
     public partial class DeleteConfirmationForm : Form
     {
-        public bool CleanupIISApps => checkBoxcleanupIISApps.Checked;
-        public bool CleanupFiles => checkBoxCleanupFiles.Checked;
-        public bool CleanupAspTemp => checkBoxCleanupAspTemp.Checked;
         public CleanupParameters CleanupParameters { get; private set; } = new CleanupParameters();
 
         public DeleteConfirmationForm()
@@ -20,6 +17,7 @@ namespace IISCleanup.Forms
             CleanupParameters.CleanupIISApps = checkBoxcleanupIISApps.Checked;
             CleanupParameters.CleanupFiles = checkBoxCleanupFiles.Checked;
             CleanupParameters.CleanupAspTemp = checkBoxCleanupAspTemp.Checked;
+            CleanupParameters.CleanupDatabases = checkBoxCleanupSqlDatabases.Checked;
             Close();
         }
 
@@ -29,6 +27,7 @@ namespace IISCleanup.Forms
             CleanupParameters.CleanupIISApps = checkBoxcleanupIISApps.Checked;
             CleanupParameters.CleanupFiles = checkBoxCleanupFiles.Checked;
             CleanupParameters.CleanupAspTemp = checkBoxCleanupAspTemp.Checked;
+            CleanupParameters.CleanupDatabases = checkBoxCleanupSqlDatabases.Checked;
             Close();
         }
     }

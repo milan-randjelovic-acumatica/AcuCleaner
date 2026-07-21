@@ -50,10 +50,10 @@ namespace IISCleanup.Services
                 .UnionBy(iisJunk, x => x.InstanceName)
                 .ExcludeStandardFolders();
 
-            var sqlInstances = GetSqlInstances(allApps);
+            var sqlDatabases = GetSqlDatabases(allApps);
 
             allApps = allApps
-                .UnionBy(sqlInstances, x => x.SqlInstanceName);
+                .UnionBy(sqlDatabases, x => x.DatabaseName);
 
             return allApps;
         }
@@ -87,7 +87,8 @@ namespace IISCleanup.Services
                             Path = path.NormalizePath(),
                             RootPath = rootPath.NormalizePath(),
                             AspFilesTempPath = Path.Combine(rootPath, Constants.TemporaryAspFiles, instanceName).NormalizePath(),
-                            SqlInstanceName = string.Empty,
+                            DatabaseName = string.Empty,
+                            DatabaseConnectionString = string.Empty,
                             Active = true,
                             InstalledOn = Directory.GetCreationTime(path),
                         });
@@ -98,19 +99,19 @@ namespace IISCleanup.Services
             return result.DistinctBy(app => app.Path);
         }
 
-        public static IEnumerable<IISApp> GetSqlInstances(IEnumerable<IISApp> iisApps)
+        public static IEnumerable<IISApp> GetSqlDatabases(IEnumerable<IISApp> iisApps)
         {
             var result = new List<IISApp>();
 
-            var sqlInstances = GetAllSqlInstances()
-                              .ExcludeStandardSqlInstances();
+            var sqlDatabases = GetAllSqlDatabases()
+                              .ExcludeStandardSqlDatabases();
 
-            foreach (var sqlInstance in sqlInstances)
+            foreach (var sqlDatabase in sqlDatabases)
             {
-                var existingApp = iisApps.FirstOrDefault(app => app.InstanceName == sqlInstance.SqlInstanceName);
+                var existingApp = iisApps.FirstOrDefault(app => app.InstanceName == sqlDatabase.DatabaseName);
                 if (existingApp != null)
                 {
-                    existingApp.SqlInstanceName = sqlInstance.InstanceName;
+                    existingApp.DatabaseName = sqlDatabase.DatabaseName;
                     result.Add(existingApp);
                 }
                 else
@@ -118,7 +119,8 @@ namespace IISCleanup.Services
                     result.Add(new IISApp
                     {
                         InstanceName = string.Empty,
-                        SqlInstanceName = sqlInstance.SqlInstanceName,
+                        DatabaseName = sqlDatabase.DatabaseName,
+                        DatabaseConnectionString = sqlDatabase.DatabaseConnectionString,
                         Path = string.Empty,
                         RootPath = string.Empty,
                         AspFilesTempPath = string.Empty,
@@ -131,16 +133,11 @@ namespace IISCleanup.Services
             return result;
         }
 
-        public static IEnumerable<IISApp> GetAllSqlInstances()
+        public static IEnumerable<IISApp> GetAllSqlDatabases()
         {
             var result = new List<IISApp>();
 
-            var connectionStrings = new List<string>()
-            {
-                @"Server=(localdb)\MSSQLLocalDB;Integrated Security=true;TrustServerCertificate=True;",
-                @"Server=localhost;Integrated Security=true;TrustServerCertificate=True;",
-            };
-            foreach (var connectionString in connectionStrings)
+            foreach (var connectionString in Constants.ConnectionStrings)
             {
                 using (var connection = new SqlConnection(connectionString))
                 {
@@ -156,7 +153,8 @@ namespace IISCleanup.Services
                             result.Add(new IISApp
                             {
                                 InstanceName = string.Empty,
-                                SqlInstanceName = reader.GetString(0),
+                                DatabaseName = reader.GetString(0),
+                                DatabaseConnectionString = connectionString,
                                 Path = string.Empty,
                                 RootPath = string.Empty,
                                 AspFilesTempPath = string.Empty,
@@ -185,7 +183,8 @@ namespace IISCleanup.Services
                     result.Add(new IISApp
                     {
                         InstanceName = folderName,
-                        SqlInstanceName = string.Empty,
+                        DatabaseName = string.Empty,
+                        DatabaseConnectionString = string.Empty,
                         Path = folder.NormalizePath(),
                         RootPath = rootFolder.NormalizePath(),
                         AspFilesTempPath = string.Empty,
@@ -210,7 +209,8 @@ namespace IISCleanup.Services
                                 result.Add(new IISApp
                                 {
                                     InstanceName = tmpInstanceName,
-                                    SqlInstanceName = string.Empty,
+                                    DatabaseName = string.Empty,
+                                    DatabaseConnectionString = string.Empty,
                                     Path = string.Empty,
                                     RootPath = folder.NormalizePath(),
                                     AspFilesTempPath = tmpApp.Path.NormalizePath(),
@@ -269,6 +269,33 @@ namespace IISCleanup.Services
             }
         }
 
+        public static void CeanupIISApps(List<IISApp> iisApps, CleanupParameters cleanupParameters, IProgress<string>? progressHandler = null)
+        {
+            StopIIS(progressHandler);
+
+            if (cleanupParameters.CleanupIISApps)
+            {
+                DeleteIISApps(iisApps, progressHandler);
+            }
+
+            if (cleanupParameters.CleanupFiles)
+            {
+                CleanupAppFolders(iisApps, progressHandler);
+            }
+
+            if (cleanupParameters.CleanupAspTemp)
+            {
+                CleanupAspTempFolders(iisApps, progressHandler);
+            }
+
+            if (cleanupParameters.CleanupDatabases)
+            {
+                CleanupDatabases(iisApps, progressHandler);
+            }
+
+            StartIIS();
+        }
+
         public static void CleanupAppFolders(List<IISApp> iisApps, IProgress<string>? progressHandler = null)
         {
             int i = 1;
@@ -297,26 +324,22 @@ namespace IISCleanup.Services
             }
         }
 
-        public static void CeanupIISApps(List<IISApp> iisApps, CleanupParameters cleanupParameters, IProgress<string>? progressHandler = null)
+        public static void CleanupDatabases(List<IISApp> iisApps, IProgress<string>? progressHandler = null)
         {
-            StopIIS(progressHandler);
-
-            if (cleanupParameters.CleanupIISApps)
+            int i = 1;
+            foreach (var iisApp in iisApps)
             {
-                DeleteIISApps(iisApps, progressHandler);
+                if (!string.IsNullOrEmpty(iisApp.DatabaseName))
+                {
+                    progressHandler?.Report($"Deleting SQL database {i++}/{iisApps.Count}: {iisApp.DatabaseName}");
+                    using (var connection = new SqlConnection(iisApp.DatabaseConnectionString))
+                    {
+                        connection.Open();
+                        var command = new SqlCommand($"DROP DATABASE [{iisApp.DatabaseName}];", connection);
+                        command.ExecuteNonQuery();
+                    }
+                }
             }
-
-            if (cleanupParameters.CleanupFiles)
-            {
-                CleanupAppFolders(iisApps, progressHandler);
-            }
-
-            if (cleanupParameters.CleanupAspTemp)
-            {
-                CleanupAspTempFolders(iisApps, progressHandler);
-            }
-
-            StartIIS();
         }
 
         public static List<Microsoft.Web.Administration.Application> FindAppsToRemove(Site site, List<IISApp> iisApps)

@@ -36,7 +36,7 @@ namespace IISCleanup
             return iisApps;
         }
 
-        public static IEnumerable<IISApp> ExcludeStandardSqlInstances(this IEnumerable<IISApp> iisApps)
+        public static IEnumerable<IISApp> ExcludeStandardSqlDatabases(this IEnumerable<IISApp> iisApps)
         {
             var EXCLUDED_INSTANCES = new List<string>
             {
@@ -47,7 +47,7 @@ namespace IISCleanup
             };
 
             iisApps = iisApps
-                .Where(app => !EXCLUDED_INSTANCES.Contains(app.SqlInstanceName, StringComparer.OrdinalIgnoreCase));
+                .Where(app => !EXCLUDED_INSTANCES.Contains(app.DatabaseName, StringComparer.OrdinalIgnoreCase));
 
             return iisApps;
         }
