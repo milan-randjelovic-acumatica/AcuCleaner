@@ -1,0 +1,3 @@
+﻿//Fix deleting sql instances
+//Refactor app by extracting services into separate classes
+//Add global error handling, and restart IIS if an error occurs

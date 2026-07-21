@@ -345,13 +345,17 @@ namespace IISCleanup.Services
         public static List<Microsoft.Web.Administration.Application> FindAppsToRemove(Site site, List<IISApp> iisApps)
         {
             var appsToRemove = new List<Microsoft.Web.Administration.Application>();
-            foreach (var appInstance in iisApps.Select(app => app.InstanceName))
+            var appInstances = iisApps.Where(app => !string.IsNullOrEmpty(app.InstanceName)).Select(app => app.InstanceName);
+            foreach (var appInstance in appInstances)
             {
                 foreach (var app in site.Applications)
                 {
-                    if (app.Path.NormalizePath() == appInstance)
+                    if (!string.IsNullOrEmpty(appInstance))
                     {
-                        appsToRemove.Add(app);
+                        if (app.Path.NormalizePath() == appInstance)
+                        {
+                            appsToRemove.Add(app);
+                        }
                     }
                 }
             }
