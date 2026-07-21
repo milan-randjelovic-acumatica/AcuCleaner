@@ -36,6 +36,22 @@ namespace IISCleanup
             return iisApps;
         }
 
+        public static IEnumerable<IISApp> ExcludeStandardSqlInstances(this IEnumerable<IISApp> iisApps)
+        {
+            var EXCLUDED_INSTANCES = new List<string>
+            {
+                "master",
+                "model",
+                "msdb",
+                "tempdb",
+            };
+
+            iisApps = iisApps
+                .Where(app => !EXCLUDED_INSTANCES.Contains(app.SqlInstanceName, StringComparer.OrdinalIgnoreCase));
+
+            return iisApps;
+        }
+
         public static string GetCurrentFolder(string path)
         {
             return path.Split("\\").Last().Replace("\\", "");

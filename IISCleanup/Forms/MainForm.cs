@@ -25,7 +25,7 @@ namespace IISCleanup.Forms
                 .GetAllApps()
                 .FilterByStatus(checkBoxActive.Checked, checkBoxJunk.Checked)
                 .FilterByDate(dateTimePicker.Value.Date)
-                .OrderBy(x => x.Instance)
+                .OrderBy(x => x.InstanceName)
                 .AddRowNumbers()
                 .ToList();
 

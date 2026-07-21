@@ -1,4 +1,5 @@
 ﻿using IISCleanup.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.Web.Administration;
 using System.Security.AccessControl;
 using System.Security.Principal;
@@ -46,8 +47,13 @@ namespace IISCleanup.Services
             var iisJunk = GetIISJunk(iisRootFolders);
 
             var allApps = iisApps
-                .UnionBy(iisJunk, x => x.Path.NormalizePath())
+                .UnionBy(iisJunk, x => x.InstanceName)
                 .ExcludeStandardFolders();
+
+            var sqlInstances = GetSqlInstances(allApps);
+
+            allApps = allApps
+                .UnionBy(sqlInstances, x => x.SqlInstanceName);
 
             return allApps;
         }
@@ -77,10 +83,11 @@ namespace IISCleanup.Services
 
                         result.Add(new IISApp
                         {
-                            Instance = instanceName,
+                            InstanceName = instanceName,
                             Path = path.NormalizePath(),
                             RootPath = rootPath.NormalizePath(),
                             AspFilesTempPath = Path.Combine(rootPath, Constants.TemporaryAspFiles, instanceName).NormalizePath(),
+                            SqlInstanceName = string.Empty,
                             Active = true,
                             InstalledOn = Directory.GetCreationTime(path),
                         });
@@ -89,6 +96,79 @@ namespace IISCleanup.Services
             }
 
             return result.DistinctBy(app => app.Path);
+        }
+
+        public static IEnumerable<IISApp> GetSqlInstances(IEnumerable<IISApp> iisApps)
+        {
+            var result = new List<IISApp>();
+
+            var sqlInstances = GetAllSqlInstances()
+                              .ExcludeStandardSqlInstances();
+
+            foreach (var sqlInstance in sqlInstances)
+            {
+                var existingApp = iisApps.FirstOrDefault(app => app.InstanceName == sqlInstance.SqlInstanceName);
+                if (existingApp != null)
+                {
+                    existingApp.SqlInstanceName = sqlInstance.InstanceName;
+                    result.Add(existingApp);
+                }
+                else
+                {
+                    result.Add(new IISApp
+                    {
+                        InstanceName = string.Empty,
+                        SqlInstanceName = sqlInstance.SqlInstanceName,
+                        Path = string.Empty,
+                        RootPath = string.Empty,
+                        AspFilesTempPath = string.Empty,
+                        Active = false,
+                        InstalledOn = DateTime.MinValue,
+                    });
+                }
+            }
+
+            return result;
+        }
+
+        public static IEnumerable<IISApp> GetAllSqlInstances()
+        {
+            var result = new List<IISApp>();
+
+            var connectionStrings = new List<string>()
+            {
+                @"Server=(localdb)\MSSQLLocalDB;Integrated Security=true;TrustServerCertificate=True;",
+                @"Server=localhost;Integrated Security=true;TrustServerCertificate=True;",
+            };
+            foreach (var connectionString in connectionStrings)
+            {
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    var command = new SqlCommand("SELECT name FROM sys.databases ORDER BY name;", connection);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Console.WriteLine(reader.GetString(0));
+                            result.Add(new IISApp
+                            {
+                                InstanceName = string.Empty,
+                                SqlInstanceName = reader.GetString(0),
+                                Path = string.Empty,
+                                RootPath = string.Empty,
+                                AspFilesTempPath = string.Empty,
+                                Active = false,
+                                InstalledOn = DateTime.MinValue,
+                            });
+                        }
+                    }
+                }
+            }
+
+            return result;
         }
 
         public static IEnumerable<IISApp> GetIISJunk(IEnumerable<string> rootFolders)
@@ -104,7 +184,8 @@ namespace IISCleanup.Services
 
                     result.Add(new IISApp
                     {
-                        Instance = folderName,
+                        InstanceName = folderName,
+                        SqlInstanceName = string.Empty,
                         Path = folder.NormalizePath(),
                         RootPath = rootFolder.NormalizePath(),
                         AspFilesTempPath = string.Empty,
@@ -119,7 +200,7 @@ namespace IISCleanup.Services
                         {
                             string tmpInstanceName = Path.GetFileName(tmpApp.Path).NormalizePath();
 
-                            var existingApp = result.FirstOrDefault(app => app.Instance == tmpInstanceName);
+                            var existingApp = result.FirstOrDefault(app => app.InstanceName == tmpInstanceName);
                             if (existingApp != null)
                             {
                                 existingApp.AspFilesTempPath = tmpApp.Path.NormalizePath();
@@ -128,7 +209,8 @@ namespace IISCleanup.Services
                             {
                                 result.Add(new IISApp
                                 {
-                                    Instance = tmpInstanceName,
+                                    InstanceName = tmpInstanceName,
+                                    SqlInstanceName = string.Empty,
                                     Path = string.Empty,
                                     RootPath = folder.NormalizePath(),
                                     AspFilesTempPath = tmpApp.Path.NormalizePath(),
@@ -146,7 +228,7 @@ namespace IISCleanup.Services
 
         public static IEnumerable<IISApp> FilterByStatus(this IEnumerable<IISApp> iisApps, bool isActive, bool junk)
         {
-            return iisApps.Where(x => x.Active == isActive || (junk == false && x.Active == false));
+            return iisApps.Where(x => x.Active == isActive || (junk == true && x.Active == false));
         }
 
         public static IEnumerable<IISApp> FilterByDate(this IEnumerable<IISApp> iisApps, DateTime cutoff)
@@ -240,7 +322,7 @@ namespace IISCleanup.Services
         public static List<Microsoft.Web.Administration.Application> FindAppsToRemove(Site site, List<IISApp> iisApps)
         {
             var appsToRemove = new List<Microsoft.Web.Administration.Application>();
-            foreach (var appInstance in iisApps.Select(app => app.Instance))
+            foreach (var appInstance in iisApps.Select(app => app.InstanceName))
             {
                 foreach (var app in site.Applications)
                 {
