@@ -7,11 +7,24 @@ using System.ServiceProcess;
 
 namespace IISCleanup.Services
 {
-    internal static class IISService
+    internal class CleanupService
     {
-        public static void StopIIS(IProgress<string>? progressHandler = null)
+        private readonly IProgress<string>? _progressHandler;
+        private IEnumerable<IISApp> _apps = new List<IISApp>();
+
+        public CleanupService()
         {
-            progressHandler?.Report("Stopping IIS...");
+            
+        }
+
+        public CleanupService(IProgress<string>? progressHandler)
+        {
+            _progressHandler = progressHandler;
+        }
+
+        public void StopIIS()
+        {
+            _progressHandler?.Report("Stopping IIS...");
 
             var service = new ServiceController("W3SVC");
 
@@ -21,12 +34,12 @@ namespace IISCleanup.Services
                 service.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(30));
             }
 
-            progressHandler?.Report("IIS stopped.");
+            _progressHandler?.Report("IIS stopped.");
         }
 
-        public static void StartIIS(IProgress<string>? progressHandler = null)
+        public void StartIIS()
         {
-            progressHandler?.Report("Starting IIS...");
+            _progressHandler?.Report("Starting IIS...");
 
             var service = new ServiceController("W3SVC");
             if (service.Status == ServiceControllerStatus.Stopped)
@@ -35,10 +48,10 @@ namespace IISCleanup.Services
                 service.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(30));
             }
 
-            progressHandler?.Report("IIS started.");
+            _progressHandler?.Report("IIS started.");
         }
 
-        public static IEnumerable<IISApp> GetAllApps()
+        public CleanupService GetAllApps()
         {
             var iisApps = GetIISApps();
 
@@ -55,10 +68,12 @@ namespace IISCleanup.Services
             allApps = allApps
                 .UnionBy(sqlDatabases, x => x.DatabaseName);
 
-            return allApps;
+            _apps = allApps;
+
+            return this;
         }
 
-        public static IEnumerable<IISApp> GetIISApps()
+        public IEnumerable<IISApp> GetIISApps()
         {
             var result = new List<IISApp>();
             using (ServerManager serverManager = new ServerManager())
@@ -99,7 +114,7 @@ namespace IISCleanup.Services
             return result.DistinctBy(app => app.Path);
         }
 
-        public static IEnumerable<IISApp> GetSqlDatabases(IEnumerable<IISApp> iisApps)
+        public IEnumerable<IISApp> GetSqlDatabases(IEnumerable<IISApp> iisApps)
         {
             var result = new List<IISApp>();
 
@@ -133,7 +148,7 @@ namespace IISCleanup.Services
             return result;
         }
 
-        public static IEnumerable<IISApp> GetAllSqlDatabases()
+        public IEnumerable<IISApp> GetAllSqlDatabases()
         {
             var result = new List<IISApp>();
 
@@ -169,7 +184,7 @@ namespace IISCleanup.Services
             return result;
         }
 
-        public static IEnumerable<IISApp> GetIISJunk(IEnumerable<string> rootFolders)
+        public IEnumerable<IISApp> GetIISJunk(IEnumerable<string> rootFolders)
         {
             var result = new List<IISApp>();
 
@@ -226,31 +241,44 @@ namespace IISCleanup.Services
             return result.DistinctBy(app => app.Path);
         }
 
-        public static IEnumerable<IISApp> FilterByStatus(this IEnumerable<IISApp> iisApps, bool isActive, bool junk)
+        public CleanupService FilterByStatus(bool isActive, bool junk)
         {
-            return iisApps.Where(x => x.Active == isActive || (junk == true && x.Active == false));
+            _apps = _apps.Where(x => x.Active == isActive || (junk == true && x.Active == false));
+            
+            return this;
         }
 
-        public static IEnumerable<IISApp> FilterByDate(this IEnumerable<IISApp> iisApps, DateTime cutoff)
+        public CleanupService FilterByDate(DateTime cutoff)
         {
-            iisApps = iisApps
+            _apps = _apps
                 .Where(x => x.InstalledOn.Date <= cutoff)
                 .OrderBy(x => x.InstalledOn);
 
-            return iisApps;
+            return this;
         }
 
-        public static IEnumerable<IISApp> AddRowNumbers(this IEnumerable<IISApp> allApps)
+        public CleanupService OrderBy(Func<IISApp, object> keySelector)
         {
-            for (int i = 0; i < allApps.Count(); i++)
+            _apps = _apps.OrderBy(keySelector);
+            return this;
+        }
+
+        public CleanupService AddRowNumbers()
+        {
+            for (int i = 0; i < _apps.Count(); i++)
             {
-                allApps.ElementAt(i).Id = i + 1;
+                _apps.ElementAt(i).Id = i + 1;
             }
 
-            return allApps;
+            return this;
         }
 
-        public static void DeleteIISApps(List<IISApp> iisApps, IProgress<string>? progressHandler = null)
+        public List<IISApp> ToList()
+        {
+            return _apps.ToList();
+        }
+
+        public void DeleteIISApps(List<IISApp> iisApps)
         {
             using (ServerManager serverManager = new ServerManager())
             {
@@ -260,7 +288,7 @@ namespace IISCleanup.Services
                     int i = 1;
                     foreach (var app in appsToRemove)
                     {
-                        progressHandler?.Report($"Removing IIS entry {i++}/{appsToRemove.Count}: {app.Path}");
+                        _progressHandler?.Report($"Removing IIS entry {i++}/{appsToRemove.Count}: {app.Path}");
                         site.Applications.Remove(app);
                     }
 
@@ -269,69 +297,69 @@ namespace IISCleanup.Services
             }
         }
 
-        public static void CeanupIISApps(List<IISApp> iisApps, CleanupParameters cleanupParameters, IProgress<string>? progressHandler = null)
+        public void CeanupIISApps(List<IISApp> iisApps, CleanupParameters cleanupParameters)
         {
-            StopIIS(progressHandler);
+            StopIIS();
 
             if (cleanupParameters.CleanupIISApps)
             {
-                DeleteIISApps(iisApps, progressHandler);
+                DeleteIISApps(iisApps);
             }
 
             if (cleanupParameters.CleanupFiles)
             {
-                CleanupAppFolders(iisApps, progressHandler);
+                CleanupAppFolders(iisApps);
             }
 
             if (cleanupParameters.CleanupAspTemp)
             {
-                CleanupAspTempFolders(iisApps, progressHandler);
+                CleanupAspTempFolders(iisApps);
             }
 
             if (cleanupParameters.CleanupDatabases)
             {
-                CleanupDatabases(iisApps, progressHandler);
+                CleanupDatabases(iisApps);
             }
 
             StartIIS();
         }
 
-        public static void CleanupAppFolders(List<IISApp> iisApps, IProgress<string>? progressHandler = null)
+        public void CleanupAppFolders(List<IISApp> iisApps)
         {
             int i = 1;
             foreach (var iisApp in iisApps)
             {
                 if (Directory.Exists(iisApp.Path))
                 {
-                    progressHandler?.Report($"Cleaning folders {i++}/{iisApps.Count}: {iisApp.Path}");
+                    _progressHandler?.Report($"Cleaning folders {i++}/{iisApps.Count}: {iisApp.Path}");
                     PrepareDirectoryForDeletion(iisApp.Path);
                     Directory.Delete(iisApp.Path, true);
                 }
             }
         }
 
-        public static void CleanupAspTempFolders(List<IISApp> iisApps, IProgress<string>? progressHandler = null)
+        public void CleanupAspTempFolders(List<IISApp> iisApps)
         {
             int i = 1;
             foreach (var iisApp in iisApps)
             {
                 if (Directory.Exists(iisApp.AspFilesTempPath))
                 {
-                    progressHandler?.Report($"Deleting ASP temp files: {i++}/{iisApps.Count} {iisApp.AspFilesTempPath}");
+                    _progressHandler?.Report($"Deleting ASP temp files: {i++}/{iisApps.Count} {iisApp.AspFilesTempPath}");
                     PrepareDirectoryForDeletion(iisApp.AspFilesTempPath);
                     Directory.Delete(iisApp.AspFilesTempPath, true);
                 }
             }
         }
 
-        public static void CleanupDatabases(List<IISApp> iisApps, IProgress<string>? progressHandler = null)
+        public void CleanupDatabases(List<IISApp> iisApps)
         {
             int i = 1;
             foreach (var iisApp in iisApps)
             {
                 if (!string.IsNullOrEmpty(iisApp.DatabaseName))
                 {
-                    progressHandler?.Report($"Deleting SQL database {i++}/{iisApps.Count}: {iisApp.DatabaseName}");
+                    _progressHandler?.Report($"Deleting SQL database {i++}/{iisApps.Count}: {iisApp.DatabaseName}");
                     using (var connection = new SqlConnection(iisApp.DatabaseConnectionString))
                     {
                         connection.Open();
@@ -342,7 +370,7 @@ namespace IISCleanup.Services
             }
         }
 
-        public static List<Microsoft.Web.Administration.Application> FindAppsToRemove(Site site, List<IISApp> iisApps)
+        public List<Microsoft.Web.Administration.Application> FindAppsToRemove(Site site, List<IISApp> iisApps)
         {
             var appsToRemove = new List<Microsoft.Web.Administration.Application>();
             var appInstances = iisApps.Where(app => !string.IsNullOrEmpty(app.InstanceName)).Select(app => app.InstanceName);
@@ -363,7 +391,7 @@ namespace IISCleanup.Services
             return appsToRemove;
         }
 
-        public static void PrepareDirectoryForDeletion(string path)
+        public void PrepareDirectoryForDeletion(string path)
         {
             GrantFullControl(path);
             File.SetAttributes(path, FileAttributes.Normal);
@@ -381,7 +409,7 @@ namespace IISCleanup.Services
             }
         }
 
-        public static void GrantFullControl(string path)
+        public void GrantFullControl(string path)
         {
             var admins = new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null);
             var rule = new FileSystemAccessRule(

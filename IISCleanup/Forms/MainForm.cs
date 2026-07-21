@@ -6,22 +6,28 @@ namespace IISCleanup.Forms
     public partial class MainForm : Form
     {
         private List<IISApp> _allApps = new List<IISApp>();
+        private readonly IProgress<string> _progressHandler;
+        private readonly CleanupService _cleanupService;
 
         public MainForm()
         {
             InitializeComponent();
+
+            _progressHandler = new Progress<string>(message => this.toolStripStatusLabel.Text = message);
+            _cleanupService = new CleanupService(_progressHandler);
         }
 
         private void Form_Load(object sender, EventArgs e)
         {
             toolStripProgressBar.Visible = false;
             toolStripStatusLabel.Text = "Ready";
+
             RefreshAppList();
         }
 
         private void RefreshAppList()
         {
-            _allApps = IISService
+            _allApps = _cleanupService
                 .GetAllApps()
                 .FilterByStatus(checkBoxActive.Checked, checkBoxJunk.Checked)
                 .FilterByDate(dateTimePicker.Value.Date)
@@ -70,11 +76,9 @@ namespace IISCleanup.Forms
             toolStripProgressBar.Visible = true;
             toolStripStatusLabel.Text = $"Deleting {selectedApps.Count} app(s)...";
 
-            var progressHandler = new Progress<string>(message => toolStripStatusLabel.Text = message);
-
             try
             {
-                await Task.Run(() => IISService.CeanupIISApps(selectedApps, cleanupParameters, progressHandler));
+                await Task.Run(() => _cleanupService.CeanupIISApps(selectedApps, cleanupParameters));
                 toolStripStatusLabel.Text = $"Deleted {selectedApps.Count} app(s).";
                 RefreshAppList();
             }
