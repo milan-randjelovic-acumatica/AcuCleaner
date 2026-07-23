@@ -10,6 +10,7 @@ namespace IISCleanup.Forms
         private List<IISApp> _allApps = new List<IISApp>();
         private readonly IProgress<string> _progressHandler;
         public IISService IISService { get; private set; }
+        public RegistryService RegistryService { get; private set; }
         public ICleanupService CleanupService { get; private set; }
 
         public MainForm()
@@ -19,7 +20,8 @@ namespace IISCleanup.Forms
 
             _progressHandler = new Progress<string>(message => this.toolStripStatusLabel.Text = message);
             IISService = new IISService(_progressHandler);
-            CleanupService = new CleanupService(IISService, _progressHandler);
+            RegistryService = new RegistryService();
+            CleanupService = new CleanupService(IISService, RegistryService, _progressHandler);
         }
 
         public static void ShowError(string message)

@@ -9,6 +9,7 @@
         public required string AspFilesTempPath { get; set; }
         public required string DatabaseName { get; set; }
         public required string DatabaseConnectionString { get; set; }
+        public required string RegistryPath { get; set; }
         public bool Active { get; set; }
         public DateTime InstalledOn { get; set; } = DateTime.MinValue;
         public override string ToString()

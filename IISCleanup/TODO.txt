@@ -1,0 +1,4 @@
+﻿//Delete registry entries
+//EXtrac sql to separate service
+//Filtering by active/inactive doesnt work
+//Installation dates for each type

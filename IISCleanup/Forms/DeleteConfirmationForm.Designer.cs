@@ -129,7 +129,6 @@
 
         private Button button2;
         private Button buttonCleanup;
-        private GroupBox groupBoxIISJunk;
         private CheckBox checkBoxCleanupFiles;
         private Button buttonCancel;
         private CheckBox checkBoxcleanupIISApps;

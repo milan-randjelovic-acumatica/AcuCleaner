@@ -51,6 +51,7 @@ namespace IISCleanup.Forms
             DatabaseName = new DataGridViewTextBoxColumn();
             pathDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             AspFilesTempPath = new DataGridViewTextBoxColumn();
+            RegistryPath = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource).BeginInit();
@@ -64,13 +65,15 @@ namespace IISCleanup.Forms
             dataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView.AutoGenerateColumns = false;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Columns.AddRange(new DataGridViewColumn[] { Id, Instance, Active, InstalledOn, DatabaseName, pathDataGridViewTextBoxColumn, AspFilesTempPath });
+            dataGridView.Columns.AddRange(new DataGridViewColumn[] { Id, Instance, Active, InstalledOn, DatabaseName, pathDataGridViewTextBoxColumn, AspFilesTempPath, RegistryPath });
             dataGridView.DataSource = iISAppBindingSource1;
-            dataGridView.Location = new Point(0, 41);
+            dataGridView.Location = new Point(0, 55);
+            dataGridView.Margin = new Padding(3, 4, 3, 4);
             dataGridView.Name = "dataGridView";
             dataGridView.ReadOnly = true;
+            dataGridView.RowHeadersWidth = 51;
             dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView.Size = new Size(1372, 495);
+            dataGridView.Size = new Size(1628, 660);
             dataGridView.TabIndex = 2;
             // 
             // iISAppBindingSource1
@@ -84,9 +87,10 @@ namespace IISCleanup.Forms
             // buttonDeleteSelected
             // 
             buttonDeleteSelected.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            buttonDeleteSelected.Location = new Point(1216, 8);
+            buttonDeleteSelected.Location = new Point(1450, 11);
+            buttonDeleteSelected.Margin = new Padding(3, 4, 3, 4);
             buttonDeleteSelected.Name = "buttonDeleteSelected";
-            buttonDeleteSelected.Size = new Size(75, 23);
+            buttonDeleteSelected.Size = new Size(86, 31);
             buttonDeleteSelected.TabIndex = 3;
             buttonDeleteSelected.Text = "Delete";
             buttonDeleteSelected.UseVisualStyleBackColor = true;
@@ -95,9 +99,10 @@ namespace IISCleanup.Forms
             // buttonDeleteAll
             // 
             buttonDeleteAll.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            buttonDeleteAll.Location = new Point(1297, 8);
+            buttonDeleteAll.Location = new Point(1542, 11);
+            buttonDeleteAll.Margin = new Padding(3, 4, 3, 4);
             buttonDeleteAll.Name = "buttonDeleteAll";
-            buttonDeleteAll.Size = new Size(75, 23);
+            buttonDeleteAll.Size = new Size(86, 31);
             buttonDeleteAll.TabIndex = 4;
             buttonDeleteAll.Text = "Delete All";
             buttonDeleteAll.UseVisualStyleBackColor = true;
@@ -105,18 +110,19 @@ namespace IISCleanup.Forms
             // 
             // dateTimePicker
             // 
-            dateTimePicker.Location = new Point(84, 8);
+            dateTimePicker.Location = new Point(96, 11);
+            dateTimePicker.Margin = new Padding(3, 4, 3, 4);
             dateTimePicker.Name = "dateTimePicker";
-            dateTimePicker.Size = new Size(210, 23);
+            dateTimePicker.Size = new Size(239, 27);
             dateTimePicker.TabIndex = 5;
             dateTimePicker.ValueChanged += dateTimePicker_ValueChanged;
             // 
             // labelOlderThan
             // 
             labelOlderThan.AutoSize = true;
-            labelOlderThan.Location = new Point(12, 12);
+            labelOlderThan.Location = new Point(14, 16);
             labelOlderThan.Name = "labelOlderThan";
-            labelOlderThan.Size = new Size(66, 15);
+            labelOlderThan.Size = new Size(82, 20);
             labelOlderThan.TabIndex = 6;
             labelOlderThan.Text = "Older than:";
             // 
@@ -125,9 +131,10 @@ namespace IISCleanup.Forms
             checkBoxActive.AutoSize = true;
             checkBoxActive.Checked = true;
             checkBoxActive.CheckState = CheckState.Checked;
-            checkBoxActive.Location = new Point(300, 11);
+            checkBoxActive.Location = new Point(343, 15);
+            checkBoxActive.Margin = new Padding(3, 4, 3, 4);
             checkBoxActive.Name = "checkBoxActive";
-            checkBoxActive.Size = new Size(59, 19);
+            checkBoxActive.Size = new Size(72, 24);
             checkBoxActive.TabIndex = 7;
             checkBoxActive.Text = "Active";
             checkBoxActive.UseVisualStyleBackColor = true;
@@ -138,9 +145,10 @@ namespace IISCleanup.Forms
             checkBoxJunk.AutoSize = true;
             checkBoxJunk.Checked = true;
             checkBoxJunk.CheckState = CheckState.Checked;
-            checkBoxJunk.Location = new Point(365, 11);
+            checkBoxJunk.Location = new Point(417, 15);
+            checkBoxJunk.Margin = new Padding(3, 4, 3, 4);
             checkBoxJunk.Name = "checkBoxJunk";
-            checkBoxJunk.Size = new Size(50, 19);
+            checkBoxJunk.Size = new Size(59, 24);
             checkBoxJunk.TabIndex = 8;
             checkBoxJunk.Text = "Junk";
             checkBoxJunk.UseVisualStyleBackColor = true;
@@ -148,29 +156,32 @@ namespace IISCleanup.Forms
             // 
             // statusStrip
             // 
+            statusStrip.ImageScalingSize = new Size(20, 20);
             statusStrip.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel, toolStripProgressBar });
-            statusStrip.Location = new Point(0, 539);
+            statusStrip.Location = new Point(0, 721);
             statusStrip.Name = "statusStrip";
-            statusStrip.Size = new Size(1384, 22);
+            statusStrip.Padding = new Padding(1, 0, 16, 0);
+            statusStrip.Size = new Size(1642, 27);
             statusStrip.TabIndex = 9;
             statusStrip.Text = "statusStrip1";
             // 
             // toolStripStatusLabel
             // 
             toolStripStatusLabel.Name = "toolStripStatusLabel";
-            toolStripStatusLabel.Size = new Size(42, 17);
+            toolStripStatusLabel.Size = new Size(52, 21);
             toolStripStatusLabel.Text = "Status:";
             // 
             // toolStripProgressBar
             // 
             toolStripProgressBar.Name = "toolStripProgressBar";
-            toolStripProgressBar.Size = new Size(100, 16);
+            toolStripProgressBar.Size = new Size(114, 19);
             toolStripProgressBar.Style = ProgressBarStyle.Marquee;
             // 
             // Id
             // 
             Id.DataPropertyName = "Id";
             Id.HeaderText = "#";
+            Id.MinimumWidth = 6;
             Id.Name = "Id";
             Id.ReadOnly = true;
             Id.Width = 50;
@@ -179,6 +190,7 @@ namespace IISCleanup.Forms
             // 
             Instance.DataPropertyName = "InstanceName";
             Instance.HeaderText = "Instance";
+            Instance.MinimumWidth = 6;
             Instance.Name = "Instance";
             Instance.ReadOnly = true;
             Instance.Width = 150;
@@ -187,14 +199,17 @@ namespace IISCleanup.Forms
             // 
             Active.DataPropertyName = "Active";
             Active.HeaderText = "Active/Junk";
+            Active.MinimumWidth = 6;
             Active.Name = "Active";
             Active.ReadOnly = true;
             Active.SortMode = DataGridViewColumnSortMode.Automatic;
+            Active.Width = 125;
             // 
             // InstalledOn
             // 
             InstalledOn.DataPropertyName = "InstalledOn";
             InstalledOn.HeaderText = "Installed On";
+            InstalledOn.MinimumWidth = 6;
             InstalledOn.Name = "InstalledOn";
             InstalledOn.ReadOnly = true;
             InstalledOn.Width = 150;
@@ -203,6 +218,7 @@ namespace IISCleanup.Forms
             // 
             DatabaseName.DataPropertyName = "DatabaseName";
             DatabaseName.HeaderText = "Database";
+            DatabaseName.MinimumWidth = 6;
             DatabaseName.Name = "DatabaseName";
             DatabaseName.ReadOnly = true;
             DatabaseName.Width = 200;
@@ -211,23 +227,34 @@ namespace IISCleanup.Forms
             // 
             pathDataGridViewTextBoxColumn.DataPropertyName = "Path";
             pathDataGridViewTextBoxColumn.HeaderText = "Path";
+            pathDataGridViewTextBoxColumn.MinimumWidth = 6;
             pathDataGridViewTextBoxColumn.Name = "pathDataGridViewTextBoxColumn";
             pathDataGridViewTextBoxColumn.ReadOnly = true;
-            pathDataGridViewTextBoxColumn.Width = 335;
+            pathDataGridViewTextBoxColumn.Width = 300;
             // 
             // AspFilesTempPath
             // 
             AspFilesTempPath.DataPropertyName = "AspFilesTempPath";
             AspFilesTempPath.HeaderText = "Asp Temp Path";
+            AspFilesTempPath.MinimumWidth = 6;
             AspFilesTempPath.Name = "AspFilesTempPath";
             AspFilesTempPath.ReadOnly = true;
-            AspFilesTempPath.Width = 350;
+            AspFilesTempPath.Width = 300;
+            // 
+            // RegistryPath
+            // 
+            RegistryPath.DataPropertyName = "RegistryPath";
+            RegistryPath.HeaderText = "Registry Path";
+            RegistryPath.MinimumWidth = 6;
+            RegistryPath.Name = "RegistryPath";
+            RegistryPath.ReadOnly = true;
+            RegistryPath.Width = 300;
             // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1384, 561);
+            ClientSize = new Size(1642, 748);
             Controls.Add(statusStrip);
             Controls.Add(checkBoxJunk);
             Controls.Add(checkBoxActive);
@@ -237,6 +264,7 @@ namespace IISCleanup.Forms
             Controls.Add(buttonDeleteSelected);
             Controls.Add(dataGridView);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            Margin = new Padding(3, 4, 3, 4);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "IIS Cleanup";
@@ -252,11 +280,8 @@ namespace IISCleanup.Forms
 
         #endregion
 
-        private ListBox AppsList;
-        private Label labelIISApps;
         private DataGridView dataGridView;
         private BindingSource iISAppBindingSource;
-        private DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private BindingSource iISAppBindingSource1;
         private Button buttonDeleteSelected;
         private Button buttonDeleteAll;
@@ -274,5 +299,6 @@ namespace IISCleanup.Forms
         private DataGridViewTextBoxColumn DatabaseName;
         private DataGridViewTextBoxColumn pathDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn AspFilesTempPath;
+        private DataGridViewTextBoxColumn RegistryPath;
     }
 }

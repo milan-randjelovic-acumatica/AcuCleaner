@@ -3,7 +3,6 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Web.Administration;
 using System.Security.AccessControl;
 using System.Security.Principal;
-using System.ServiceProcess;
 
 namespace IISCleanup.Services
 {
@@ -11,16 +10,19 @@ namespace IISCleanup.Services
     {
         private readonly IProgress<string>? _progressHandler;
         private readonly IISService? _iisService;
+        private readonly RegistryService? _registryService;
         private IEnumerable<IISApp> _apps = new List<IISApp>();
 
-        public CleanupService(IISService iISService)
+        public CleanupService(IISService iISService, RegistryService registryService)
         {
             _iisService = iISService;
+            _registryService = registryService;
         }
 
-        public CleanupService(IISService iISService, IProgress<string>? progressHandler)
+        public CleanupService(IISService iISService, RegistryService registryService, IProgress<string>? progressHandler)
         {
             _iisService = iISService;
+            _registryService = registryService;
             _progressHandler = progressHandler;
         }
 
@@ -37,9 +39,12 @@ namespace IISCleanup.Services
                 .ExcludeStandardFolders();
 
             var sqlDatabases = GetDatabasesForApps(allApps);
-
             allApps = allApps
                 .UnionBy(sqlDatabases, x => x.DatabaseName);
+
+            var registryEnties = GetRegistryEntiesForApps(allApps);
+            allApps = allApps
+               .UnionBy(registryEnties, x => x.InstanceName);
 
             _apps = allApps;
 
@@ -77,6 +82,7 @@ namespace IISCleanup.Services
                             AspFilesTempPath = Path.Combine(rootPath, Constants.TemporaryAspFiles, instanceName).NormalizePath(),
                             DatabaseName = string.Empty,
                             DatabaseConnectionString = string.Empty,
+                            RegistryPath = string.Empty,
                             Active = true,
                             InstalledOn = Directory.GetCreationTime(path),
                         });
@@ -112,6 +118,7 @@ namespace IISCleanup.Services
                         Path = string.Empty,
                         RootPath = string.Empty,
                         AspFilesTempPath = string.Empty,
+                        RegistryPath = string.Empty,
                         Active = false,
                         InstalledOn = DateTime.MinValue,
                     });
@@ -146,6 +153,7 @@ namespace IISCleanup.Services
                                 Path = string.Empty,
                                 RootPath = string.Empty,
                                 AspFilesTempPath = string.Empty,
+                                RegistryPath = string.Empty,
                                 Active = false,
                                 InstalledOn = DateTime.MinValue,
                             });
@@ -176,6 +184,7 @@ namespace IISCleanup.Services
                         Path = folder.NormalizePath(),
                         RootPath = rootFolder.NormalizePath(),
                         AspFilesTempPath = string.Empty,
+                        RegistryPath = string.Empty,
                         Active = false,
                         InstalledOn = Directory.GetCreationTime(folder),
                     });
@@ -202,6 +211,7 @@ namespace IISCleanup.Services
                                     Path = string.Empty,
                                     RootPath = folder.NormalizePath(),
                                     AspFilesTempPath = tmpApp.Path.NormalizePath(),
+                                    RegistryPath = string.Empty,
                                     Active = false,
                                     InstalledOn = Directory.GetCreationTime(folder),
                                 });
@@ -212,6 +222,37 @@ namespace IISCleanup.Services
             }
 
             return result.DistinctBy(app => app.Path);
+        }
+
+        public IEnumerable<IISApp> GetRegistryEntiesForApps(IEnumerable<IISApp> iisApps)
+        {
+            var result = new List<IISApp>();
+            var registryEnties = _registryService?.GetRegistryEnties();
+            foreach (var registryEntry in registryEnties ?? Enumerable.Empty<IISApp>())
+            {
+                var existingApp = iisApps.FirstOrDefault(app => app.InstanceName == registryEntry.InstanceName);
+                if (existingApp != null)
+                {
+                    existingApp.RegistryPath = registryEntry.RegistryPath;
+                    result.Add(existingApp);
+                }
+                else
+                {
+                    result.Add(new IISApp
+                    {
+                        InstanceName = registryEntry.InstanceName,
+                        DatabaseName = string.Empty,
+                        DatabaseConnectionString = string.Empty,
+                        Path = string.Empty,
+                        RootPath = string.Empty,
+                        AspFilesTempPath = string.Empty,
+                        RegistryPath = registryEntry.RegistryPath,
+                        Active = false,
+                        InstalledOn = DateTime.MinValue,
+                    });
+                }
+            }
+            return result;
         }
 
         public IAppsCollection FilterByStatus(bool isActive, bool junk)
