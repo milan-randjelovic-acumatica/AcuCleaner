@@ -33,6 +33,14 @@ namespace IISCleanup.Forms
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             dataGridView = new DataGridView();
+            Id = new DataGridViewTextBoxColumn();
+            Instance = new DataGridViewTextBoxColumn();
+            Active = new DataGridViewCheckBoxColumn();
+            InstalledOn = new DataGridViewTextBoxColumn();
+            DatabaseName = new DataGridViewTextBoxColumn();
+            pathDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            AspFilesTempPath = new DataGridViewTextBoxColumn();
+            RegistryPath = new DataGridViewTextBoxColumn();
             iISAppBindingSource1 = new BindingSource(components);
             iISAppBindingSource = new BindingSource(components);
             buttonDeleteSelected = new Button();
@@ -44,18 +52,19 @@ namespace IISCleanup.Forms
             statusStrip = new StatusStrip();
             toolStripStatusLabel = new ToolStripStatusLabel();
             toolStripProgressBar = new ToolStripProgressBar();
-            Id = new DataGridViewTextBoxColumn();
-            Instance = new DataGridViewTextBoxColumn();
-            Active = new DataGridViewCheckBoxColumn();
-            InstalledOn = new DataGridViewTextBoxColumn();
-            DatabaseName = new DataGridViewTextBoxColumn();
-            pathDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            AspFilesTempPath = new DataGridViewTextBoxColumn();
-            RegistryPath = new DataGridViewTextBoxColumn();
+            groupBoxCleanup = new GroupBox();
+            checkBoxCleanupRegistry = new CheckBox();
+            checkBoxCleanupDatabases = new CheckBox();
+            checkBoxCleanupAspTemp = new CheckBox();
+            checkBoxcleanupIISApps = new CheckBox();
+            checkBoxCleanupFiles = new CheckBox();
+            groupBoxFilter = new GroupBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource).BeginInit();
             statusStrip.SuspendLayout();
+            groupBoxCleanup.SuspendLayout();
+            groupBoxFilter.SuspendLayout();
             SuspendLayout();
             // 
             // dataGridView
@@ -67,115 +76,13 @@ namespace IISCleanup.Forms
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView.Columns.AddRange(new DataGridViewColumn[] { Id, Instance, Active, InstalledOn, DatabaseName, pathDataGridViewTextBoxColumn, AspFilesTempPath, RegistryPath });
             dataGridView.DataSource = iISAppBindingSource1;
-            dataGridView.Location = new Point(0, 55);
-            dataGridView.Margin = new Padding(3, 4, 3, 4);
+            dataGridView.Location = new Point(12, 12);
             dataGridView.Name = "dataGridView";
             dataGridView.ReadOnly = true;
             dataGridView.RowHeadersWidth = 51;
             dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView.Size = new Size(1628, 660);
+            dataGridView.Size = new Size(812, 524);
             dataGridView.TabIndex = 2;
-            // 
-            // iISAppBindingSource1
-            // 
-            iISAppBindingSource1.DataSource = typeof(IISApp);
-            // 
-            // iISAppBindingSource
-            // 
-            iISAppBindingSource.DataSource = typeof(IISApp);
-            // 
-            // buttonDeleteSelected
-            // 
-            buttonDeleteSelected.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            buttonDeleteSelected.Location = new Point(1450, 11);
-            buttonDeleteSelected.Margin = new Padding(3, 4, 3, 4);
-            buttonDeleteSelected.Name = "buttonDeleteSelected";
-            buttonDeleteSelected.Size = new Size(86, 31);
-            buttonDeleteSelected.TabIndex = 3;
-            buttonDeleteSelected.Text = "Delete";
-            buttonDeleteSelected.UseVisualStyleBackColor = true;
-            buttonDeleteSelected.Click += buttonDeleteSelected_Click;
-            // 
-            // buttonDeleteAll
-            // 
-            buttonDeleteAll.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            buttonDeleteAll.Location = new Point(1542, 11);
-            buttonDeleteAll.Margin = new Padding(3, 4, 3, 4);
-            buttonDeleteAll.Name = "buttonDeleteAll";
-            buttonDeleteAll.Size = new Size(86, 31);
-            buttonDeleteAll.TabIndex = 4;
-            buttonDeleteAll.Text = "Delete All";
-            buttonDeleteAll.UseVisualStyleBackColor = true;
-            buttonDeleteAll.Click += buttonDeleteAll_Click;
-            // 
-            // dateTimePicker
-            // 
-            dateTimePicker.Location = new Point(96, 11);
-            dateTimePicker.Margin = new Padding(3, 4, 3, 4);
-            dateTimePicker.Name = "dateTimePicker";
-            dateTimePicker.Size = new Size(239, 27);
-            dateTimePicker.TabIndex = 5;
-            dateTimePicker.ValueChanged += dateTimePicker_ValueChanged;
-            // 
-            // labelOlderThan
-            // 
-            labelOlderThan.AutoSize = true;
-            labelOlderThan.Location = new Point(14, 16);
-            labelOlderThan.Name = "labelOlderThan";
-            labelOlderThan.Size = new Size(82, 20);
-            labelOlderThan.TabIndex = 6;
-            labelOlderThan.Text = "Older than:";
-            // 
-            // checkBoxActive
-            // 
-            checkBoxActive.AutoSize = true;
-            checkBoxActive.Checked = true;
-            checkBoxActive.CheckState = CheckState.Checked;
-            checkBoxActive.Location = new Point(343, 15);
-            checkBoxActive.Margin = new Padding(3, 4, 3, 4);
-            checkBoxActive.Name = "checkBoxActive";
-            checkBoxActive.Size = new Size(72, 24);
-            checkBoxActive.TabIndex = 7;
-            checkBoxActive.Text = "Active";
-            checkBoxActive.UseVisualStyleBackColor = true;
-            checkBoxActive.CheckedChanged += checkBoxActive_CheckedChanged;
-            // 
-            // checkBoxJunk
-            // 
-            checkBoxJunk.AutoSize = true;
-            checkBoxJunk.Checked = true;
-            checkBoxJunk.CheckState = CheckState.Checked;
-            checkBoxJunk.Location = new Point(417, 15);
-            checkBoxJunk.Margin = new Padding(3, 4, 3, 4);
-            checkBoxJunk.Name = "checkBoxJunk";
-            checkBoxJunk.Size = new Size(59, 24);
-            checkBoxJunk.TabIndex = 8;
-            checkBoxJunk.Text = "Junk";
-            checkBoxJunk.UseVisualStyleBackColor = true;
-            checkBoxJunk.CheckedChanged += checkBoxJunk_CheckedChanged;
-            // 
-            // statusStrip
-            // 
-            statusStrip.ImageScalingSize = new Size(20, 20);
-            statusStrip.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel, toolStripProgressBar });
-            statusStrip.Location = new Point(0, 721);
-            statusStrip.Name = "statusStrip";
-            statusStrip.Padding = new Padding(1, 0, 16, 0);
-            statusStrip.Size = new Size(1642, 27);
-            statusStrip.TabIndex = 9;
-            statusStrip.Text = "statusStrip1";
-            // 
-            // toolStripStatusLabel
-            // 
-            toolStripStatusLabel.Name = "toolStripStatusLabel";
-            toolStripStatusLabel.Size = new Size(52, 21);
-            toolStripStatusLabel.Text = "Status:";
-            // 
-            // toolStripProgressBar
-            // 
-            toolStripProgressBar.Name = "toolStripProgressBar";
-            toolStripProgressBar.Size = new Size(114, 19);
-            toolStripProgressBar.Style = ProgressBarStyle.Marquee;
             // 
             // Id
             // 
@@ -193,7 +100,6 @@ namespace IISCleanup.Forms
             Instance.MinimumWidth = 6;
             Instance.Name = "Instance";
             Instance.ReadOnly = true;
-            Instance.Width = 150;
             // 
             // Active
             // 
@@ -203,7 +109,6 @@ namespace IISCleanup.Forms
             Active.Name = "Active";
             Active.ReadOnly = true;
             Active.SortMode = DataGridViewColumnSortMode.Automatic;
-            Active.Width = 125;
             // 
             // InstalledOn
             // 
@@ -212,7 +117,6 @@ namespace IISCleanup.Forms
             InstalledOn.MinimumWidth = 6;
             InstalledOn.Name = "InstalledOn";
             InstalledOn.ReadOnly = true;
-            InstalledOn.Width = 150;
             // 
             // DatabaseName
             // 
@@ -221,7 +125,6 @@ namespace IISCleanup.Forms
             DatabaseName.MinimumWidth = 6;
             DatabaseName.Name = "DatabaseName";
             DatabaseName.ReadOnly = true;
-            DatabaseName.Width = 200;
             // 
             // pathDataGridViewTextBoxColumn
             // 
@@ -230,7 +133,6 @@ namespace IISCleanup.Forms
             pathDataGridViewTextBoxColumn.MinimumWidth = 6;
             pathDataGridViewTextBoxColumn.Name = "pathDataGridViewTextBoxColumn";
             pathDataGridViewTextBoxColumn.ReadOnly = true;
-            pathDataGridViewTextBoxColumn.Width = 300;
             // 
             // AspFilesTempPath
             // 
@@ -239,7 +141,6 @@ namespace IISCleanup.Forms
             AspFilesTempPath.MinimumWidth = 6;
             AspFilesTempPath.Name = "AspFilesTempPath";
             AspFilesTempPath.ReadOnly = true;
-            AspFilesTempPath.Width = 300;
             // 
             // RegistryPath
             // 
@@ -248,23 +149,203 @@ namespace IISCleanup.Forms
             RegistryPath.MinimumWidth = 6;
             RegistryPath.Name = "RegistryPath";
             RegistryPath.ReadOnly = true;
-            RegistryPath.Width = 300;
+            // 
+            // iISAppBindingSource1
+            // 
+            iISAppBindingSource1.DataSource = typeof(IISApp);
+            // 
+            // iISAppBindingSource
+            // 
+            iISAppBindingSource.DataSource = typeof(IISApp);
+            // 
+            // buttonDeleteSelected
+            // 
+            buttonDeleteSelected.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            buttonDeleteSelected.Location = new Point(63, 369);
+            buttonDeleteSelected.Name = "buttonDeleteSelected";
+            buttonDeleteSelected.Size = new Size(75, 23);
+            buttonDeleteSelected.TabIndex = 3;
+            buttonDeleteSelected.Text = "Delete";
+            buttonDeleteSelected.UseVisualStyleBackColor = true;
+            buttonDeleteSelected.Click += buttonDeleteSelected_Click;
+            // 
+            // buttonDeleteAll
+            // 
+            buttonDeleteAll.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            buttonDeleteAll.Location = new Point(144, 369);
+            buttonDeleteAll.Name = "buttonDeleteAll";
+            buttonDeleteAll.Size = new Size(75, 23);
+            buttonDeleteAll.TabIndex = 4;
+            buttonDeleteAll.Text = "Delete All";
+            buttonDeleteAll.UseVisualStyleBackColor = true;
+            buttonDeleteAll.Click += buttonDeleteAll_Click;
+            // 
+            // dateTimePicker
+            // 
+            dateTimePicker.Location = new Point(6, 37);
+            dateTimePicker.Name = "dateTimePicker";
+            dateTimePicker.Size = new Size(210, 23);
+            dateTimePicker.TabIndex = 5;
+            dateTimePicker.ValueChanged += dateTimePicker_ValueChanged;
+            // 
+            // labelOlderThan
+            // 
+            labelOlderThan.AutoSize = true;
+            labelOlderThan.Location = new Point(6, 19);
+            labelOlderThan.Name = "labelOlderThan";
+            labelOlderThan.Size = new Size(66, 15);
+            labelOlderThan.TabIndex = 6;
+            labelOlderThan.Text = "Older than:";
+            // 
+            // checkBoxActive
+            // 
+            checkBoxActive.AutoSize = true;
+            checkBoxActive.Checked = true;
+            checkBoxActive.CheckState = CheckState.Checked;
+            checkBoxActive.Location = new Point(6, 66);
+            checkBoxActive.Name = "checkBoxActive";
+            checkBoxActive.Size = new Size(59, 19);
+            checkBoxActive.TabIndex = 7;
+            checkBoxActive.Text = "Active";
+            checkBoxActive.UseVisualStyleBackColor = true;
+            checkBoxActive.CheckedChanged += checkBoxActive_CheckedChanged;
+            // 
+            // checkBoxJunk
+            // 
+            checkBoxJunk.AutoSize = true;
+            checkBoxJunk.Checked = true;
+            checkBoxJunk.CheckState = CheckState.Checked;
+            checkBoxJunk.Location = new Point(6, 91);
+            checkBoxJunk.Name = "checkBoxJunk";
+            checkBoxJunk.Size = new Size(50, 19);
+            checkBoxJunk.TabIndex = 8;
+            checkBoxJunk.Text = "Junk";
+            checkBoxJunk.UseVisualStyleBackColor = true;
+            checkBoxJunk.CheckedChanged += checkBoxJunk_CheckedChanged;
+            // 
+            // statusStrip
+            // 
+            statusStrip.ImageScalingSize = new Size(20, 20);
+            statusStrip.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel, toolStripProgressBar });
+            statusStrip.Location = new Point(0, 539);
+            statusStrip.Name = "statusStrip";
+            statusStrip.Size = new Size(1067, 22);
+            statusStrip.TabIndex = 9;
+            statusStrip.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel
+            // 
+            toolStripStatusLabel.Name = "toolStripStatusLabel";
+            toolStripStatusLabel.Size = new Size(42, 17);
+            toolStripStatusLabel.Text = "Status:";
+            // 
+            // toolStripProgressBar
+            // 
+            toolStripProgressBar.Name = "toolStripProgressBar";
+            toolStripProgressBar.Size = new Size(100, 16);
+            toolStripProgressBar.Style = ProgressBarStyle.Marquee;
+            // 
+            // groupBoxCleanup
+            // 
+            groupBoxCleanup.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            groupBoxCleanup.Controls.Add(checkBoxCleanupRegistry);
+            groupBoxCleanup.Controls.Add(checkBoxCleanupDatabases);
+            groupBoxCleanup.Controls.Add(checkBoxCleanupAspTemp);
+            groupBoxCleanup.Controls.Add(checkBoxcleanupIISApps);
+            groupBoxCleanup.Controls.Add(checkBoxCleanupFiles);
+            groupBoxCleanup.Controls.Add(buttonDeleteSelected);
+            groupBoxCleanup.Controls.Add(buttonDeleteAll);
+            groupBoxCleanup.Location = new Point(830, 138);
+            groupBoxCleanup.Name = "groupBoxCleanup";
+            groupBoxCleanup.Size = new Size(225, 398);
+            groupBoxCleanup.TabIndex = 10;
+            groupBoxCleanup.TabStop = false;
+            groupBoxCleanup.Text = "Cleanup";
+            // 
+            // checkBoxCleanupRegistry
+            // 
+            checkBoxCleanupRegistry.AutoSize = true;
+            checkBoxCleanupRegistry.Checked = true;
+            checkBoxCleanupRegistry.CheckState = CheckState.Checked;
+            checkBoxCleanupRegistry.Location = new Point(6, 122);
+            checkBoxCleanupRegistry.Name = "checkBoxCleanupRegistry";
+            checkBoxCleanupRegistry.Size = new Size(115, 19);
+            checkBoxCleanupRegistry.TabIndex = 16;
+            checkBoxCleanupRegistry.Text = "Cleanup Registry";
+            checkBoxCleanupRegistry.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxCleanupDatabases
+            // 
+            checkBoxCleanupDatabases.AutoSize = true;
+            checkBoxCleanupDatabases.Checked = true;
+            checkBoxCleanupDatabases.CheckState = CheckState.Checked;
+            checkBoxCleanupDatabases.Location = new Point(6, 97);
+            checkBoxCleanupDatabases.Name = "checkBoxCleanupDatabases";
+            checkBoxCleanupDatabases.Size = new Size(125, 19);
+            checkBoxCleanupDatabases.TabIndex = 15;
+            checkBoxCleanupDatabases.Text = "Cleanup databases";
+            checkBoxCleanupDatabases.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxCleanupAspTemp
+            // 
+            checkBoxCleanupAspTemp.AutoSize = true;
+            checkBoxCleanupAspTemp.Checked = true;
+            checkBoxCleanupAspTemp.CheckState = CheckState.Checked;
+            checkBoxCleanupAspTemp.Location = new Point(6, 72);
+            checkBoxCleanupAspTemp.Name = "checkBoxCleanupAspTemp";
+            checkBoxCleanupAspTemp.Size = new Size(140, 19);
+            checkBoxCleanupAspTemp.TabIndex = 14;
+            checkBoxCleanupAspTemp.Text = "Cleanup IIS temp files";
+            checkBoxCleanupAspTemp.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxcleanupIISApps
+            // 
+            checkBoxcleanupIISApps.AutoSize = true;
+            checkBoxcleanupIISApps.Checked = true;
+            checkBoxcleanupIISApps.CheckState = CheckState.Checked;
+            checkBoxcleanupIISApps.Location = new Point(6, 22);
+            checkBoxcleanupIISApps.Name = "checkBoxcleanupIISApps";
+            checkBoxcleanupIISApps.Size = new Size(113, 19);
+            checkBoxcleanupIISApps.TabIndex = 13;
+            checkBoxcleanupIISApps.Text = "Cleanup IIS apps";
+            checkBoxcleanupIISApps.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxCleanupFiles
+            // 
+            checkBoxCleanupFiles.AutoSize = true;
+            checkBoxCleanupFiles.Checked = true;
+            checkBoxCleanupFiles.CheckState = CheckState.Checked;
+            checkBoxCleanupFiles.Location = new Point(6, 47);
+            checkBoxCleanupFiles.Name = "checkBoxCleanupFiles";
+            checkBoxCleanupFiles.Size = new Size(137, 19);
+            checkBoxCleanupFiles.TabIndex = 12;
+            checkBoxCleanupFiles.Text = "Cleanup IIS apps files";
+            checkBoxCleanupFiles.UseVisualStyleBackColor = true;
+            // 
+            // groupBoxFilter
+            // 
+            groupBoxFilter.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            groupBoxFilter.Controls.Add(dateTimePicker);
+            groupBoxFilter.Controls.Add(labelOlderThan);
+            groupBoxFilter.Controls.Add(checkBoxActive);
+            groupBoxFilter.Controls.Add(checkBoxJunk);
+            groupBoxFilter.Location = new Point(830, 12);
+            groupBoxFilter.Name = "groupBoxFilter";
+            groupBoxFilter.Size = new Size(225, 120);
+            groupBoxFilter.TabIndex = 11;
+            groupBoxFilter.TabStop = false;
+            groupBoxFilter.Text = "Filter";
             // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1642, 748);
+            ClientSize = new Size(1067, 561);
+            Controls.Add(groupBoxFilter);
+            Controls.Add(groupBoxCleanup);
             Controls.Add(statusStrip);
-            Controls.Add(checkBoxJunk);
-            Controls.Add(checkBoxActive);
-            Controls.Add(labelOlderThan);
-            Controls.Add(dateTimePicker);
-            Controls.Add(buttonDeleteAll);
-            Controls.Add(buttonDeleteSelected);
             Controls.Add(dataGridView);
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Margin = new Padding(3, 4, 3, 4);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "IIS Cleanup";
@@ -274,6 +355,10 @@ namespace IISCleanup.Forms
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource).EndInit();
             statusStrip.ResumeLayout(false);
             statusStrip.PerformLayout();
+            groupBoxCleanup.ResumeLayout(false);
+            groupBoxCleanup.PerformLayout();
+            groupBoxFilter.ResumeLayout(false);
+            groupBoxFilter.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -292,6 +377,13 @@ namespace IISCleanup.Forms
         private StatusStrip statusStrip;
         private ToolStripProgressBar toolStripProgressBar;
         private ToolStripStatusLabel toolStripStatusLabel;
+        private GroupBox groupBoxCleanup;
+        private GroupBox groupBoxFilter;
+        private CheckBox checkBoxCleanupRegistry;
+        private CheckBox checkBoxCleanupDatabases;
+        private CheckBox checkBoxCleanupAspTemp;
+        private CheckBox checkBoxcleanupIISApps;
+        private CheckBox checkBoxCleanupFiles;
         private DataGridViewTextBoxColumn Id;
         private DataGridViewTextBoxColumn Instance;
         private DataGridViewCheckBoxColumn Active;

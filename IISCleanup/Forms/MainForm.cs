@@ -52,6 +52,15 @@ namespace IISCleanup.Forms
 
         private void RefreshAppList()
         {
+            CleanupParameters = new CleanupParameters
+            {
+                CleanupIISApps = checkBoxcleanupIISApps.Checked,
+                CleanupFiles = checkBoxCleanupFiles.Checked,
+                CleanupDatabases = checkBoxCleanupDatabases.Checked,
+                CleanupAspTemp = checkBoxCleanupAspTemp.Checked,
+                CleanupRegistry = checkBoxCleanupRegistry.Checked,
+            };
+
             _allApps = CleanupService
                 .GetAll(CleanupParameters)
                 .FilterByStatus(checkBoxActive.Checked, checkBoxJunk.Checked)
@@ -66,7 +75,15 @@ namespace IISCleanup.Forms
 
         private async Task DeleteSelectedAppsAsync()
         {
-            CleanupParameters.Apps = new List<IISApp>();
+            CleanupParameters = new CleanupParameters
+            {
+                CleanupIISApps = checkBoxcleanupIISApps.Checked,
+                CleanupFiles = checkBoxCleanupFiles.Checked,
+                CleanupDatabases = checkBoxCleanupDatabases.Checked,
+                CleanupAspTemp = checkBoxCleanupAspTemp.Checked,
+                CleanupRegistry = checkBoxCleanupRegistry.Checked,
+            };
+
             foreach (DataGridViewRow selectedRow in dataGridView.SelectedRows)
             {
                 if (selectedRow.DataBoundItem is IISApp app)
@@ -126,24 +143,14 @@ namespace IISCleanup.Forms
 
         private async void buttonDeleteSelected_Click(object sender, EventArgs e)
         {
-            DeleteConfirmationForm confirmation = new DeleteConfirmationForm(CleanupParameters);
-            var result = confirmation.ShowDialog();
-            if (result == DialogResult.Yes)
-            {
-                await DeleteSelectedAppsAsync();
-            }
+            await DeleteSelectedAppsAsync();
         }
 
         private async void buttonDeleteAll_Click(object sender, EventArgs e)
         {
             dataGridView.SelectAll();
 
-            DeleteConfirmationForm confirmation = new DeleteConfirmationForm(CleanupParameters);
-            var result = confirmation.ShowDialog();
-            if (result == DialogResult.Yes)
-            {
-                await DeleteSelectedAppsAsync();
-            }
+            await DeleteSelectedAppsAsync();
         }
 
         private void checkBoxActive_CheckedChanged(object sender, EventArgs e)
