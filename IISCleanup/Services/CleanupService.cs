@@ -56,7 +56,7 @@ namespace IISCleanup.Services
 
         public IAppsCollection FilterByStatus(bool isActive, bool junk)
         {
-            _apps = _apps.Where(x => x.Active == isActive || (junk == true && x.Active == false));
+            _apps = _apps.Where(x => (isActive == true && x.Active == true) || (junk == true && x.Active == false));
 
             return this;
         }

@@ -74,18 +74,15 @@ namespace IISCleanup.Services
                 return;
             }
 
-            using var baseKey = Registry.LocalMachine.OpenSubKey(_path, writable: true);
-            if (baseKey == null)
+            using (var baseKey = Registry.LocalMachine.OpenSubKey(_path, writable: true))
             {
-                return;
-            }
-
-            foreach (var app in cleanupParameters.Apps)
-            {
-                if (!string.IsNullOrEmpty(app.RegistryPath))
+                foreach (var app in cleanupParameters.Apps)
                 {
-                    var registryPath = app.RegistryPath.Replace('/', '\\').TrimEnd('\\');
-                    baseKey.DeleteSubKeyTree(registryPath, throwOnMissingSubKey: false);
+                    if (!string.IsNullOrEmpty(app.RegistryPath))
+                    {
+                        var registryPath = app.RegistryPath.Replace('/', '\\').TrimEnd('\\');
+                        baseKey?.DeleteSubKeyTree(app.InstanceName, throwOnMissingSubKey: true);
+                    }
                 }
             }
         }

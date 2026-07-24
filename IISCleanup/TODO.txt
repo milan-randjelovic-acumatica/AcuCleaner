@@ -1,3 +1,1 @@
-﻿//Delete registry entries
-//Filtering by active/inactive doesnt work
-//Installation dates for each type
+﻿//Installation dates for each type
