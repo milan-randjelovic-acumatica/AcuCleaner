@@ -33,14 +33,6 @@ namespace IISCleanup.Forms
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             dataGridView = new DataGridView();
-            Id = new DataGridViewTextBoxColumn();
-            Instance = new DataGridViewTextBoxColumn();
-            Active = new DataGridViewCheckBoxColumn();
-            InstalledOn = new DataGridViewTextBoxColumn();
-            DatabaseName = new DataGridViewTextBoxColumn();
-            pathDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            AspFilesTempPath = new DataGridViewTextBoxColumn();
-            RegistryPath = new DataGridViewTextBoxColumn();
             iISAppBindingSource1 = new BindingSource(components);
             iISAppBindingSource = new BindingSource(components);
             buttonDeleteSelected = new Button();
@@ -59,6 +51,14 @@ namespace IISCleanup.Forms
             checkBoxcleanupIISApps = new CheckBox();
             checkBoxCleanupFiles = new CheckBox();
             groupBoxFilter = new GroupBox();
+            Id = new DataGridViewTextBoxColumn();
+            Instance = new DataGridViewTextBoxColumn();
+            Active = new DataGridViewCheckBoxColumn();
+            InstalledOn = new DataGridViewTextBoxColumn();
+            DatabaseName = new DataGridViewTextBoxColumn();
+            pathDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            AspFilesTempPath = new DataGridViewTextBoxColumn();
+            RegistryPath = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource).BeginInit();
@@ -83,72 +83,6 @@ namespace IISCleanup.Forms
             dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView.Size = new Size(812, 524);
             dataGridView.TabIndex = 2;
-            // 
-            // Id
-            // 
-            Id.DataPropertyName = "Id";
-            Id.HeaderText = "#";
-            Id.MinimumWidth = 6;
-            Id.Name = "Id";
-            Id.ReadOnly = true;
-            Id.Width = 50;
-            // 
-            // Instance
-            // 
-            Instance.DataPropertyName = "InstanceName";
-            Instance.HeaderText = "Instance";
-            Instance.MinimumWidth = 6;
-            Instance.Name = "Instance";
-            Instance.ReadOnly = true;
-            // 
-            // Active
-            // 
-            Active.DataPropertyName = "Active";
-            Active.HeaderText = "Active/Junk";
-            Active.MinimumWidth = 6;
-            Active.Name = "Active";
-            Active.ReadOnly = true;
-            Active.SortMode = DataGridViewColumnSortMode.Automatic;
-            // 
-            // InstalledOn
-            // 
-            InstalledOn.DataPropertyName = "InstalledOn";
-            InstalledOn.HeaderText = "Installed On";
-            InstalledOn.MinimumWidth = 6;
-            InstalledOn.Name = "InstalledOn";
-            InstalledOn.ReadOnly = true;
-            // 
-            // DatabaseName
-            // 
-            DatabaseName.DataPropertyName = "DatabaseName";
-            DatabaseName.HeaderText = "Database";
-            DatabaseName.MinimumWidth = 6;
-            DatabaseName.Name = "DatabaseName";
-            DatabaseName.ReadOnly = true;
-            // 
-            // pathDataGridViewTextBoxColumn
-            // 
-            pathDataGridViewTextBoxColumn.DataPropertyName = "Path";
-            pathDataGridViewTextBoxColumn.HeaderText = "Path";
-            pathDataGridViewTextBoxColumn.MinimumWidth = 6;
-            pathDataGridViewTextBoxColumn.Name = "pathDataGridViewTextBoxColumn";
-            pathDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // AspFilesTempPath
-            // 
-            AspFilesTempPath.DataPropertyName = "AspFilesTempPath";
-            AspFilesTempPath.HeaderText = "Asp Temp Path";
-            AspFilesTempPath.MinimumWidth = 6;
-            AspFilesTempPath.Name = "AspFilesTempPath";
-            AspFilesTempPath.ReadOnly = true;
-            // 
-            // RegistryPath
-            // 
-            RegistryPath.DataPropertyName = "RegistryPath";
-            RegistryPath.HeaderText = "Registry Path";
-            RegistryPath.MinimumWidth = 6;
-            RegistryPath.Name = "RegistryPath";
-            RegistryPath.ReadOnly = true;
             // 
             // iISAppBindingSource1
             // 
@@ -335,6 +269,76 @@ namespace IISCleanup.Forms
             groupBoxFilter.TabIndex = 11;
             groupBoxFilter.TabStop = false;
             groupBoxFilter.Text = "Filter";
+            // 
+            // Id
+            // 
+            Id.DataPropertyName = "Id";
+            Id.HeaderText = "#";
+            Id.MinimumWidth = 6;
+            Id.Name = "Id";
+            Id.ReadOnly = true;
+            Id.Width = 50;
+            // 
+            // Instance
+            // 
+            Instance.DataPropertyName = "InstanceName";
+            Instance.HeaderText = "Instance";
+            Instance.MinimumWidth = 6;
+            Instance.Name = "Instance";
+            Instance.ReadOnly = true;
+            // 
+            // Active
+            // 
+            Active.DataPropertyName = "Active";
+            Active.HeaderText = "Active/Junk";
+            Active.MinimumWidth = 6;
+            Active.Name = "Active";
+            Active.ReadOnly = true;
+            Active.SortMode = DataGridViewColumnSortMode.Automatic;
+            // 
+            // InstalledOn
+            // 
+            InstalledOn.DataPropertyName = "InstalledOn";
+            InstalledOn.HeaderText = "Installed On";
+            InstalledOn.MinimumWidth = 6;
+            InstalledOn.Name = "InstalledOn";
+            InstalledOn.ReadOnly = true;
+            // 
+            // DatabaseName
+            // 
+            DatabaseName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            DatabaseName.DataPropertyName = "DatabaseName";
+            DatabaseName.HeaderText = "Database";
+            DatabaseName.MinimumWidth = 6;
+            DatabaseName.Name = "DatabaseName";
+            DatabaseName.ReadOnly = true;
+            // 
+            // pathDataGridViewTextBoxColumn
+            // 
+            pathDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            pathDataGridViewTextBoxColumn.DataPropertyName = "Path";
+            pathDataGridViewTextBoxColumn.HeaderText = "Path";
+            pathDataGridViewTextBoxColumn.MinimumWidth = 6;
+            pathDataGridViewTextBoxColumn.Name = "pathDataGridViewTextBoxColumn";
+            pathDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // AspFilesTempPath
+            // 
+            AspFilesTempPath.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            AspFilesTempPath.DataPropertyName = "AspFilesTempPath";
+            AspFilesTempPath.HeaderText = "Asp Temp Path";
+            AspFilesTempPath.MinimumWidth = 6;
+            AspFilesTempPath.Name = "AspFilesTempPath";
+            AspFilesTempPath.ReadOnly = true;
+            // 
+            // RegistryPath
+            // 
+            RegistryPath.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            RegistryPath.DataPropertyName = "RegistryPath";
+            RegistryPath.HeaderText = "Registry Path";
+            RegistryPath.MinimumWidth = 6;
+            RegistryPath.Name = "RegistryPath";
+            RegistryPath.ReadOnly = true;
             // 
             // MainForm
             // 
