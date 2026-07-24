@@ -34,12 +34,13 @@
             checkBoxcleanupIISApps = new CheckBox();
             checkBoxCleanupAspTemp = new CheckBox();
             checkBoxCleanupSqlDatabases = new CheckBox();
+            checkBoxCleanupRegistry = new CheckBox();
             SuspendLayout();
             // 
             // buttonCleanup
             // 
             buttonCleanup.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonCleanup.Location = new Point(166, 111);
+            buttonCleanup.Location = new Point(166, 141);
             buttonCleanup.Name = "buttonCleanup";
             buttonCleanup.Size = new Size(75, 23);
             buttonCleanup.TabIndex = 4;
@@ -62,7 +63,7 @@
             // buttonCancel
             // 
             buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonCancel.Location = new Point(247, 111);
+            buttonCancel.Location = new Point(247, 141);
             buttonCancel.Name = "buttonCancel";
             buttonCancel.Size = new Size(75, 23);
             buttonCancel.TabIndex = 7;
@@ -106,11 +107,24 @@
             checkBoxCleanupSqlDatabases.Text = "Cleanup SQL databases";
             checkBoxCleanupSqlDatabases.UseVisualStyleBackColor = true;
             // 
+            // checkBoxCleanupRegistry
+            // 
+            checkBoxCleanupRegistry.AutoSize = true;
+            checkBoxCleanupRegistry.Checked = true;
+            checkBoxCleanupRegistry.CheckState = CheckState.Checked;
+            checkBoxCleanupRegistry.Location = new Point(12, 112);
+            checkBoxCleanupRegistry.Name = "checkBoxCleanupRegistry";
+            checkBoxCleanupRegistry.Size = new Size(115, 19);
+            checkBoxCleanupRegistry.TabIndex = 11;
+            checkBoxCleanupRegistry.Text = "Cleanup Registry";
+            checkBoxCleanupRegistry.UseVisualStyleBackColor = true;
+            // 
             // DeleteConfirmationForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(334, 146);
+            ClientSize = new Size(334, 176);
+            Controls.Add(checkBoxCleanupRegistry);
             Controls.Add(checkBoxCleanupSqlDatabases);
             Controls.Add(checkBoxCleanupAspTemp);
             Controls.Add(checkBoxcleanupIISApps);
@@ -134,5 +148,6 @@
         private CheckBox checkBoxcleanupIISApps;
         private CheckBox checkBoxCleanupAspTemp;
         private CheckBox checkBoxCleanupSqlDatabases;
+        private CheckBox checkBoxCleanupRegistry;
     }
 }

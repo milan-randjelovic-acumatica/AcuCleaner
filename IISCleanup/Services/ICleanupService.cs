@@ -4,7 +4,8 @@ namespace IISCleanup.Services
 {
     public interface ICleanupService
     {
-        IAppsCollection GetAllApps();
-        void Ceanup(List<IISApp> iisApps, CleanupParameters cleanupParameters);
+        IEnumerable<IISApp> GetAllApps();
+        IEnumerable<IISApp> GetAppsForCleanup(CleanupParameters cleanupParameters);
+        void Cleanup(CleanupParameters cleanupParameters);
     }
 }

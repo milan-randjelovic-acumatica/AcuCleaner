@@ -9,9 +9,12 @@ namespace IISCleanup.Forms
 
         private List<IISApp> _allApps = new List<IISApp>();
         private readonly IProgress<string> _progressHandler;
-        public IISService IISService { get; private set; }
-        public RegistryService RegistryService { get; private set; }
-        public ICleanupService CleanupService { get; private set; }
+        public IISCleanupService IISService { get; private set; }
+        public FileSystemCleanupService FileSystemCleanupService { get; private set; }
+        public RegistryCleanupService RegistryService { get; private set; }
+        public DatabaseCleanupService DatabaseCleanupService { get; private set; }
+        public CleanupService CleanupService { get; private set; }
+        public CleanupParameters CleanupParameters { get; private set; }
 
         public MainForm()
         {
@@ -19,9 +22,12 @@ namespace IISCleanup.Forms
             _instance = this;
 
             _progressHandler = new Progress<string>(message => this.toolStripStatusLabel.Text = message);
-            IISService = new IISService(_progressHandler);
-            RegistryService = new RegistryService();
-            CleanupService = new CleanupService(IISService, RegistryService, _progressHandler);
+            IISService = new IISCleanupService(_progressHandler);
+            FileSystemCleanupService = new FileSystemCleanupService(_progressHandler);
+            DatabaseCleanupService = new DatabaseCleanupService(_progressHandler);
+            RegistryService = new RegistryCleanupService();
+            CleanupService = new CleanupService(IISService, FileSystemCleanupService, DatabaseCleanupService, RegistryService, _progressHandler);
+            CleanupParameters = new CleanupParameters();
         }
 
         public static void ShowError(string message)
@@ -47,7 +53,7 @@ namespace IISCleanup.Forms
         private void RefreshAppList()
         {
             _allApps = CleanupService
-                .GetAllApps()
+                .GetAll(CleanupParameters)
                 .FilterByStatus(checkBoxActive.Checked, checkBoxJunk.Checked)
                 .FilterByDate(dateTimePicker.Value.Date)
                 .OrderBy(x => x.InstanceName)
@@ -58,24 +64,24 @@ namespace IISCleanup.Forms
             iISAppBindingSource1.ResetBindings(false);
         }
 
-        private async Task DeleteSelectedAppsAsync(CleanupParameters cleanupParameters)
+        private async Task DeleteSelectedAppsAsync()
         {
-            var selectedApps = new List<IISApp>();
+            CleanupParameters.Apps = new List<IISApp>();
             foreach (DataGridViewRow selectedRow in dataGridView.SelectedRows)
             {
                 if (selectedRow.DataBoundItem is IISApp app)
                 {
-                    selectedApps.Add(app);
+                    CleanupParameters.Apps.Add(app);
                 }
             }
 
-            if (selectedApps.Count == 0)
+            if (CleanupParameters.Apps.Count == 0)
             {
                 toolStripStatusLabel.Text = "No rows selected.";
                 return;
             }
 
-            var message = $"Delete {selectedApps.Count} selected app(s)?";
+            var message = $"Delete {CleanupParameters.Apps.Count} selected app(s)?";
 
             var confirmation = MessageBox.Show(
                 message,
@@ -93,12 +99,12 @@ namespace IISCleanup.Forms
             buttonDeleteSelected.Enabled = false;
             buttonDeleteAll.Enabled = false;
             toolStripProgressBar.Visible = true;
-            toolStripStatusLabel.Text = $"Deleting {selectedApps.Count} app(s)...";
+            toolStripStatusLabel.Text = $"Deleting {CleanupParameters.Apps.Count} app(s)...";
 
             try
             {
-                await Task.Run(() => CleanupService.Ceanup(selectedApps, cleanupParameters));
-                toolStripStatusLabel.Text = $"Deleted {selectedApps.Count} app(s).";
+                await Task.Run(() => CleanupService.Cleanup(CleanupParameters));
+                toolStripStatusLabel.Text = $"Deleted {CleanupParameters.Apps.Count} app(s).";
                 RefreshAppList();
             }
             catch (Exception ex)
@@ -120,11 +126,11 @@ namespace IISCleanup.Forms
 
         private async void buttonDeleteSelected_Click(object sender, EventArgs e)
         {
-            DeleteConfirmationForm confirmation = new DeleteConfirmationForm();
+            DeleteConfirmationForm confirmation = new DeleteConfirmationForm(CleanupParameters);
             var result = confirmation.ShowDialog();
             if (result == DialogResult.Yes)
             {
-                await DeleteSelectedAppsAsync(confirmation.CleanupParameters);
+                await DeleteSelectedAppsAsync();
             }
         }
 
@@ -132,11 +138,11 @@ namespace IISCleanup.Forms
         {
             dataGridView.SelectAll();
 
-            DeleteConfirmationForm confirmation = new DeleteConfirmationForm();
+            DeleteConfirmationForm confirmation = new DeleteConfirmationForm(CleanupParameters);
             var result = confirmation.ShowDialog();
             if (result == DialogResult.Yes)
             {
-                await DeleteSelectedAppsAsync(confirmation.CleanupParameters);
+                await DeleteSelectedAppsAsync();
             }
         }
 
