@@ -26,7 +26,7 @@ namespace AcuCleaner.Services.Database
                 {
                     connection.Open();
 
-                    var command = new SqlCommand("SELECT name FROM sys.databases ORDER BY name;", connection);
+                    var command = new SqlCommand("SELECT name, create_date FROM sys.databases ORDER BY name;", connection);
 
                     using (var reader = command.ExecuteReader())
                     {
@@ -43,7 +43,7 @@ namespace AcuCleaner.Services.Database
                                 AspFilesTempPath = string.Empty,
                                 RegistryPath = string.Empty,
                                 Active = false,
-                                InstalledOn = DateTime.MinValue,
+                                InstalledOn = reader.GetDateTime(1),
                             });
                         }
                     }
@@ -66,6 +66,8 @@ namespace AcuCleaner.Services.Database
                 if (existingApp != null)
                 {
                     existingApp.DatabaseName = sqlDatabase.DatabaseName;
+                    existingApp.DatabaseConnectionString = sqlDatabase.DatabaseConnectionString;
+                    existingApp.InstalledOn = existingApp.InstalledOn == DateTime.MinValue ? sqlDatabase.InstalledOn : existingApp.InstalledOn;
                     result.Add(existingApp);
                 }
                 else
@@ -80,7 +82,7 @@ namespace AcuCleaner.Services.Database
                         AspFilesTempPath = string.Empty,
                         RegistryPath = string.Empty,
                         Active = false,
-                        InstalledOn = DateTime.MinValue,
+                        InstalledOn = sqlDatabase.InstalledOn,
                     });
                 }
             }

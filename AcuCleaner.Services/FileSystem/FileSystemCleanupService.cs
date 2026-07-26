@@ -28,25 +28,37 @@ namespace AcuCleaner.Services.FileSystem
 
             foreach (var rootFolder in cleanupParameters.FileSystemRootPaths)
             {
-                var folders = Directory.GetDirectories(rootFolder);
+                var folders = Directory.GetDirectories(rootFolder).ExcludeStandardFolders();
                 foreach (var folder in folders)
                 {
                     string folderName = Path.GetFileName(folder).NormalizePath();
 
-                    result.Add(new IISApp
+                    if (folderName != Constants.TemporaryAspFiles)
                     {
-                        InstanceName = folderName,
-                        DatabaseName = string.Empty,
-                        DatabaseConnectionString = string.Empty,
-                        Path = folder.NormalizePath(),
-                        RootPath = rootFolder.NormalizePath(),
-                        AspFilesTempPath = string.Empty,
-                        RegistryPath = string.Empty,
-                        Active = false,
-                        InstalledOn = Directory.GetCreationTime(folder),
-                    });
 
-                    if (folderName == Constants.TemporaryAspFiles)
+                        var existingApp = cleanupParameters.Apps.FirstOrDefault(app => app.InstanceName == folderName);
+                        if (existingApp != null)
+                        {
+                            existingApp.Path = folder.NormalizePath();
+                            existingApp.InstalledOn = existingApp.InstalledOn == DateTime.MinValue ? Directory.GetCreationTime(folder) : existingApp.InstalledOn;
+                        }
+                        else
+                        {
+                            result.Add(new IISApp
+                            {
+                                InstanceName = folderName,
+                                DatabaseName = string.Empty,
+                                DatabaseConnectionString = string.Empty,
+                                Path = folder.NormalizePath(),
+                                RootPath = rootFolder.NormalizePath(),
+                                AspFilesTempPath = string.Empty,
+                                RegistryPath = string.Empty,
+                                Active = false,
+                                InstalledOn = Directory.GetCreationTime(folder),
+                            });
+                        }
+                    }
+                    else
                     {
                         var parameters = new CleanupParameters()
                         {
@@ -76,6 +88,7 @@ namespace AcuCleaner.Services.FileSystem
                             if (existingApp != null)
                             {
                                 existingApp.AspFilesTempPath = tmpApp.Path.NormalizePath();
+                                existingApp.InstalledOn = existingApp.InstalledOn == DateTime.MinValue ? Directory.GetCreationTime(tmpApp.Path) : existingApp.InstalledOn;
                             }
                             else
                             {
@@ -89,7 +102,7 @@ namespace AcuCleaner.Services.FileSystem
                                     AspFilesTempPath = tmpApp.Path.NormalizePath(),
                                     RegistryPath = string.Empty,
                                     Active = false,
-                                    InstalledOn = Directory.GetCreationTime(folder),
+                                    InstalledOn = Directory.GetCreationTime(tmpApp.Path),
                                 });
                             }
                         }

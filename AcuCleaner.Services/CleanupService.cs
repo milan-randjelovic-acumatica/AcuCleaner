@@ -8,7 +8,6 @@ namespace AcuCleaner.Services
 {
     public class CleanupService : IAppsCollection
     {
-        private readonly IProgress<string>? _progressHandler;
         private readonly AcuCleanerService? _iisService;
         private readonly RegistryCleanupService? _registryService;
         private readonly DatabaseCleanupService? _databaseCleanupService;
@@ -29,7 +28,6 @@ namespace AcuCleaner.Services
             _fileSystemCleanupService = fileSystemCleanupService;
             _databaseCleanupService = databaseCleanupService;
             _registryService = registryService;
-            _progressHandler = progressHandler;
         }
 
         public IAppsCollection GetAll(CleanupParameters cleanupParameters)
@@ -40,7 +38,6 @@ namespace AcuCleaner.Services
 
             cleanupParameters.Apps = cleanupParameters.Apps
                 .UnionBy(iisJunk, x => x.InstanceName)
-                .ExcludeStandardFolders()
                 .ToList();
 
             var sqlDatabases = _databaseCleanupService?.GetAppsForCleanup(cleanupParameters) ?? Enumerable.Empty<IISApp>();
