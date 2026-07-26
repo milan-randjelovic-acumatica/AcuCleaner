@@ -1,7 +1,7 @@
-﻿using IISCleanup.Models;
+﻿using AcuCleaner.Models;
 using Microsoft.Win32;
 
-namespace IISCleanup.Services
+namespace AcuCleaner.Services
 {
     public class RegistryCleanupService : ICleanupService
     {

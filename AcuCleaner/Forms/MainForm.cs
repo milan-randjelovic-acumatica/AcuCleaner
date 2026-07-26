@@ -1,7 +1,7 @@
-using IISCleanup.Models;
-using IISCleanup.Services;
+using AcuCleaner.Models;
+using AcuCleaner.Services;
 
-namespace IISCleanup.Forms
+namespace AcuCleaner.Forms
 {
     public partial class MainForm : Form
     {
@@ -9,7 +9,7 @@ namespace IISCleanup.Forms
 
         private List<IISApp> _allApps = new List<IISApp>();
         private readonly IProgress<string> _progressHandler;
-        public IISCleanupService IISService { get; private set; }
+        public AcuCleanerService IISService { get; private set; }
         public FileSystemCleanupService FileSystemCleanupService { get; private set; }
         public RegistryCleanupService RegistryService { get; private set; }
         public DatabaseCleanupService DatabaseCleanupService { get; private set; }
@@ -22,7 +22,7 @@ namespace IISCleanup.Forms
             _instance = this;
 
             _progressHandler = new Progress<string>(message => this.toolStripStatusLabel.Text = message);
-            IISService = new IISCleanupService(_progressHandler);
+            IISService = new AcuCleanerService(_progressHandler);
             FileSystemCleanupService = new FileSystemCleanupService(_progressHandler);
             DatabaseCleanupService = new DatabaseCleanupService(_progressHandler);
             RegistryService = new RegistryCleanupService();

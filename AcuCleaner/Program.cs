@@ -1,4 +1,4 @@
-namespace IISCleanup
+namespace AcuCleaner
 {
     internal static class Program
     {

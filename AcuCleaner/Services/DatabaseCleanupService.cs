@@ -1,7 +1,7 @@
-﻿using IISCleanup.Models;
+﻿using AcuCleaner.Models;
 using Microsoft.Data.SqlClient;
 
-namespace IISCleanup.Services
+namespace AcuCleaner.Services
 {
     public class DatabaseCleanupService : ICleanupService
     {

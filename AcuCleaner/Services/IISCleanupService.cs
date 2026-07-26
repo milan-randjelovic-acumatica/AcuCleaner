@@ -1,18 +1,18 @@
-﻿using IISCleanup.Models;
+﻿using AcuCleaner.Models;
 using Microsoft.Web.Administration;
 using System.ServiceProcess;
 
-namespace IISCleanup.Services
+namespace AcuCleaner.Services
 {
-    public class IISCleanupService : ICleanupService
+    public class AcuCleanerService : ICleanupService
     {
         private readonly IProgress<string>? _progressHandler;
 
-        public IISCleanupService()
+        public AcuCleanerService()
         {           
         }
 
-        public IISCleanupService(IProgress<string>? progressHandler)
+        public AcuCleanerService(IProgress<string>? progressHandler)
         {
             _progressHandler = progressHandler;
         }

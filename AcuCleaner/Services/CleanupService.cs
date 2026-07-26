@@ -1,17 +1,17 @@
-﻿using IISCleanup.Models;
+﻿using AcuCleaner.Models;
 
-namespace IISCleanup.Services
+namespace AcuCleaner.Services
 {
     public class CleanupService : IAppsCollection
     {
         private readonly IProgress<string>? _progressHandler;
-        private readonly IISCleanupService? _iisService;
+        private readonly AcuCleanerService? _iisService;
         private readonly RegistryCleanupService? _registryService;
         private readonly DatabaseCleanupService? _databaseCleanupService;
         private readonly FileSystemCleanupService? _fileSystemCleanupService;
         private IEnumerable<IISApp> _apps = new List<IISApp>();
 
-        public CleanupService(IISCleanupService iISService, FileSystemCleanupService fileSystemCleanupService, DatabaseCleanupService databaseCleanupService, RegistryCleanupService registryService)
+        public CleanupService(AcuCleanerService iISService, FileSystemCleanupService fileSystemCleanupService, DatabaseCleanupService databaseCleanupService, RegistryCleanupService registryService)
         {
             _iisService = iISService;
             _fileSystemCleanupService = fileSystemCleanupService;
@@ -19,7 +19,7 @@ namespace IISCleanup.Services
             _registryService = registryService;
         }
 
-        public CleanupService(IISCleanupService iISService, FileSystemCleanupService fileSystemCleanupService, DatabaseCleanupService databaseCleanupService, RegistryCleanupService registryService, IProgress<string>? progressHandler)
+        public CleanupService(AcuCleanerService iISService, FileSystemCleanupService fileSystemCleanupService, DatabaseCleanupService databaseCleanupService, RegistryCleanupService registryService, IProgress<string>? progressHandler)
         {
             _iisService = iISService;
             _fileSystemCleanupService = fileSystemCleanupService;

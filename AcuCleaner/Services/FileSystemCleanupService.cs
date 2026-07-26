@@ -1,8 +1,8 @@
-﻿using IISCleanup.Models;
+﻿using AcuCleaner.Models;
 using System.Security.AccessControl;
 using System.Security.Principal;
 
-namespace IISCleanup.Services
+namespace AcuCleaner.Services
 {
     public class FileSystemCleanupService : ICleanupService
     {

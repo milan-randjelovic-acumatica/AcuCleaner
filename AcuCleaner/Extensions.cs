@@ -1,6 +1,6 @@
-﻿using IISCleanup.Models;
+﻿using AcuCleaner.Models;
 
-namespace IISCleanup
+namespace AcuCleaner
 {
     internal static class Extensions
     {

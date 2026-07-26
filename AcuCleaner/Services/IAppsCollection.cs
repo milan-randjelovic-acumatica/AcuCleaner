@@ -1,6 +1,6 @@
-﻿using IISCleanup.Models;
+﻿using AcuCleaner.Models;
 
-namespace IISCleanup.Services
+namespace AcuCleaner.Services
 {
     public interface IAppsCollection
     {

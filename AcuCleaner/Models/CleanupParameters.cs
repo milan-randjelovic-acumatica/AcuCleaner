@@ -1,4 +1,4 @@
-﻿namespace IISCleanup.Models
+﻿namespace AcuCleaner.Models
 {
     public class CleanupParameters
     {
