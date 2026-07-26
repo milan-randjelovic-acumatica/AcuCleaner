@@ -115,7 +115,7 @@ namespace AcuCleaner.Services
             }
         }
 
-        public List<Microsoft.Web.Administration.Application> FindAppsToRemove(Site site, IEnumerable<IISApp> iisApps)
+        public List<Application> FindAppsToRemove(Site site, IEnumerable<IISApp> iisApps)
         {
             var appsToRemove = new List<Microsoft.Web.Administration.Application>();
             var appInstances = iisApps.Where(app => !string.IsNullOrEmpty(app.InstanceName)).Select(app => app.InstanceName);
