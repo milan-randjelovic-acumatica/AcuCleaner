@@ -2,7 +2,7 @@
 using Microsoft.Web.Administration;
 using System.ServiceProcess;
 
-namespace AcuCleaner.Services
+namespace AcuCleaner.Services.IIS
 {
     public class AcuCleanerService : ICleanupService
     {

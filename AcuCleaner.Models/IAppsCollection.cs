@@ -1,6 +1,4 @@
-﻿using AcuCleaner.Models;
-
-namespace AcuCleaner.Services
+﻿namespace AcuCleaner.Models
 {
     public interface IAppsCollection
     {

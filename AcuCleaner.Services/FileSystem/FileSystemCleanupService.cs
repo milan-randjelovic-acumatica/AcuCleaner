@@ -2,7 +2,7 @@
 using System.Security.AccessControl;
 using System.Security.Principal;
 
-namespace AcuCleaner.Services
+namespace AcuCleaner.Services.FileSystem
 {
     public class FileSystemCleanupService : ICleanupService
     {
@@ -159,6 +159,7 @@ namespace AcuCleaner.Services
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
         public void GrantFullControl(string path)
         {
             var admins = new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null);

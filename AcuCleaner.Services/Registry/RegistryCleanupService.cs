@@ -1,7 +1,7 @@
 ﻿using AcuCleaner.Models;
 using Microsoft.Win32;
 
-namespace AcuCleaner.Services
+namespace AcuCleaner.Services.Registry
 {
     public class RegistryCleanupService : ICleanupService
     {
@@ -11,7 +11,7 @@ namespace AcuCleaner.Services
         {
             var result = new List<IISApp>();
 
-            using (RegistryKey? baseKey = Registry.LocalMachine.OpenSubKey(_path))
+            using (RegistryKey? baseKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(_path))
             {
                 if (baseKey != null)
                 {
@@ -74,7 +74,7 @@ namespace AcuCleaner.Services
                 return;
             }
 
-            using (var baseKey = Registry.LocalMachine.OpenSubKey(_path, writable: true))
+            using (var baseKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(_path, writable: true))
             {
                 foreach (var app in cleanupParameters.Apps)
                 {
