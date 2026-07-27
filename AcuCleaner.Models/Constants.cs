@@ -4,6 +4,7 @@
     {
         public const string TemporaryAspFiles = "TemporaryAspFiles";
         public const string Snapshots = "Snapshots";
+        public const string Customization = "Customization";
 
         public static readonly List<string> ConnectionStrings = new List<string>()
         {

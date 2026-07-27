@@ -74,11 +74,12 @@ namespace AcuCleaner.Services.IIS
                             InstanceName = instanceName,
                             Path = path.NormalizePath(),
                             RootPath = rootPath.NormalizePath(),
-                            AspFilesTempPath = Path.Combine(rootPath, Constants.TemporaryAspFiles, instanceName).NormalizePath(),
+                            AspTempFilesPath = Path.Combine(rootPath, Constants.TemporaryAspFiles, instanceName).NormalizePath(),
                             DatabaseName = string.Empty,
                             DatabaseConnectionString = string.Empty,
                             RegistryPath = string.Empty,
                             SnapshotPath = string.Empty,
+                            CustomizationPath = string.Empty,
                             Active = true,
                             InstalledOn = Directory.GetCreationTime(path),
                         });

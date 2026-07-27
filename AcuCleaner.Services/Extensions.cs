@@ -57,7 +57,6 @@ namespace AcuCleaner.Services
                 "UnitTesting",
                 "NodeTemp",
                 "BackUp",
-                "Customization",
             };
 
             paths = paths

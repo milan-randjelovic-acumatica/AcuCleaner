@@ -33,15 +33,6 @@ namespace AcuCleaner.Forms
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             dataGridView = new DataGridView();
-            Id = new DataGridViewTextBoxColumn();
-            Instance = new DataGridViewTextBoxColumn();
-            Active = new DataGridViewCheckBoxColumn();
-            InstalledOn = new DataGridViewTextBoxColumn();
-            DatabaseName = new DataGridViewTextBoxColumn();
-            pathDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            AspFilesTempPath = new DataGridViewTextBoxColumn();
-            SnapshotPath = new DataGridViewTextBoxColumn();
-            RegistryPath = new DataGridViewTextBoxColumn();
             iISAppBindingSource1 = new BindingSource(components);
             iISAppBindingSource = new BindingSource(components);
             buttonDeleteSelected = new Button();
@@ -62,6 +53,17 @@ namespace AcuCleaner.Forms
             checkBoxCleanupFiles = new CheckBox();
             groupBoxFilter = new GroupBox();
             buttonRefresh = new Button();
+            Id = new DataGridViewTextBoxColumn();
+            Instance = new DataGridViewTextBoxColumn();
+            Active = new DataGridViewCheckBoxColumn();
+            InstalledOn = new DataGridViewTextBoxColumn();
+            DatabaseName = new DataGridViewTextBoxColumn();
+            pathDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            AspTempFilesPath = new DataGridViewTextBoxColumn();
+            CustomizationPath = new DataGridViewTextBoxColumn();
+            SnapshotPath = new DataGridViewTextBoxColumn();
+            RegistryPath = new DataGridViewTextBoxColumn();
+            checkBoxCleanupCustomizations = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource).BeginInit();
@@ -77,7 +79,7 @@ namespace AcuCleaner.Forms
             dataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView.AutoGenerateColumns = false;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Columns.AddRange(new DataGridViewColumn[] { Id, Instance, Active, InstalledOn, DatabaseName, pathDataGridViewTextBoxColumn, AspFilesTempPath, SnapshotPath, RegistryPath });
+            dataGridView.Columns.AddRange(new DataGridViewColumn[] { Id, Instance, Active, InstalledOn, DatabaseName, pathDataGridViewTextBoxColumn, AspTempFilesPath, CustomizationPath, SnapshotPath, RegistryPath });
             dataGridView.DataSource = iISAppBindingSource1;
             dataGridView.Location = new Point(12, 12);
             dataGridView.Name = "dataGridView";
@@ -86,83 +88,6 @@ namespace AcuCleaner.Forms
             dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView.Size = new Size(812, 524);
             dataGridView.TabIndex = 2;
-            // 
-            // Id
-            // 
-            Id.DataPropertyName = "Id";
-            Id.HeaderText = "#";
-            Id.MinimumWidth = 6;
-            Id.Name = "Id";
-            Id.ReadOnly = true;
-            Id.Width = 50;
-            // 
-            // Instance
-            // 
-            Instance.DataPropertyName = "InstanceName";
-            Instance.HeaderText = "Instance";
-            Instance.MinimumWidth = 6;
-            Instance.Name = "Instance";
-            Instance.ReadOnly = true;
-            // 
-            // Active
-            // 
-            Active.DataPropertyName = "Active";
-            Active.HeaderText = "Active/Junk";
-            Active.MinimumWidth = 6;
-            Active.Name = "Active";
-            Active.ReadOnly = true;
-            Active.SortMode = DataGridViewColumnSortMode.Automatic;
-            // 
-            // InstalledOn
-            // 
-            InstalledOn.DataPropertyName = "InstalledOn";
-            InstalledOn.HeaderText = "Installed On";
-            InstalledOn.MinimumWidth = 6;
-            InstalledOn.Name = "InstalledOn";
-            InstalledOn.ReadOnly = true;
-            // 
-            // DatabaseName
-            // 
-            DatabaseName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            DatabaseName.DataPropertyName = "DatabaseName";
-            DatabaseName.HeaderText = "Database";
-            DatabaseName.MinimumWidth = 6;
-            DatabaseName.Name = "DatabaseName";
-            DatabaseName.ReadOnly = true;
-            // 
-            // pathDataGridViewTextBoxColumn
-            // 
-            pathDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            pathDataGridViewTextBoxColumn.DataPropertyName = "Path";
-            pathDataGridViewTextBoxColumn.HeaderText = "Path";
-            pathDataGridViewTextBoxColumn.MinimumWidth = 6;
-            pathDataGridViewTextBoxColumn.Name = "pathDataGridViewTextBoxColumn";
-            pathDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // AspFilesTempPath
-            // 
-            AspFilesTempPath.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            AspFilesTempPath.DataPropertyName = "AspFilesTempPath";
-            AspFilesTempPath.HeaderText = "Asp Temp Path";
-            AspFilesTempPath.MinimumWidth = 6;
-            AspFilesTempPath.Name = "AspFilesTempPath";
-            AspFilesTempPath.ReadOnly = true;
-            // 
-            // SnapshotPath
-            // 
-            SnapshotPath.DataPropertyName = "SnapshotPath";
-            SnapshotPath.HeaderText = "Snapshot Path";
-            SnapshotPath.Name = "SnapshotPath";
-            SnapshotPath.ReadOnly = true;
-            // 
-            // RegistryPath
-            // 
-            RegistryPath.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            RegistryPath.DataPropertyName = "RegistryPath";
-            RegistryPath.HeaderText = "Registry Path";
-            RegistryPath.MinimumWidth = 6;
-            RegistryPath.Name = "RegistryPath";
-            RegistryPath.ReadOnly = true;
             // 
             // iISAppBindingSource1
             // 
@@ -263,6 +188,7 @@ namespace AcuCleaner.Forms
             // groupBoxCleanup
             // 
             groupBoxCleanup.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            groupBoxCleanup.Controls.Add(checkBoxCleanupCustomizations);
             groupBoxCleanup.Controls.Add(checkBoxCleanupSnapshots);
             groupBoxCleanup.Controls.Add(checkBoxCleanupRegistry);
             groupBoxCleanup.Controls.Add(checkBoxCleanupDatabases);
@@ -295,7 +221,7 @@ namespace AcuCleaner.Forms
             checkBoxCleanupRegistry.AutoSize = true;
             checkBoxCleanupRegistry.Checked = true;
             checkBoxCleanupRegistry.CheckState = CheckState.Checked;
-            checkBoxCleanupRegistry.Location = new Point(6, 147);
+            checkBoxCleanupRegistry.Location = new Point(6, 172);
             checkBoxCleanupRegistry.Name = "checkBoxCleanupRegistry";
             checkBoxCleanupRegistry.Size = new Size(115, 19);
             checkBoxCleanupRegistry.TabIndex = 16;
@@ -307,7 +233,7 @@ namespace AcuCleaner.Forms
             checkBoxCleanupDatabases.AutoSize = true;
             checkBoxCleanupDatabases.Checked = true;
             checkBoxCleanupDatabases.CheckState = CheckState.Checked;
-            checkBoxCleanupDatabases.Location = new Point(6, 122);
+            checkBoxCleanupDatabases.Location = new Point(6, 147);
             checkBoxCleanupDatabases.Name = "checkBoxCleanupDatabases";
             checkBoxCleanupDatabases.Size = new Size(126, 19);
             checkBoxCleanupDatabases.TabIndex = 15;
@@ -376,6 +302,103 @@ namespace AcuCleaner.Forms
             buttonRefresh.UseVisualStyleBackColor = true;
             buttonRefresh.Click += buttonRefresh_Click;
             // 
+            // Id
+            // 
+            Id.DataPropertyName = "Id";
+            Id.HeaderText = "#";
+            Id.MinimumWidth = 6;
+            Id.Name = "Id";
+            Id.ReadOnly = true;
+            Id.Width = 50;
+            // 
+            // Instance
+            // 
+            Instance.DataPropertyName = "InstanceName";
+            Instance.HeaderText = "Instance";
+            Instance.MinimumWidth = 6;
+            Instance.Name = "Instance";
+            Instance.ReadOnly = true;
+            // 
+            // Active
+            // 
+            Active.DataPropertyName = "Active";
+            Active.HeaderText = "Active/Junk";
+            Active.MinimumWidth = 6;
+            Active.Name = "Active";
+            Active.ReadOnly = true;
+            Active.SortMode = DataGridViewColumnSortMode.Automatic;
+            // 
+            // InstalledOn
+            // 
+            InstalledOn.DataPropertyName = "InstalledOn";
+            InstalledOn.HeaderText = "Installed On";
+            InstalledOn.MinimumWidth = 6;
+            InstalledOn.Name = "InstalledOn";
+            InstalledOn.ReadOnly = true;
+            // 
+            // DatabaseName
+            // 
+            DatabaseName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            DatabaseName.DataPropertyName = "DatabaseName";
+            DatabaseName.HeaderText = "Database";
+            DatabaseName.MinimumWidth = 6;
+            DatabaseName.Name = "DatabaseName";
+            DatabaseName.ReadOnly = true;
+            // 
+            // pathDataGridViewTextBoxColumn
+            // 
+            pathDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            pathDataGridViewTextBoxColumn.DataPropertyName = "Path";
+            pathDataGridViewTextBoxColumn.HeaderText = "Path";
+            pathDataGridViewTextBoxColumn.MinimumWidth = 6;
+            pathDataGridViewTextBoxColumn.Name = "pathDataGridViewTextBoxColumn";
+            pathDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // AspTempFilesPath
+            // 
+            AspTempFilesPath.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            AspTempFilesPath.DataPropertyName = "AspTempFilesPath";
+            AspTempFilesPath.HeaderText = "AspTempFiles Path";
+            AspTempFilesPath.Name = "AspTempFilesPath";
+            AspTempFilesPath.ReadOnly = true;
+            // 
+            // CustomizationPath
+            // 
+            CustomizationPath.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            CustomizationPath.DataPropertyName = "CustomizationPath";
+            CustomizationPath.HeaderText = "Customization Path";
+            CustomizationPath.Name = "CustomizationPath";
+            CustomizationPath.ReadOnly = true;
+            // 
+            // SnapshotPath
+            // 
+            SnapshotPath.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            SnapshotPath.DataPropertyName = "SnapshotPath";
+            SnapshotPath.HeaderText = "Snapshot Path";
+            SnapshotPath.Name = "SnapshotPath";
+            SnapshotPath.ReadOnly = true;
+            // 
+            // RegistryPath
+            // 
+            RegistryPath.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            RegistryPath.DataPropertyName = "RegistryPath";
+            RegistryPath.HeaderText = "Registry Path";
+            RegistryPath.MinimumWidth = 6;
+            RegistryPath.Name = "RegistryPath";
+            RegistryPath.ReadOnly = true;
+            // 
+            // checkBoxCleanupCustomizations
+            // 
+            checkBoxCleanupCustomizations.AutoSize = true;
+            checkBoxCleanupCustomizations.Checked = true;
+            checkBoxCleanupCustomizations.CheckState = CheckState.Checked;
+            checkBoxCleanupCustomizations.Location = new Point(6, 122);
+            checkBoxCleanupCustomizations.Name = "checkBoxCleanupCustomizations";
+            checkBoxCleanupCustomizations.Size = new Size(174, 19);
+            checkBoxCleanupCustomizations.TabIndex = 18;
+            checkBoxCleanupCustomizations.Text = "Cleanup Customization files";
+            checkBoxCleanupCustomizations.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -426,15 +449,17 @@ namespace AcuCleaner.Forms
         private CheckBox checkBoxcleanupIISApps;
         private CheckBox checkBoxCleanupFiles;
         private Button buttonRefresh;
+        private CheckBox checkBoxCleanupSnapshots;
         private DataGridViewTextBoxColumn Id;
         private DataGridViewTextBoxColumn Instance;
         private DataGridViewCheckBoxColumn Active;
         private DataGridViewTextBoxColumn InstalledOn;
         private DataGridViewTextBoxColumn DatabaseName;
         private DataGridViewTextBoxColumn pathDataGridViewTextBoxColumn;
-        private DataGridViewTextBoxColumn AspFilesTempPath;
+        private DataGridViewTextBoxColumn AspTempFilesPath;
+        private DataGridViewTextBoxColumn CustomizationPath;
         private DataGridViewTextBoxColumn SnapshotPath;
         private DataGridViewTextBoxColumn RegistryPath;
-        private CheckBox checkBoxCleanupSnapshots;
+        private CheckBox checkBoxCleanupCustomizations;
     }
 }

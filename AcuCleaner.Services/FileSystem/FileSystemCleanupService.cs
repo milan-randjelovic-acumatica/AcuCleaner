@@ -50,89 +50,15 @@ namespace AcuCleaner.Services.FileSystem
 
                     if (folderName == Constants.TemporaryAspFiles)
                     {
-                        // Process temporary ASP files directly without recursion
-                        var normalizedPath = path.NormalizePath();
-                        var aspTempPaths = Directory.GetDirectories(path).ExcludeStandardFolders();
-
-                        foreach (var tmpPath in aspTempPaths)
-                        {
-                            string tmpInstanceName = Path.GetFileName(tmpPath).NormalizePath();
-                            if (string.IsNullOrEmpty(tmpInstanceName))
-                            {
-                                continue;
-                            }
-
-                            var normalizedTmpPath = tmpPath.NormalizePath();
-
-                            if (result.TryGetValue(tmpInstanceName, out var existingApp))
-                            {
-                                existingApp.InstanceName = existingApp.InstanceName != string.Empty ? existingApp.InstanceName : tmpInstanceName;
-                                existingApp.AspFilesTempPath = normalizedTmpPath;
-                                if (existingApp.InstalledOn == DateTime.MinValue)
-                                {
-                                    existingApp.InstalledOn = Directory.GetCreationTime(tmpPath);
-                                }
-                            }
-                            else
-                            {
-                                result[tmpInstanceName] = new IISApp
-                                {
-                                    InstanceName = tmpInstanceName,
-                                    DatabaseName = string.Empty,
-                                    DatabaseConnectionString = string.Empty,
-                                    Path = string.Empty,
-                                    RootPath = normalizedPath,
-                                    AspFilesTempPath = normalizedTmpPath,
-                                    SnapshotPath = string.Empty,
-                                    RegistryPath = string.Empty,
-                                    Active = false,
-                                    InstalledOn = Directory.GetCreationTime(tmpPath),
-                                };
-                            }
-                        }
+                        ProcessSpecialFolder(path, result, (app, normalizedPath) => app.AspTempFilesPath = normalizedPath);
                     }
                     else if (folderName == Constants.Snapshots)
                     {
-                        // Process snapshot files directly without recursion
-                        var normalizedPath = path.NormalizePath();
-                        var snapshotPaths = Directory.GetDirectories(path).ExcludeStandardFolders();
-
-                        foreach (var snapshotPath in snapshotPaths)
-                        {
-                            string snapshotName = Path.GetFileName(snapshotPath).NormalizePath();
-                            if (string.IsNullOrEmpty(snapshotName))
-                            {
-                                continue;
-                            }
-
-                            var normalizedSnapshotPath = snapshotPath.NormalizePath();
-
-                            if (result.TryGetValue(snapshotName, out var existingApp))
-                            {
-                                existingApp.InstanceName = existingApp.InstanceName != string.Empty ? existingApp.InstanceName : snapshotName;
-                                existingApp.SnapshotPath = normalizedSnapshotPath;
-                                if (existingApp.InstalledOn == DateTime.MinValue)
-                                {
-                                    existingApp.InstalledOn = Directory.GetCreationTime(snapshotPath);
-                                }
-                            }
-                            else
-                            {
-                                result[snapshotName] = new IISApp
-                                {
-                                    InstanceName = snapshotName,
-                                    DatabaseName = string.Empty,
-                                    DatabaseConnectionString = string.Empty,
-                                    Path = string.Empty,
-                                    RootPath = normalizedPath,
-                                    AspFilesTempPath = string.Empty,
-                                    SnapshotPath = normalizedSnapshotPath,
-                                    RegistryPath = string.Empty,
-                                    Active = false,
-                                    InstalledOn = Directory.GetCreationTime(snapshotPath),
-                                };
-                            }
-                        }
+                        ProcessSpecialFolder(path, result, (app, normalizedPath) => app.SnapshotPath = normalizedPath);
+                    }
+                    else if(folderName == Constants.Customization)
+                    {
+                        ProcessSpecialFolder(path, result, (app, normalizedPath) => app.CustomizationPath = normalizedPath);
                     }
                     else
                     {
@@ -156,20 +82,65 @@ namespace AcuCleaner.Services.FileSystem
                                 DatabaseConnectionString = string.Empty,
                                 Path = normalizedPath,
                                 RootPath = normalizedRootFolder,
-                                AspFilesTempPath = string.Empty,
+                                AspTempFilesPath = string.Empty,
+                                CustomizationPath = string.Empty,
                                 SnapshotPath = string.Empty,
                                 RegistryPath = string.Empty,
                                 Active = false,
                                 InstalledOn = Directory.GetCreationTime(path),
                             };
                         }
-
-
                     }
                 }
             }
 
             return result.Values;
+        }
+
+        private void ProcessSpecialFolder(string path, Dictionary<string, IISApp> result, Action<IISApp, string> setPathAction)
+        {
+            var normalizedPath = path.NormalizePath();
+            var subPaths = Directory.GetDirectories(path).ExcludeStandardFolders();
+
+            foreach (var subPath in subPaths)
+            {
+                string instanceName = Path.GetFileName(subPath).NormalizePath();
+                if (string.IsNullOrEmpty(instanceName))
+                {
+                    continue;
+                }
+
+                var normalizedSubPath = subPath.NormalizePath();
+
+                if (result.TryGetValue(instanceName, out var existingApp))
+                {
+                    existingApp.InstanceName = existingApp.InstanceName != string.Empty ? existingApp.InstanceName : instanceName;
+                    setPathAction(existingApp, normalizedSubPath);
+                    if (existingApp.InstalledOn == DateTime.MinValue)
+                    {
+                        existingApp.InstalledOn = Directory.GetCreationTime(subPath);
+                    }
+                }
+                else
+                {
+                    var newApp = new IISApp
+                    {
+                        InstanceName = instanceName,
+                        DatabaseName = string.Empty,
+                        DatabaseConnectionString = string.Empty,
+                        Path = string.Empty,
+                        RootPath = normalizedPath,
+                        AspTempFilesPath = string.Empty,
+                        SnapshotPath = string.Empty,
+                        CustomizationPath = string.Empty,
+                        RegistryPath = string.Empty,
+                        Active = false,
+                        InstalledOn = Directory.GetCreationTime(subPath),
+                    };
+                    setPathAction(newApp, normalizedSubPath);
+                    result[instanceName] = newApp;
+                }
+            }
         }
 
         public void Cleanup(CleanupParameters cleanupParameters)
@@ -187,6 +158,11 @@ namespace AcuCleaner.Services.FileSystem
             if(cleanupParameters.CleanupSnapshots)
             {
                 CleanupSnapshotFolders(cleanupParameters);
+            }
+
+            if(cleanupParameters.CleanupCustomizations)
+            {
+                CleanupCustomizationFolders(cleanupParameters);
             }
         }
 
@@ -209,11 +185,11 @@ namespace AcuCleaner.Services.FileSystem
             int i = 1;
             foreach (var app in cleanupParameters.Apps)
             {
-                if (!string.IsNullOrEmpty(app.AspFilesTempPath) && Directory.Exists(app.AspFilesTempPath))
+                if (!string.IsNullOrEmpty(app.AspTempFilesPath) && Directory.Exists(app.AspTempFilesPath))
                 {
-                    _progressHandler?.Report($"Deleting ASP temp files: {i++}/{cleanupParameters.Apps.Count} {app.AspFilesTempPath}");
-                    PrepareDirectoryForDeletion(app.AspFilesTempPath);
-                    Directory.Delete(app.AspFilesTempPath, true);
+                    _progressHandler?.Report($"Deleting ASP temp files: {i++}/{cleanupParameters.Apps.Count} {app.AspTempFilesPath}");
+                    PrepareDirectoryForDeletion(app.AspTempFilesPath);
+                    Directory.Delete(app.AspTempFilesPath, true);
                 }
             }
         }
@@ -228,6 +204,20 @@ namespace AcuCleaner.Services.FileSystem
                     _progressHandler?.Report($"Deleting snapshot files: {i++}/{cleanupParameters.Apps.Count} {app.SnapshotPath}");
                     PrepareDirectoryForDeletion(app.SnapshotPath);
                     Directory.Delete(app.SnapshotPath, true);
+                }
+            }
+        }
+
+        public void CleanupCustomizationFolders(CleanupParameters cleanupParameters)
+        {
+            int i = 1;
+            foreach (var app in cleanupParameters.Apps)
+            {
+                if (!string.IsNullOrEmpty(app.CustomizationPath) && Directory.Exists(app.CustomizationPath))
+                {
+                    _progressHandler?.Report($"Deleting customization files: {i++}/{cleanupParameters.Apps.Count} {app.CustomizationPath}");
+                    PrepareDirectoryForDeletion(app.CustomizationPath);
+                    Directory.Delete(app.CustomizationPath, true);
                 }
             }
         }
