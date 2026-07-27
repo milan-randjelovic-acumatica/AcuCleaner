@@ -72,8 +72,8 @@ namespace AcuCleaner.Services.Registry
         public IEnumerable<IISApp> GetAppsForCleanup(CleanupParameters cleanupParameters)
         {
             var result = new List<IISApp>();
-            var registryEnties = GetAllApps();
-            foreach (var registryEntry in registryEnties ?? Enumerable.Empty<IISApp>())
+            var registryEnties = GetAllApps() ?? Enumerable.Empty<IISApp>();
+            foreach (var registryEntry in registryEnties)
             {
                 var existingApp = cleanupParameters.Apps.FirstOrDefault(app => app.InstanceName == registryEntry.InstanceName);
                 if (existingApp != null)

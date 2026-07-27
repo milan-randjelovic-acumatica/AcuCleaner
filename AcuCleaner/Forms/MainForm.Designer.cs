@@ -230,7 +230,7 @@ namespace AcuCleaner.Forms
             // statusStrip
             // 
             statusStrip.ImageScalingSize = new Size(20, 20);
-            statusStrip.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel, toolStripProgressBar });
+            statusStrip.Items.AddRange(new ToolStripItem[] { toolStripProgressBar, toolStripStatusLabel });
             statusStrip.Location = new Point(0, 539);
             statusStrip.Name = "statusStrip";
             statusStrip.Size = new Size(1067, 22);
@@ -245,6 +245,7 @@ namespace AcuCleaner.Forms
             // 
             // toolStripProgressBar
             // 
+            toolStripProgressBar.Alignment = ToolStripItemAlignment.Right;
             toolStripProgressBar.Name = "toolStripProgressBar";
             toolStripProgressBar.Size = new Size(100, 16);
             toolStripProgressBar.Style = ProgressBarStyle.Marquee;
@@ -344,6 +345,7 @@ namespace AcuCleaner.Forms
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.White;
             ClientSize = new Size(1067, 561);
             Controls.Add(groupBoxFilter);
             Controls.Add(groupBoxCleanup);
