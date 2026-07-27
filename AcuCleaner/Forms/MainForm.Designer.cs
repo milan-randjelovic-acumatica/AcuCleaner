@@ -169,7 +169,7 @@ namespace AcuCleaner.Forms
             buttonDeleteSelected.Name = "buttonDeleteSelected";
             buttonDeleteSelected.Size = new Size(75, 23);
             buttonDeleteSelected.TabIndex = 3;
-            buttonDeleteSelected.Text = "Delete";
+            buttonDeleteSelected.Text = "Clean";
             buttonDeleteSelected.UseVisualStyleBackColor = true;
             buttonDeleteSelected.Click += buttonDeleteSelected_Click;
             // 
@@ -180,7 +180,7 @@ namespace AcuCleaner.Forms
             buttonDeleteAll.Name = "buttonDeleteAll";
             buttonDeleteAll.Size = new Size(75, 23);
             buttonDeleteAll.TabIndex = 4;
-            buttonDeleteAll.Text = "Delete All";
+            buttonDeleteAll.Text = "Clean all";
             buttonDeleteAll.UseVisualStyleBackColor = true;
             buttonDeleteAll.Click += buttonDeleteAll_Click;
             // 
@@ -285,9 +285,9 @@ namespace AcuCleaner.Forms
             checkBoxCleanupDatabases.CheckState = CheckState.Checked;
             checkBoxCleanupDatabases.Location = new Point(6, 97);
             checkBoxCleanupDatabases.Name = "checkBoxCleanupDatabases";
-            checkBoxCleanupDatabases.Size = new Size(125, 19);
+            checkBoxCleanupDatabases.Size = new Size(126, 19);
             checkBoxCleanupDatabases.TabIndex = 15;
-            checkBoxCleanupDatabases.Text = "Cleanup databases";
+            checkBoxCleanupDatabases.Text = "Cleanup Databases";
             checkBoxCleanupDatabases.UseVisualStyleBackColor = true;
             // 
             // checkBoxCleanupAspTemp
@@ -297,9 +297,9 @@ namespace AcuCleaner.Forms
             checkBoxCleanupAspTemp.CheckState = CheckState.Checked;
             checkBoxCleanupAspTemp.Location = new Point(6, 72);
             checkBoxCleanupAspTemp.Name = "checkBoxCleanupAspTemp";
-            checkBoxCleanupAspTemp.Size = new Size(140, 19);
+            checkBoxCleanupAspTemp.Size = new Size(127, 19);
             checkBoxCleanupAspTemp.TabIndex = 14;
-            checkBoxCleanupAspTemp.Text = "Cleanup IIS temp files";
+            checkBoxCleanupAspTemp.Text = "Cleanup Temp files";
             checkBoxCleanupAspTemp.UseVisualStyleBackColor = true;
             // 
             // checkBoxcleanupIISApps
@@ -321,9 +321,9 @@ namespace AcuCleaner.Forms
             checkBoxCleanupFiles.CheckState = CheckState.Checked;
             checkBoxCleanupFiles.Location = new Point(6, 47);
             checkBoxCleanupFiles.Name = "checkBoxCleanupFiles";
-            checkBoxCleanupFiles.Size = new Size(137, 19);
+            checkBoxCleanupFiles.Size = new Size(96, 19);
             checkBoxCleanupFiles.TabIndex = 12;
-            checkBoxCleanupFiles.Text = "Cleanup IIS apps files";
+            checkBoxCleanupFiles.Text = "Cleanup Files";
             checkBoxCleanupFiles.UseVisualStyleBackColor = true;
             // 
             // groupBoxFilter
