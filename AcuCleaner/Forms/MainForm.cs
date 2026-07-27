@@ -137,6 +137,7 @@ namespace AcuCleaner.Forms
                 CleanupSnapshots = checkBoxCleanupSnapshots.Checked,
                 CleanupRegistry = checkBoxCleanupRegistry.Checked,
                 CleanupCustomizations = checkBoxCleanupCustomizations.Checked,
+                CleanupBackups = checkBoxCleanupBackups.Checked,
             };
         }
 

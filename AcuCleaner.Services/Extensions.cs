@@ -42,7 +42,6 @@ namespace AcuCleaner.Services
             {
                 "NodeJS",
                 "NpmCache",
-                "Backup",
                 "Logs",
                 "Files",
                 "Data",
@@ -56,7 +55,6 @@ namespace AcuCleaner.Services
                 "ScreenBasedAPIWrapper",
                 "UnitTesting",
                 "NodeTemp",
-                "BackUp",
             };
 
             paths = paths

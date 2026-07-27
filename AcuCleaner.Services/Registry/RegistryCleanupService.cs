@@ -60,6 +60,7 @@ namespace AcuCleaner.Services.Registry
                             Path = string.Empty,
                             SnapshotPath = string.Empty,
                             CustomizationPath = string.Empty,
+                            BackupPath = string.Empty,
                             RootPath = string.Empty,
                             Active = true,
                             InstalledOn = subKeyEntry != null ? GetSubKeyLastWriteTime(subKeyEntry) : DateTime.MinValue,
@@ -98,6 +99,7 @@ namespace AcuCleaner.Services.Registry
                         RegistryPath = registryEntry.RegistryPath,
                         SnapshotPath = string.Empty,
                         CustomizationPath = string.Empty,
+                        BackupPath = string.Empty,
                         Active = false,
                         InstalledOn = registryEntry.InstalledOn,
                     });

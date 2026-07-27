@@ -80,6 +80,7 @@ namespace AcuCleaner.Services.IIS
                             RegistryPath = string.Empty,
                             SnapshotPath = string.Empty,
                             CustomizationPath = string.Empty,
+                            BackupPath = string.Empty,
                             Active = true,
                             InstalledOn = Directory.GetCreationTime(path),
                         });

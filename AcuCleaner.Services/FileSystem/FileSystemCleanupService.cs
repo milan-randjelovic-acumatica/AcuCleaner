@@ -60,6 +60,10 @@ namespace AcuCleaner.Services.FileSystem
                     {
                         ProcessSpecialFolder(path, result, (app, normalizedPath) => app.CustomizationPath = normalizedPath);
                     }
+                    else if(folderName == Constants.BackUp)
+                    {
+                        ProcessSpecialFolder( Path.Combine(path, Constants.Sites), result, (app, normalizedPath) => app.BackupPath = normalizedPath);
+                    }
                     else
                     {
                         var normalizedPath = path.NormalizePath();
@@ -84,6 +88,7 @@ namespace AcuCleaner.Services.FileSystem
                                 RootPath = normalizedRootFolder,
                                 AspTempFilesPath = string.Empty,
                                 CustomizationPath = string.Empty,
+                                BackupPath = string.Empty,
                                 SnapshotPath = string.Empty,
                                 RegistryPath = string.Empty,
                                 Active = false,
@@ -133,6 +138,7 @@ namespace AcuCleaner.Services.FileSystem
                         AspTempFilesPath = string.Empty,
                         SnapshotPath = string.Empty,
                         CustomizationPath = string.Empty,
+                        BackupPath = string.Empty,
                         RegistryPath = string.Empty,
                         Active = false,
                         InstalledOn = Directory.GetCreationTime(subPath),
@@ -163,6 +169,11 @@ namespace AcuCleaner.Services.FileSystem
             if(cleanupParameters.CleanupCustomizations)
             {
                 CleanupCustomizationFolders(cleanupParameters);
+            }
+
+            if(cleanupParameters.CleanupBackups)
+            {
+                CleanupBackupFolders(cleanupParameters);
             }
         }
 
@@ -218,6 +229,20 @@ namespace AcuCleaner.Services.FileSystem
                     _progressHandler?.Report($"Deleting customization files: {i++}/{cleanupParameters.Apps.Count} {app.CustomizationPath}");
                     PrepareDirectoryForDeletion(app.CustomizationPath);
                     Directory.Delete(app.CustomizationPath, true);
+                }
+            }
+        }
+
+        public void CleanupBackupFolders(CleanupParameters cleanupParameters)
+        {
+            int i = 1;
+            foreach (var app in cleanupParameters.Apps)
+            {
+                if (!string.IsNullOrEmpty(app.BackupPath) && Directory.Exists(app.BackupPath))
+                {
+                    _progressHandler?.Report($"Deleting backup files: {i++}/{cleanupParameters.Apps.Count} {app.BackupPath}");
+                    PrepareDirectoryForDeletion(app.BackupPath);
+                    Directory.Delete(app.BackupPath, true);
                 }
             }
         }
