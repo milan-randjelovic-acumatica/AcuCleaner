@@ -78,6 +78,7 @@ namespace AcuCleaner.Services.IIS
                             DatabaseName = string.Empty,
                             DatabaseConnectionString = string.Empty,
                             RegistryPath = string.Empty,
+                            SnapshotPath = string.Empty,
                             Active = true,
                             InstalledOn = Directory.GetCreationTime(path),
                         });

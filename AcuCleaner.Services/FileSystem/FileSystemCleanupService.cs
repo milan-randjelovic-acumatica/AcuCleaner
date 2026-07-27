@@ -24,102 +24,152 @@ namespace AcuCleaner.Services.FileSystem
 
         public IEnumerable<IISApp> GetAppsForCleanup(CleanupParameters cleanupParameters)
         {
-            var result = cleanupParameters.Apps.ToList();
+            var result = new Dictionary<string, IISApp>(StringComparer.OrdinalIgnoreCase);
+
+            // Pre-populate dictionary with existing apps for O(1) lookups
+            foreach (var app in cleanupParameters.Apps)
+            {
+                if (!string.IsNullOrEmpty(app.InstanceName) && !result.ContainsKey(app.InstanceName))
+                {
+                    result[app.InstanceName] = app;
+                }
+            }
 
             foreach (var rootFolder in cleanupParameters.FileSystemRootPaths)
             {
-                var folders = Directory.GetDirectories(rootFolder).ExcludeStandardFolders();
-                foreach (var folder in folders)
+                var normalizedRootFolder = rootFolder.NormalizePath();
+                var paths = Directory.GetDirectories(rootFolder).ExcludeStandardFolders();
+
+                foreach (var path in paths)
                 {
-                    string folderName = Path.GetFileName(folder).NormalizePath();
-                    if(string.IsNullOrEmpty(folderName))
+                    string folderName = Path.GetFileName(path).NormalizePath();
+                    if (string.IsNullOrEmpty(folderName))
                     {
                         continue;
                     }
 
-                    if (folderName != Constants.TemporaryAspFiles)
+                    if (folderName == Constants.TemporaryAspFiles)
                     {
-                        var existingApp = result.FirstOrDefault(app => app.InstanceName == folderName);
-                        if (existingApp != null)
-                        {
-                            existingApp.InstanceName = existingApp.InstanceName != string.Empty ? existingApp.InstanceName : folderName;
-                            existingApp.Path = folder.NormalizePath();
-                            existingApp.InstalledOn = existingApp.InstalledOn == DateTime.MinValue ? Directory.GetCreationTime(folder) : existingApp.InstalledOn;
-                        }
-                        else
-                        {
-                            result.Add(new IISApp
-                            {
-                                InstanceName = folderName,
-                                DatabaseName = string.Empty,
-                                DatabaseConnectionString = string.Empty,
-                                Path = folder.NormalizePath(),
-                                RootPath = rootFolder.NormalizePath(),
-                                AspFilesTempPath = string.Empty,
-                                RegistryPath = string.Empty,
-                                Active = false,
-                                InstalledOn = Directory.GetCreationTime(folder),
-                            });
-                        }
-                    }
-                    else
-                    {
-                        var parameters = new CleanupParameters()
-                        {
-                            Apps = new List<IISApp>()
-                            {
-                                new IISApp
-                                {
-                                     RootPath = folder.NormalizePath(),
-                                     AspFilesTempPath = string.Empty,
-                                     DatabaseConnectionString = string.Empty,
-                                     DatabaseName = string.Empty,
-                                     InstanceName = folderName,
-                                     Path = string.Empty,
-                                     RegistryPath = string.Empty,
-                                     Active = false
-                                }
-                            }
-                        };
+                        // Process temporary ASP files directly without recursion
+                        var normalizedPath = path.NormalizePath();
+                        var aspTempPaths = Directory.GetDirectories(path).ExcludeStandardFolders();
 
-
-                        var tmpASPApps = GetAppsForCleanup(parameters);
-                        foreach (var tmpApp in tmpASPApps)
+                        foreach (var tmpPath in aspTempPaths)
                         {
-                            string tmpInstanceName = Path.GetFileName(tmpApp.Path).NormalizePath();
+                            string tmpInstanceName = Path.GetFileName(tmpPath).NormalizePath();
                             if (string.IsNullOrEmpty(tmpInstanceName))
                             {
                                 continue;
                             }
 
-                            var existingApp = result.FirstOrDefault(app => app.InstanceName == tmpInstanceName);
-                            if (existingApp != null)
+                            var normalizedTmpPath = tmpPath.NormalizePath();
+
+                            if (result.TryGetValue(tmpInstanceName, out var existingApp))
                             {
                                 existingApp.InstanceName = existingApp.InstanceName != string.Empty ? existingApp.InstanceName : tmpInstanceName;
-                                existingApp.AspFilesTempPath = tmpApp.Path.NormalizePath();
-                                existingApp.InstalledOn = existingApp.InstalledOn == DateTime.MinValue ? Directory.GetCreationTime(tmpApp.Path) : existingApp.InstalledOn;
+                                existingApp.AspFilesTempPath = normalizedTmpPath;
+                                if (existingApp.InstalledOn == DateTime.MinValue)
+                                {
+                                    existingApp.InstalledOn = Directory.GetCreationTime(tmpPath);
+                                }
                             }
                             else
                             {
-                                result.Add(new IISApp
+                                result[tmpInstanceName] = new IISApp
                                 {
                                     InstanceName = tmpInstanceName,
                                     DatabaseName = string.Empty,
                                     DatabaseConnectionString = string.Empty,
                                     Path = string.Empty,
-                                    RootPath = folder.NormalizePath(),
-                                    AspFilesTempPath = tmpApp.Path.NormalizePath(),
+                                    RootPath = normalizedPath,
+                                    AspFilesTempPath = normalizedTmpPath,
+                                    SnapshotPath = string.Empty,
                                     RegistryPath = string.Empty,
                                     Active = false,
-                                    InstalledOn = Directory.GetCreationTime(tmpApp.Path),
-                                });
+                                    InstalledOn = Directory.GetCreationTime(tmpPath),
+                                };
                             }
                         }
+                    }
+                    else if (folderName == Constants.Snapshots)
+                    {
+                        // Process snapshot files directly without recursion
+                        var normalizedPath = path.NormalizePath();
+                        var aspTempPaths = Directory.GetDirectories(path).ExcludeStandardFolders();
+
+                        foreach (var tmpPath in aspTempPaths)
+                        {
+                            string tmpInstanceName = Path.GetFileName(tmpPath).NormalizePath();
+                            if (string.IsNullOrEmpty(tmpInstanceName))
+                            {
+                                continue;
+                            }
+
+                            var normalizedTmpPath = tmpPath.NormalizePath();
+
+                            if (result.TryGetValue(tmpInstanceName, out var existingApp))
+                            {
+                                existingApp.InstanceName = existingApp.InstanceName != string.Empty ? existingApp.InstanceName : tmpInstanceName;
+                                existingApp.SnapshotPath = normalizedTmpPath;
+                                if (existingApp.InstalledOn == DateTime.MinValue)
+                                {
+                                    existingApp.InstalledOn = Directory.GetCreationTime(tmpPath);
+                                }
+                            }
+                            else
+                            {
+                                result[tmpInstanceName] = new IISApp
+                                {
+                                    InstanceName = tmpInstanceName,
+                                    DatabaseName = string.Empty,
+                                    DatabaseConnectionString = string.Empty,
+                                    Path = string.Empty,
+                                    RootPath = normalizedPath,
+                                    AspFilesTempPath = string.Empty,
+                                    SnapshotPath = normalizedTmpPath,
+                                    RegistryPath = string.Empty,
+                                    Active = false,
+                                    InstalledOn = Directory.GetCreationTime(tmpPath),
+                                };
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var normalizedPath = path.NormalizePath();
+
+                        if (result.TryGetValue(folderName, out var existingApp))
+                        {
+                            existingApp.InstanceName = existingApp.InstanceName != string.Empty ? existingApp.InstanceName : folderName;
+                            existingApp.Path = normalizedPath;
+                            if (existingApp.InstalledOn == DateTime.MinValue)
+                            {
+                                existingApp.InstalledOn = Directory.GetCreationTime(path);
+                            }
+                        }
+                        else
+                        {
+                            result[folderName] = new IISApp
+                            {
+                                InstanceName = folderName,
+                                DatabaseName = string.Empty,
+                                DatabaseConnectionString = string.Empty,
+                                Path = normalizedPath,
+                                RootPath = normalizedRootFolder,
+                                AspFilesTempPath = string.Empty,
+                                SnapshotPath = string.Empty,
+                                RegistryPath = string.Empty,
+                                Active = false,
+                                InstalledOn = Directory.GetCreationTime(path),
+                            };
+                        }
+
+
                     }
                 }
             }
 
-            return result.DistinctBy(app => app.Path);
+            return result.Values;
         }
 
         public void Cleanup(CleanupParameters cleanupParameters)

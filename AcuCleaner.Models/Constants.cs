@@ -3,6 +3,7 @@
     public class Constants
     {
         public const string TemporaryAspFiles = "TemporaryAspFiles";
+        public const string Snapshots = "Snapshots";
 
         public static readonly List<string> ConnectionStrings = new List<string>()
         {

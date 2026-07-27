@@ -7,6 +7,7 @@
         public required string Path { get; set; }
         public required string RootPath { get; set; }
         public required string AspFilesTempPath { get; set; }
+        public required string SnapshotPath { get; set; }
         public required string DatabaseName { get; set; }
         public required string DatabaseConnectionString { get; set; }
         public required string RegistryPath { get; set; }

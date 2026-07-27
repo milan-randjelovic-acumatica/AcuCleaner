@@ -58,6 +58,7 @@ namespace AcuCleaner.Services.Registry
                             DatabaseConnectionString = string.Empty,
                             DatabaseName = string.Empty,
                             Path = string.Empty,
+                            SnapshotPath = string.Empty,
                             RootPath = string.Empty,
                             Active = true,
                             InstalledOn = subKeyEntry != null ? GetSubKeyLastWriteTime(subKeyEntry) : DateTime.MinValue,
@@ -94,6 +95,7 @@ namespace AcuCleaner.Services.Registry
                         RootPath = string.Empty,
                         AspFilesTempPath = string.Empty,
                         RegistryPath = registryEntry.RegistryPath,
+                        SnapshotPath = string.Empty,
                         Active = false,
                         InstalledOn = registryEntry.InstalledOn,
                     });

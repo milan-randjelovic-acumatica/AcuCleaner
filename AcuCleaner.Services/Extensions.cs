@@ -42,7 +42,6 @@ namespace AcuCleaner.Services
             {
                 "NodeJS",
                 "NpmCache",
-                "Snapshots",
                 "Backup",
                 "Logs",
                 "Files",
