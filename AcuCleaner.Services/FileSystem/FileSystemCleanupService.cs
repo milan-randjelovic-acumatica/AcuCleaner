@@ -42,6 +42,7 @@ namespace AcuCleaner.Services.FileSystem
                         var existingApp = result.FirstOrDefault(app => app.InstanceName == folderName);
                         if (existingApp != null)
                         {
+                            existingApp.InstanceName = existingApp.InstanceName != string.Empty ? existingApp.InstanceName : folderName;
                             existingApp.Path = folder.NormalizePath();
                             existingApp.InstalledOn = existingApp.InstalledOn == DateTime.MinValue ? Directory.GetCreationTime(folder) : existingApp.InstalledOn;
                         }
@@ -49,7 +50,7 @@ namespace AcuCleaner.Services.FileSystem
                         {
                             result.Add(new IISApp
                             {
-                                InstanceName = string.Empty,
+                                InstanceName = folderName,
                                 DatabaseName = string.Empty,
                                 DatabaseConnectionString = string.Empty,
                                 Path = folder.NormalizePath(),
@@ -94,6 +95,7 @@ namespace AcuCleaner.Services.FileSystem
                             var existingApp = result.FirstOrDefault(app => app.InstanceName == tmpInstanceName);
                             if (existingApp != null)
                             {
+                                existingApp.InstanceName = existingApp.InstanceName != string.Empty ? existingApp.InstanceName : tmpInstanceName;
                                 existingApp.AspFilesTempPath = tmpApp.Path.NormalizePath();
                                 existingApp.InstalledOn = existingApp.InstalledOn == DateTime.MinValue ? Directory.GetCreationTime(tmpApp.Path) : existingApp.InstalledOn;
                             }
@@ -101,7 +103,7 @@ namespace AcuCleaner.Services.FileSystem
                             {
                                 result.Add(new IISApp
                                 {
-                                    InstanceName = string.Empty,
+                                    InstanceName = tmpInstanceName,
                                     DatabaseName = string.Empty,
                                     DatabaseConnectionString = string.Empty,
                                     Path = string.Empty,

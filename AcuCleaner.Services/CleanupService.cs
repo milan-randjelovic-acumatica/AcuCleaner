@@ -33,7 +33,7 @@ namespace AcuCleaner.Services
         public IAppsCollection GetAll(CleanupParameters cleanupParameters)
         {
             cleanupParameters.Apps = _iisService?.GetAllApps()?.ToList() ?? new List<IISApp>();
-            
+
             var iisJunk = _fileSystemCleanupService?.GetAppsForCleanup(cleanupParameters) ?? Enumerable.Empty<IISApp>();
 
             cleanupParameters.Apps = cleanupParameters.Apps
@@ -42,7 +42,7 @@ namespace AcuCleaner.Services
 
             var sqlDatabases = _databaseCleanupService?.GetAppsForCleanup(cleanupParameters) ?? Enumerable.Empty<IISApp>();
             cleanupParameters.Apps = cleanupParameters.Apps
-                .UnionBy(sqlDatabases, x => x.DatabaseName)
+                .UnionBy(sqlDatabases, x => x.InstanceName)
                 .ToList();
 
             var registryEnties = _registryService?.GetAppsForCleanup(cleanupParameters) ?? Enumerable.Empty<IISApp>();
@@ -105,6 +105,6 @@ namespace AcuCleaner.Services
             _registryService?.Cleanup(cleanupParameters);
 
             _iisService?.Start();
-        }    
+        }
     }
 }

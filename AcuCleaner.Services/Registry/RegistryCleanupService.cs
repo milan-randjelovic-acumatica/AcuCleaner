@@ -78,6 +78,7 @@ namespace AcuCleaner.Services.Registry
                 var existingApp = cleanupParameters.Apps.FirstOrDefault(app => app.InstanceName == registryEntry.InstanceName);
                 if (existingApp != null)
                 {
+                    existingApp.InstanceName = existingApp.InstanceName != string.Empty ? existingApp.InstanceName : registryEntry.InstanceName;
                     existingApp.RegistryPath = registryEntry.RegistryPath;
                     existingApp.InstalledOn = existingApp.InstalledOn == DateTime.MinValue ? registryEntry.InstalledOn : existingApp.InstalledOn;
                     result.Add(existingApp);

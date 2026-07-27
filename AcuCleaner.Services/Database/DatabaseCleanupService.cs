@@ -65,6 +65,7 @@ namespace AcuCleaner.Services.Database
                 var existingApp = cleanupParameters.Apps.FirstOrDefault(app => app.InstanceName == sqlDatabase.DatabaseName);
                 if (existingApp != null)
                 {
+                    existingApp.InstanceName = existingApp.InstanceName != string.Empty ? existingApp.InstanceName : sqlDatabase.DatabaseName;
                     existingApp.DatabaseName = sqlDatabase.DatabaseName;
                     existingApp.DatabaseConnectionString = sqlDatabase.DatabaseConnectionString;
                     existingApp.InstalledOn = existingApp.InstalledOn == DateTime.MinValue ? sqlDatabase.InstalledOn : existingApp.InstalledOn;
@@ -74,7 +75,7 @@ namespace AcuCleaner.Services.Database
                 {
                     result.Add(new IISApp
                     {
-                        InstanceName = string.Empty,
+                        InstanceName = sqlDatabase.DatabaseName,
                         DatabaseName = sqlDatabase.DatabaseName,
                         DatabaseConnectionString = sqlDatabase.DatabaseConnectionString,
                         Path = string.Empty,
