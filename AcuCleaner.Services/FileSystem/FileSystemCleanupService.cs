@@ -24,7 +24,7 @@ namespace AcuCleaner.Services.FileSystem
 
         public IEnumerable<IISApp> GetAppsForCleanup(CleanupParameters cleanupParameters)
         {
-            var result = new List<IISApp>();
+            var result = cleanupParameters.Apps.ToList();
 
             foreach (var rootFolder in cleanupParameters.FileSystemRootPaths)
             {
@@ -32,11 +32,14 @@ namespace AcuCleaner.Services.FileSystem
                 foreach (var folder in folders)
                 {
                     string folderName = Path.GetFileName(folder).NormalizePath();
+                    if(string.IsNullOrEmpty(folderName))
+                    {
+                        continue;
+                    }
 
                     if (folderName != Constants.TemporaryAspFiles)
                     {
-
-                        var existingApp = cleanupParameters.Apps.FirstOrDefault(app => app.InstanceName == folderName);
+                        var existingApp = result.FirstOrDefault(app => app.InstanceName == folderName);
                         if (existingApp != null)
                         {
                             existingApp.Path = folder.NormalizePath();
@@ -46,7 +49,7 @@ namespace AcuCleaner.Services.FileSystem
                         {
                             result.Add(new IISApp
                             {
-                                InstanceName = folderName,
+                                InstanceName = string.Empty,
                                 DatabaseName = string.Empty,
                                 DatabaseConnectionString = string.Empty,
                                 Path = folder.NormalizePath(),
@@ -83,6 +86,10 @@ namespace AcuCleaner.Services.FileSystem
                         foreach (var tmpApp in tmpASPApps)
                         {
                             string tmpInstanceName = Path.GetFileName(tmpApp.Path).NormalizePath();
+                            if (string.IsNullOrEmpty(tmpInstanceName))
+                            {
+                                continue;
+                            }
 
                             var existingApp = result.FirstOrDefault(app => app.InstanceName == tmpInstanceName);
                             if (existingApp != null)
@@ -94,7 +101,7 @@ namespace AcuCleaner.Services.FileSystem
                             {
                                 result.Add(new IISApp
                                 {
-                                    InstanceName = tmpInstanceName,
+                                    InstanceName = string.Empty,
                                     DatabaseName = string.Empty,
                                     DatabaseConnectionString = string.Empty,
                                     Path = string.Empty,
