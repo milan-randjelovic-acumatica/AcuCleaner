@@ -3,6 +3,7 @@ using AcuCleaner.Services.Database;
 using AcuCleaner.Services.FileSystem;
 using AcuCleaner.Services.IIS;
 using AcuCleaner.Services.Registry;
+using System.Net.WebSockets;
 
 namespace AcuCleaner.Services
 {
@@ -55,18 +56,29 @@ namespace AcuCleaner.Services
             return this;
         }
 
-        public IAppsCollection FilterByStatus(bool isActive, bool junk)
+        public IAppsCollection Filter(FilterParameters filterParameters)
         {
-            _apps = _apps.Where(x => (isActive == true && x.Active == true) || (junk == true && x.Active == false));
+            var apps = _apps
+                .Where(x => (filterParameters.ShowActiveApps && x.Active) || (filterParameters.ShowJunk && !x.Active))
+                .Where(x => x.InstalledOn.Date <= filterParameters.CutoffDate);
 
-            return this;
-        }
-
-        public IAppsCollection FilterByDate(DateTime cutoff)
-        {
-            _apps = _apps
-                .Where(x => x.InstalledOn.Date <= cutoff)
-                .OrderBy(x => x.InstalledOn);
+            var result = new List<IISApp>();
+            foreach (var app in apps)
+            {
+                if (
+                    filterParameters.ShowDatabases && !string.IsNullOrEmpty(app.DatabaseName) ||
+                    filterParameters.ShowFiles && !string.IsNullOrEmpty(app.Path) ||
+                    filterParameters.ShowAspTempFiles && !string.IsNullOrEmpty(app.AspTempFilesPath) ||
+                    filterParameters.ShowSnapshots && !string.IsNullOrEmpty(app.SnapshotPath) ||
+                    filterParameters.ShowCustomizations && !string.IsNullOrEmpty(app.CustomizationPath) ||
+                    filterParameters.ShowBackups && !string.IsNullOrEmpty(app.BackupPath) ||
+                    filterParameters.ShowRegistry && !string.IsNullOrEmpty(app.RegistryPath))
+                {
+                    result.Add(app);
+                }
+            }
+            
+            _apps = result;
 
             return this;
         }

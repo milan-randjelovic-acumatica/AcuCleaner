@@ -2,8 +2,7 @@
 {
     public interface IAppsCollection
     {
-        IAppsCollection FilterByStatus(bool isActive, bool junk);
-        IAppsCollection FilterByDate(DateTime cutoff);
+        IAppsCollection Filter(FilterParameters filterParameters);
         IAppsCollection OrderBy(Func<IISApp, object> keySelector);
         IAppsCollection AddRowNumbers();
         List<IISApp> ToList();

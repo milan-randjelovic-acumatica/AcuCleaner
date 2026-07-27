@@ -19,6 +19,7 @@ namespace AcuCleaner.Forms
         public DatabaseCleanupService DatabaseCleanupService { get; private set; }
         public CleanupService CleanupService { get; private set; }
         public CleanupParameters CleanupParameters { get; private set; }
+        public FilterParameters FilterParameters { get; private set; }
 
         public MainForm()
         {
@@ -32,6 +33,7 @@ namespace AcuCleaner.Forms
             RegistryService = new RegistryCleanupService();
             CleanupService = new CleanupService(IISService, FileSystemCleanupService, DatabaseCleanupService, RegistryService, _progressHandler);
             CleanupParameters = new CleanupParameters();
+            FilterParameters = new FilterParameters();
         }
 
         public static void ShowError(string message)
@@ -58,10 +60,11 @@ namespace AcuCleaner.Forms
         {
             SetCleanupParamerers();
 
+            SetFilterParameters();
+
             _allApps = CleanupService
                 .GetAll(CleanupParameters)
-                .FilterByStatus(checkBoxActive.Checked, checkBoxJunk.Checked)
-                .FilterByDate(dateTimePicker.Value.Date)
+                .Filter(FilterParameters)
                 .OrderBy(x => x.InstanceName)
                 .AddRowNumbers()
                 .ToList();
@@ -141,6 +144,23 @@ namespace AcuCleaner.Forms
             };
         }
 
+        private void SetFilterParameters()
+        {
+            FilterParameters = new FilterParameters
+            {
+                ShowActiveApps = checkBoxActive.Checked,
+                ShowJunk = checkBoxJunk.Checked,
+                ShowFiles = checkBoxIISFiles.Checked,
+                ShowAspTempFiles = checkBoxAspTmpFiles.Checked,
+                ShowDatabases = checkBoxDatabases.Checked,
+                ShowRegistry = checkBoxRegistry.Checked,
+                ShowSnapshots = checkBoxSnapshots.Checked,
+                ShowCustomizations = checkBoxCustomizations.Checked,
+                ShowBackups = checkBoxBackups.Checked,
+                CutoffDate = dateTimePicker.Value.Date
+            };
+        }
+
         private void dateTimePicker_ValueChanged(object sender, EventArgs e)
         {
             RefreshAppList();
@@ -158,7 +178,7 @@ namespace AcuCleaner.Forms
             await DeleteSelectedAppsAsync();
         }
 
-        private void checkBoxActive_CheckedChanged(object sender, EventArgs e)
+        private void filter_CheckedChanged(object sender, EventArgs e)
         {
             RefreshAppList();
         }
