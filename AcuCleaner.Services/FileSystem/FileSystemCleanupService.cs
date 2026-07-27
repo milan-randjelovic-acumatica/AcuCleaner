@@ -95,41 +95,41 @@ namespace AcuCleaner.Services.FileSystem
                     {
                         // Process snapshot files directly without recursion
                         var normalizedPath = path.NormalizePath();
-                        var aspTempPaths = Directory.GetDirectories(path).ExcludeStandardFolders();
+                        var snapshotPaths = Directory.GetDirectories(path).ExcludeStandardFolders();
 
-                        foreach (var tmpPath in aspTempPaths)
+                        foreach (var snapshotPath in snapshotPaths)
                         {
-                            string tmpInstanceName = Path.GetFileName(tmpPath).NormalizePath();
-                            if (string.IsNullOrEmpty(tmpInstanceName))
+                            string snapshotName = Path.GetFileName(snapshotPath).NormalizePath();
+                            if (string.IsNullOrEmpty(snapshotName))
                             {
                                 continue;
                             }
 
-                            var normalizedTmpPath = tmpPath.NormalizePath();
+                            var normalizedSnapshotPath = snapshotPath.NormalizePath();
 
-                            if (result.TryGetValue(tmpInstanceName, out var existingApp))
+                            if (result.TryGetValue(snapshotName, out var existingApp))
                             {
-                                existingApp.InstanceName = existingApp.InstanceName != string.Empty ? existingApp.InstanceName : tmpInstanceName;
-                                existingApp.SnapshotPath = normalizedTmpPath;
+                                existingApp.InstanceName = existingApp.InstanceName != string.Empty ? existingApp.InstanceName : snapshotName;
+                                existingApp.SnapshotPath = normalizedSnapshotPath;
                                 if (existingApp.InstalledOn == DateTime.MinValue)
                                 {
-                                    existingApp.InstalledOn = Directory.GetCreationTime(tmpPath);
+                                    existingApp.InstalledOn = Directory.GetCreationTime(snapshotPath);
                                 }
                             }
                             else
                             {
-                                result[tmpInstanceName] = new IISApp
+                                result[snapshotName] = new IISApp
                                 {
-                                    InstanceName = tmpInstanceName,
+                                    InstanceName = snapshotName,
                                     DatabaseName = string.Empty,
                                     DatabaseConnectionString = string.Empty,
                                     Path = string.Empty,
                                     RootPath = normalizedPath,
                                     AspFilesTempPath = string.Empty,
-                                    SnapshotPath = normalizedTmpPath,
+                                    SnapshotPath = normalizedSnapshotPath,
                                     RegistryPath = string.Empty,
                                     Active = false,
-                                    InstalledOn = Directory.GetCreationTime(tmpPath),
+                                    InstalledOn = Directory.GetCreationTime(snapshotPath),
                                 };
                             }
                         }
