@@ -56,14 +56,7 @@ namespace AcuCleaner.Forms
 
         private void RefreshAppList()
         {
-            CleanupParameters = new CleanupParameters
-            {
-                CleanupIISApps = checkBoxcleanupIISApps.Checked,
-                CleanupFiles = checkBoxCleanupFiles.Checked,
-                CleanupDatabases = checkBoxCleanupDatabases.Checked,
-                CleanupAspTemp = checkBoxCleanupAspTemp.Checked,
-                CleanupRegistry = checkBoxCleanupRegistry.Checked,
-            };
+            SetCleanupParamerers();
 
             _allApps = CleanupService
                 .GetAll(CleanupParameters)
@@ -79,14 +72,7 @@ namespace AcuCleaner.Forms
 
         private async Task DeleteSelectedAppsAsync()
         {
-            CleanupParameters = new CleanupParameters
-            {
-                CleanupIISApps = checkBoxcleanupIISApps.Checked,
-                CleanupFiles = checkBoxCleanupFiles.Checked,
-                CleanupDatabases = checkBoxCleanupDatabases.Checked,
-                CleanupAspTemp = checkBoxCleanupAspTemp.Checked,
-                CleanupRegistry = checkBoxCleanupRegistry.Checked,
-            };
+            SetCleanupParamerers();
 
             foreach (DataGridViewRow selectedRow in dataGridView.SelectedRows)
             {
@@ -138,6 +124,19 @@ namespace AcuCleaner.Forms
                 buttonDeleteSelected.Enabled = true;
                 buttonDeleteAll.Enabled = true;
             }
+        }
+
+        private void SetCleanupParamerers()
+        {
+            CleanupParameters = new CleanupParameters
+            {
+                CleanupIISApps = checkBoxcleanupIISApps.Checked,
+                CleanupFiles = checkBoxCleanupFiles.Checked,
+                CleanupDatabases = checkBoxCleanupDatabases.Checked,
+                CleanupAspTemp = checkBoxCleanupAspTemp.Checked,
+                CleanupSnapshots = checkBoxCleanupSnapshots.Checked,
+                CleanupRegistry = checkBoxCleanupRegistry.Checked,
+            };
         }
 
         private void dateTimePicker_ValueChanged(object sender, EventArgs e)

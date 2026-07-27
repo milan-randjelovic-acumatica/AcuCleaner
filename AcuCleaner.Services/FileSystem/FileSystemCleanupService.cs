@@ -183,6 +183,11 @@ namespace AcuCleaner.Services.FileSystem
             {
                 CleanupAspTempFolders(cleanupParameters);
             }
+
+            if(cleanupParameters.CleanupSnapshots)
+            {
+                CleanupSnapshotFolders(cleanupParameters);
+            }
         }
 
         public void CleanupAppFolders(CleanupParameters cleanupParameters)
@@ -209,6 +214,20 @@ namespace AcuCleaner.Services.FileSystem
                     _progressHandler?.Report($"Deleting ASP temp files: {i++}/{cleanupParameters.Apps.Count} {app.AspFilesTempPath}");
                     PrepareDirectoryForDeletion(app.AspFilesTempPath);
                     Directory.Delete(app.AspFilesTempPath, true);
+                }
+            }
+        }
+
+        public void CleanupSnapshotFolders(CleanupParameters cleanupParameters)
+        {
+            int i = 1;
+            foreach (var app in cleanupParameters.Apps)
+            {
+                if (!string.IsNullOrEmpty(app.SnapshotPath) && Directory.Exists(app.SnapshotPath))
+                {
+                    _progressHandler?.Report($"Deleting snapshot files: {i++}/{cleanupParameters.Apps.Count} {app.SnapshotPath}");
+                    PrepareDirectoryForDeletion(app.SnapshotPath);
+                    Directory.Delete(app.SnapshotPath, true);
                 }
             }
         }
