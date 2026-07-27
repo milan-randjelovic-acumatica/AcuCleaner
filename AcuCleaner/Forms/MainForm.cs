@@ -166,5 +166,10 @@ namespace AcuCleaner.Forms
         {
             RefreshAppList();
         }
+
+        private void buttonRefresh_Click(object sender, EventArgs e)
+        {
+            RefreshAppList();
+        }
     }
 }

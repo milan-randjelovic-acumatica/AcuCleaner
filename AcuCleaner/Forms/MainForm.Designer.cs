@@ -50,8 +50,8 @@ namespace AcuCleaner.Forms
             checkBoxActive = new CheckBox();
             checkBoxJunk = new CheckBox();
             statusStrip = new StatusStrip();
-            toolStripStatusLabel = new ToolStripStatusLabel();
             toolStripProgressBar = new ToolStripProgressBar();
+            toolStripStatusLabel = new ToolStripStatusLabel();
             groupBoxCleanup = new GroupBox();
             checkBoxCleanupRegistry = new CheckBox();
             checkBoxCleanupDatabases = new CheckBox();
@@ -59,6 +59,7 @@ namespace AcuCleaner.Forms
             checkBoxcleanupIISApps = new CheckBox();
             checkBoxCleanupFiles = new CheckBox();
             groupBoxFilter = new GroupBox();
+            buttonRefresh = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource).BeginInit();
@@ -165,7 +166,7 @@ namespace AcuCleaner.Forms
             // buttonDeleteSelected
             // 
             buttonDeleteSelected.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonDeleteSelected.Location = new Point(63, 369);
+            buttonDeleteSelected.Location = new Point(63, 349);
             buttonDeleteSelected.Name = "buttonDeleteSelected";
             buttonDeleteSelected.Size = new Size(75, 23);
             buttonDeleteSelected.TabIndex = 3;
@@ -176,7 +177,7 @@ namespace AcuCleaner.Forms
             // buttonDeleteAll
             // 
             buttonDeleteAll.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonDeleteAll.Location = new Point(144, 369);
+            buttonDeleteAll.Location = new Point(144, 349);
             buttonDeleteAll.Name = "buttonDeleteAll";
             buttonDeleteAll.Size = new Size(75, 23);
             buttonDeleteAll.TabIndex = 4;
@@ -237,18 +238,18 @@ namespace AcuCleaner.Forms
             statusStrip.TabIndex = 9;
             statusStrip.Text = "statusStrip1";
             // 
-            // toolStripStatusLabel
-            // 
-            toolStripStatusLabel.Name = "toolStripStatusLabel";
-            toolStripStatusLabel.Size = new Size(42, 17);
-            toolStripStatusLabel.Text = "Status:";
-            // 
             // toolStripProgressBar
             // 
             toolStripProgressBar.Alignment = ToolStripItemAlignment.Right;
             toolStripProgressBar.Name = "toolStripProgressBar";
             toolStripProgressBar.Size = new Size(100, 16);
             toolStripProgressBar.Style = ProgressBarStyle.Marquee;
+            // 
+            // toolStripStatusLabel
+            // 
+            toolStripStatusLabel.Name = "toolStripStatusLabel";
+            toolStripStatusLabel.Size = new Size(42, 17);
+            toolStripStatusLabel.Text = "Status:";
             // 
             // groupBoxCleanup
             // 
@@ -260,9 +261,9 @@ namespace AcuCleaner.Forms
             groupBoxCleanup.Controls.Add(checkBoxCleanupFiles);
             groupBoxCleanup.Controls.Add(buttonDeleteSelected);
             groupBoxCleanup.Controls.Add(buttonDeleteAll);
-            groupBoxCleanup.Location = new Point(830, 138);
+            groupBoxCleanup.Location = new Point(830, 158);
             groupBoxCleanup.Name = "groupBoxCleanup";
-            groupBoxCleanup.Size = new Size(225, 398);
+            groupBoxCleanup.Size = new Size(225, 378);
             groupBoxCleanup.TabIndex = 10;
             groupBoxCleanup.TabStop = false;
             groupBoxCleanup.Text = "Cleanup";
@@ -330,16 +331,28 @@ namespace AcuCleaner.Forms
             // groupBoxFilter
             // 
             groupBoxFilter.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            groupBoxFilter.Controls.Add(buttonRefresh);
             groupBoxFilter.Controls.Add(dateTimePicker);
             groupBoxFilter.Controls.Add(labelOlderThan);
             groupBoxFilter.Controls.Add(checkBoxActive);
             groupBoxFilter.Controls.Add(checkBoxJunk);
             groupBoxFilter.Location = new Point(830, 12);
             groupBoxFilter.Name = "groupBoxFilter";
-            groupBoxFilter.Size = new Size(225, 120);
+            groupBoxFilter.Size = new Size(225, 140);
             groupBoxFilter.TabIndex = 11;
             groupBoxFilter.TabStop = false;
             groupBoxFilter.Text = "Filter";
+            // 
+            // buttonRefresh
+            // 
+            buttonRefresh.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            buttonRefresh.Location = new Point(144, 111);
+            buttonRefresh.Name = "buttonRefresh";
+            buttonRefresh.Size = new Size(75, 23);
+            buttonRefresh.TabIndex = 9;
+            buttonRefresh.Text = "Refresh";
+            buttonRefresh.UseVisualStyleBackColor = true;
+            buttonRefresh.Click += buttonRefresh_Click;
             // 
             // MainForm
             // 
@@ -398,5 +411,6 @@ namespace AcuCleaner.Forms
         private DataGridViewTextBoxColumn pathDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn AspFilesTempPath;
         private DataGridViewTextBoxColumn RegistryPath;
+        private Button buttonRefresh;
     }
 }
