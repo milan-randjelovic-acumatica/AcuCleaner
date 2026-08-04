@@ -62,13 +62,18 @@ namespace AcuCleaner.Services.IIS
 
                         var path = app.VirtualDirectories.First().PhysicalPath;
                         var rootPath = new DirectoryInfo(path).Parent?.FullName ?? string.Empty;
-                        var instanceName = app.Path.NormalizePath();
-
-                        if (Directory.GetFiles(rootPath).Select(x => x.Split("\\").Last()).Contains("Pure.sln"))
+                        if (!Directory.Exists(rootPath))
                         {
                             continue;
                         }
 
+                        var rootContent = Directory.GetFiles(rootPath).Select(x => x.Split("\\").Last());
+                        if (rootContent.Contains("Pure.sln") || rootContent.Contains("Pure"))
+                        {
+                            continue;
+                        }
+
+                        var instanceName = app.Path.NormalizePath();
                         result.Add(new IISApp
                         {
                             InstanceName = instanceName,
