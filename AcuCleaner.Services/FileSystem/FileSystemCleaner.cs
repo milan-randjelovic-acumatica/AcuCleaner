@@ -4,15 +4,15 @@ using System.Security.Principal;
 
 namespace AcuCleaner.Services.FileSystem
 {
-    public class FileSystemCleanupService : ICleanupService
+    public class FileSystemCleaner : ICleanupService
     {
         private readonly IProgress<string>? _progressHandler;
 
-        public FileSystemCleanupService()
+        public FileSystemCleaner()
         {
         }
 
-        public FileSystemCleanupService(IProgress<string> progressHandler)
+        public FileSystemCleaner(IProgress<string> progressHandler)
         {
             _progressHandler = progressHandler;
         }
@@ -184,7 +184,7 @@ namespace AcuCleaner.Services.FileSystem
             {
                 if (!string.IsNullOrEmpty(app.Path) && Directory.Exists(app.Path))
                 {
-                    _progressHandler?.Report($"Cleaning folders {i++}/{cleanupParameters.Apps.Count}: {app.Path}");
+                    _progressHandler?.Report($"Cleaning folders {i++}/{cleanupParameters.Apps.Count()}: {app.Path}");
                     PrepareDirectoryForDeletion(app.Path);
                     Directory.Delete(app.Path, true);
                 }
@@ -198,7 +198,7 @@ namespace AcuCleaner.Services.FileSystem
             {
                 if (!string.IsNullOrEmpty(app.AspTempFilesPath) && Directory.Exists(app.AspTempFilesPath))
                 {
-                    _progressHandler?.Report($"Deleting ASP temp files: {i++}/{cleanupParameters.Apps.Count} {app.AspTempFilesPath}");
+                    _progressHandler?.Report($"Deleting ASP temp files: {i++}/{cleanupParameters.Apps.Count()} {app.AspTempFilesPath}");
                     PrepareDirectoryForDeletion(app.AspTempFilesPath);
                     Directory.Delete(app.AspTempFilesPath, true);
                 }
@@ -212,7 +212,7 @@ namespace AcuCleaner.Services.FileSystem
             {
                 if (!string.IsNullOrEmpty(app.SnapshotPath) && Directory.Exists(app.SnapshotPath))
                 {
-                    _progressHandler?.Report($"Deleting snapshot files: {i++}/{cleanupParameters.Apps.Count} {app.SnapshotPath}");
+                    _progressHandler?.Report($"Deleting snapshot files: {i++}/{cleanupParameters.Apps.Count()} {app.SnapshotPath}");
                     PrepareDirectoryForDeletion(app.SnapshotPath);
                     Directory.Delete(app.SnapshotPath, true);
                 }
@@ -226,7 +226,7 @@ namespace AcuCleaner.Services.FileSystem
             {
                 if (!string.IsNullOrEmpty(app.CustomizationPath) && Directory.Exists(app.CustomizationPath))
                 {
-                    _progressHandler?.Report($"Deleting customization files: {i++}/{cleanupParameters.Apps.Count} {app.CustomizationPath}");
+                    _progressHandler?.Report($"Deleting customization files: {i++}/{cleanupParameters.Apps.Count()} {app.CustomizationPath}");
                     PrepareDirectoryForDeletion(app.CustomizationPath);
                     Directory.Delete(app.CustomizationPath, true);
                 }
@@ -240,7 +240,7 @@ namespace AcuCleaner.Services.FileSystem
             {
                 if (!string.IsNullOrEmpty(app.BackupPath) && Directory.Exists(app.BackupPath))
                 {
-                    _progressHandler?.Report($"Deleting backup files: {i++}/{cleanupParameters.Apps.Count} {app.BackupPath}");
+                    _progressHandler?.Report($"Deleting backup files: {i++}/{cleanupParameters.Apps.Count()} {app.BackupPath}");
                     PrepareDirectoryForDeletion(app.BackupPath);
                     Directory.Delete(app.BackupPath, true);
                 }

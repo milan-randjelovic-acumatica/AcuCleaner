@@ -10,7 +10,7 @@
         public bool CleanupSnapshots { get; set; } = true;
         public bool CleanupCustomizations { get; set; } = true;
         public bool CleanupBackups { get; set; } = true;
-        public List<IISApp> Apps { get; set; } = new List<IISApp>();
+        public IEnumerable<IISApp> Apps { get; set; } = new List<IISApp>();
         public List<string> FileSystemRootPaths => Apps.Select(x => x.RootPath).Distinct().ToList();
     }
 }

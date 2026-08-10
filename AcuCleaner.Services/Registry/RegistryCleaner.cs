@@ -4,9 +4,15 @@ using System.Runtime.InteropServices;
 
 namespace AcuCleaner.Services.Registry
 {
-    public class RegistryCleanupService : ICleanupService
+    public class RegistryCleaner : ICleanupService
     {
         private readonly string _path = @"SOFTWARE\ACUMATICA ERP";
+        private readonly IProgress<string>? _progressHandler;
+
+        public RegistryCleaner(IProgress<string> progressHandler)
+        {
+            _progressHandler = progressHandler;
+        }
 
         [DllImport("advapi32.dll", CharSet = CharSet.Auto)]
         private static extern int RegQueryInfoKey(

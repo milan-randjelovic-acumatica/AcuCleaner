@@ -9,10 +9,10 @@ namespace AcuCleaner
         static void Main()
         {
             Application.ThreadException += (sender, e) =>
-                Forms.MainForm.ShowError(e.Exception.Message);
+                Forms.MainForm.HandleError(e.Exception.Message);
 
             AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
-                Forms.MainForm.ShowError(e.ExceptionObject?.ToString() ?? "An unexpected error occurred.");
+                Forms.MainForm.HandleError(e.ExceptionObject?.ToString() ?? "An unexpected error occurred.");
 
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
 

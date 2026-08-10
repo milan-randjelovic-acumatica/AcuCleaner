@@ -3,15 +3,15 @@ using Microsoft.Data.SqlClient;
 
 namespace AcuCleaner.Services.Database
 {
-    public class DatabaseCleanupService : ICleanupService
+    public class DatabaseCleaner : ICleanupService
     {
         private readonly IProgress<string>? _progressHandler;
 
-        public DatabaseCleanupService()
+        public DatabaseCleaner()
         {
         }
 
-        public DatabaseCleanupService(IProgress<string> progressHandler)
+        public DatabaseCleaner(IProgress<string> progressHandler)
         {
             _progressHandler = progressHandler;
         }
@@ -109,7 +109,7 @@ namespace AcuCleaner.Services.Database
             {
                 if (!string.IsNullOrEmpty(iisApp.DatabaseName))
                 {
-                    _progressHandler?.Report($"Deleting SQL database {i++}/{cleanupParameters.Apps.Count}: {iisApp.DatabaseName}");
+                    _progressHandler?.Report($"Deleting SQL database {i++}/{cleanupParameters.Apps.Count()}: {iisApp.DatabaseName}");
                     using (var connection = new SqlConnection(iisApp.DatabaseConnectionString))
                     {
                         connection.Open();

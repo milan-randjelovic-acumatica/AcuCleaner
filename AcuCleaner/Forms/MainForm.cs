@@ -10,16 +10,10 @@ namespace AcuCleaner.Forms
     public partial class MainForm : Form
     {
         private static MainForm? _instance;
-
         private List<IISApp> _allApps = new List<IISApp>();
         private readonly IProgress<string> _progressHandler;
-        public AcuCleanerService IISService { get; private set; }
-        public FileSystemCleanupService FileSystemCleanupService { get; private set; }
-        public RegistryCleanupService RegistryService { get; private set; }
-        public DatabaseCleanupService DatabaseCleanupService { get; private set; }
+
         public CleanupService CleanupService { get; private set; }
-        public CleanupParameters CleanupParameters { get; private set; }
-        public FilterParameters FilterParameters { get; private set; }
 
         public MainForm()
         {
@@ -27,16 +21,17 @@ namespace AcuCleaner.Forms
             _instance = this;
 
             _progressHandler = new Progress<string>(message => this.toolStripStatusLabel.Text = message);
-            IISService = new AcuCleanerService(_progressHandler);
-            FileSystemCleanupService = new FileSystemCleanupService(_progressHandler);
-            DatabaseCleanupService = new DatabaseCleanupService(_progressHandler);
-            RegistryService = new RegistryCleanupService();
-            CleanupService = new CleanupService(IISService, FileSystemCleanupService, DatabaseCleanupService, RegistryService, _progressHandler);
-            CleanupParameters = new CleanupParameters();
-            FilterParameters = new FilterParameters();
+
+            CleanupService = new CleanupService(new List<ICleanupService>()
+            {
+                new IISCleaner(_progressHandler),
+                new FileSystemCleaner(_progressHandler),
+                new DatabaseCleaner(_progressHandler),
+                new RegistryCleaner(_progressHandler)
+            });
         }
 
-        public static void ShowError(string message)
+        public static void HandleError(string message)
         {
             if (_instance == null) return;
 
@@ -45,7 +40,7 @@ namespace AcuCleaner.Forms
             else
                 _instance.toolStripStatusLabel.Text = $"Error: {message}";
 
-            _instance.IISService.Start();
+            _instance.CleanupService.Cleaners.OfType<IISCleaner>().FirstOrDefault()?.Start();
         }
 
         private void Form_Load(object sender, EventArgs e)
@@ -63,8 +58,8 @@ namespace AcuCleaner.Forms
             SetFilterParameters();
 
             _allApps = CleanupService
-                .GetAll(CleanupParameters)
-                .Filter(FilterParameters)
+                .GetAll()
+                .Filter()
                 .OrderBy(x => x.InstanceName)
                 .AddRowNumbers()
                 .ToList();
@@ -81,17 +76,17 @@ namespace AcuCleaner.Forms
             {
                 if (selectedRow.DataBoundItem is IISApp app)
                 {
-                    CleanupParameters.Apps.Add(app);
+                    (CleanupService.CleanupParameters.Apps as List<IISApp>)?.Add(app);
                 }
             }
 
-            if (CleanupParameters.Apps.Count == 0)
+            if (!CleanupService.CleanupParameters.Apps.Any())
             {
                 toolStripStatusLabel.Text = "No rows selected.";
                 return;
             }
 
-            var message = $"Delete {CleanupParameters.Apps.Count} selected app(s)?";
+            var message = $"Delete {CleanupService.CleanupParameters.Apps.Count()} selected app(s)?";
 
             var confirmation = MessageBox.Show(
                 message,
@@ -109,12 +104,12 @@ namespace AcuCleaner.Forms
             buttonDeleteSelected.Enabled = false;
             buttonDeleteAll.Enabled = false;
             toolStripProgressBar.Visible = true;
-            toolStripStatusLabel.Text = $"Deleting {CleanupParameters.Apps.Count} app(s)...";
+            toolStripStatusLabel.Text = $"Deleting {CleanupService.CleanupParameters.Apps.Count()} app(s)...";
 
             try
             {
-                await Task.Run(() => CleanupService.Cleanup(CleanupParameters));
-                toolStripStatusLabel.Text = $"Deleted {CleanupParameters.Apps.Count} app(s).";
+                await Task.Run(() => CleanupService.Cleanup(CleanupService.CleanupParameters));
+                toolStripStatusLabel.Text = $"Deleted {CleanupService.CleanupParameters.Apps.Count()} app(s).";
                 RefreshAppList();
             }
             catch (Exception ex)
@@ -131,7 +126,7 @@ namespace AcuCleaner.Forms
 
         private void SetCleanupParamerers()
         {
-            CleanupParameters = new CleanupParameters
+            CleanupService.CleanupParameters = new CleanupParameters
             {
                 CleanupIISApps = checkBoxcleanupIISApps.Checked,
                 CleanupFiles = checkBoxCleanupFiles.Checked,
@@ -146,7 +141,7 @@ namespace AcuCleaner.Forms
 
         private void SetFilterParameters()
         {
-            FilterParameters = new FilterParameters
+            CleanupService.FilterParameters = new FilterParameters
             {
                 ShowActiveApps = checkBoxActive.Checked,
                 ShowJunk = checkBoxJunk.Checked,

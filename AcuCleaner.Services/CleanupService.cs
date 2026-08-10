@@ -1,83 +1,60 @@
 ﻿using AcuCleaner.Models;
-using AcuCleaner.Services.Database;
-using AcuCleaner.Services.FileSystem;
 using AcuCleaner.Services.IIS;
-using AcuCleaner.Services.Registry;
-using System.Net.WebSockets;
 
 namespace AcuCleaner.Services
 {
     public class CleanupService : IAppsCollection
     {
-        private readonly AcuCleanerService? _iisService;
-        private readonly RegistryCleanupService? _registryService;
-        private readonly DatabaseCleanupService? _databaseCleanupService;
-        private readonly FileSystemCleanupService? _fileSystemCleanupService;
+        public IEnumerable<ICleanupService> Cleaners { get; private set; }
         private IEnumerable<IISApp> _apps = new List<IISApp>();
+        public CleanupParameters CleanupParameters { get; set; } = new CleanupParameters();
+        public FilterParameters FilterParameters { get; set; } = new FilterParameters();
 
-        public CleanupService(AcuCleanerService iISService, FileSystemCleanupService fileSystemCleanupService, DatabaseCleanupService databaseCleanupService, RegistryCleanupService registryService)
+        public CleanupService(IEnumerable<ICleanupService> cleaners)
         {
-            _iisService = iISService;
-            _fileSystemCleanupService = fileSystemCleanupService;
-            _databaseCleanupService = databaseCleanupService;
-            _registryService = registryService;
+            Cleaners = cleaners;
         }
 
-        public CleanupService(AcuCleanerService iISService, FileSystemCleanupService fileSystemCleanupService, DatabaseCleanupService databaseCleanupService, RegistryCleanupService registryService, IProgress<string>? progressHandler)
+        public IAppsCollection GetAll()
         {
-            _iisService = iISService;
-            _fileSystemCleanupService = fileSystemCleanupService;
-            _databaseCleanupService = databaseCleanupService;
-            _registryService = registryService;
-        }
+            _apps = new List<IISApp>();
 
-        public IAppsCollection GetAll(CleanupParameters cleanupParameters)
-        {
-            cleanupParameters.Apps = _iisService?.GetAppsForCleanup(cleanupParameters)?.ToList() ?? new List<IISApp>();
+            foreach (var cleaner in Cleaners)
+            {
+                var appsForCleanup = cleaner?.GetAppsForCleanup(CleanupParameters) ?? Enumerable.Empty<IISApp>();
+                if (appsForCleanup.Any())
+                {
+                    CleanupParameters.Apps = CleanupParameters.Apps.UnionBy(appsForCleanup, x => x.InstanceName);
+                }
+            }
 
-            var iisJunk = _fileSystemCleanupService?.GetAppsForCleanup(cleanupParameters) ?? Enumerable.Empty<IISApp>();
-
-            cleanupParameters.Apps = cleanupParameters.Apps
-                .UnionBy(iisJunk, x => x.InstanceName)
-                .ToList();
-
-            var sqlDatabases = _databaseCleanupService?.GetAppsForCleanup(cleanupParameters) ?? Enumerable.Empty<IISApp>();
-            cleanupParameters.Apps = cleanupParameters.Apps
-                .UnionBy(sqlDatabases, x => x.InstanceName)
-                .ToList();
-
-            var registryEnties = _registryService?.GetAppsForCleanup(cleanupParameters) ?? Enumerable.Empty<IISApp>();
-            cleanupParameters.Apps = cleanupParameters.Apps
-               .UnionBy(registryEnties, x => x.InstanceName)
-               .ToList();
-
-            _apps = cleanupParameters.Apps;
+            _apps = CleanupParameters.Apps;
 
             return this;
         }
 
-        public IAppsCollection Filter(FilterParameters filterParameters)
+        public IAppsCollection Filter()
         {
             var apps = _apps
-                .Where(x => (filterParameters.ShowActiveApps && x.Active) || (filterParameters.ShowJunk && !x.Active))
-                .Where(x => x.InstalledOn.Date <= filterParameters.CutoffDate);
+                .Where(x => (FilterParameters.ShowActiveApps && x.Active) || (FilterParameters.ShowJunk && !x.Active))
+                .Where(x => x.InstalledOn.Date <= FilterParameters.CutoffDate);
 
             var result = new List<IISApp>();
             foreach (var app in apps)
             {
                 if (
-                    filterParameters.ShowDatabases && !string.IsNullOrEmpty(app.DatabaseName) ||
-                    filterParameters.ShowFiles && !string.IsNullOrEmpty(app.Path) ||
-                    filterParameters.ShowAspTempFiles && !string.IsNullOrEmpty(app.AspTempFilesPath) ||
-                    filterParameters.ShowSnapshots && !string.IsNullOrEmpty(app.SnapshotPath) ||
-                    filterParameters.ShowCustomizations && !string.IsNullOrEmpty(app.CustomizationPath) ||
-                    filterParameters.ShowBackups && !string.IsNullOrEmpty(app.BackupPath) ||
-                    filterParameters.ShowRegistry && !string.IsNullOrEmpty(app.RegistryPath))
+                    FilterParameters.ShowDatabases && !string.IsNullOrEmpty(app.DatabaseName) ||
+                    FilterParameters.ShowFiles && !string.IsNullOrEmpty(app.Path) ||
+                    FilterParameters.ShowAspTempFiles && !string.IsNullOrEmpty(app.AspTempFilesPath) ||
+                    FilterParameters.ShowSnapshots && !string.IsNullOrEmpty(app.SnapshotPath) ||
+                    FilterParameters.ShowCustomizations && !string.IsNullOrEmpty(app.CustomizationPath) ||
+                    FilterParameters.ShowBackups && !string.IsNullOrEmpty(app.BackupPath) ||
+                    FilterParameters.ShowRegistry && !string.IsNullOrEmpty(app.RegistryPath))
                 {
                     result.Add(app);
                 }
             }
-            
+
             _apps = result;
 
             return this;
@@ -106,17 +83,17 @@ namespace AcuCleaner.Services
 
         public void Cleanup(CleanupParameters cleanupParameters)
         {
-            _iisService?.Stop();
+            var iisService = Cleaners.OfType<IISCleaner>().FirstOrDefault();
 
-            _iisService?.Cleanup(cleanupParameters);
+            iisService?.Stop();
 
-            _fileSystemCleanupService?.Cleanup(cleanupParameters);
+            foreach (var cleaner in Cleaners)
+            {
+                cleaner?.Cleanup(cleanupParameters);
+            }
+            ;
 
-            _databaseCleanupService?.Cleanup(cleanupParameters);
-
-            _registryService?.Cleanup(cleanupParameters);
-
-            _iisService?.Start();
+            iisService?.Start();
         }
     }
 }

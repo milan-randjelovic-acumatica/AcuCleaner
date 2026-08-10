@@ -4,15 +4,15 @@ using System.ServiceProcess;
 
 namespace AcuCleaner.Services.IIS
 {
-    public class AcuCleanerService : ICleanupService
+    public class IISCleaner : ICleanupService
     {
         private readonly IProgress<string>? _progressHandler;
 
-        public AcuCleanerService()
+        public IISCleaner()
         {           
         }
 
-        public AcuCleanerService(IProgress<string>? progressHandler)
+        public IISCleaner(IProgress<string>? progressHandler)
         {
             _progressHandler = progressHandler;
         }
