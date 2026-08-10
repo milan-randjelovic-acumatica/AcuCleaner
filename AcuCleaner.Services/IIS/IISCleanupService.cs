@@ -98,7 +98,7 @@ namespace AcuCleaner.Services.IIS
 
         public IEnumerable<IISApp> GetAppsForCleanup(CleanupParameters cleanupParameters)
         {
-            throw new NotImplementedException();
+            return GetAllApps();
         }
 
         public void Cleanup(CleanupParameters cleanupParameters)

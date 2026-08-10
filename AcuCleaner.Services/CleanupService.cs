@@ -33,7 +33,7 @@ namespace AcuCleaner.Services
 
         public IAppsCollection GetAll(CleanupParameters cleanupParameters)
         {
-            cleanupParameters.Apps = _iisService?.GetAllApps()?.ToList() ?? new List<IISApp>();
+            cleanupParameters.Apps = _iisService?.GetAppsForCleanup(cleanupParameters)?.ToList() ?? new List<IISApp>();
 
             var iisJunk = _fileSystemCleanupService?.GetAppsForCleanup(cleanupParameters) ?? Enumerable.Empty<IISApp>();
 
