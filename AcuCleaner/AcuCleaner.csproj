@@ -16,13 +16,11 @@
 
   <ItemGroup>
     <Content Include="acumatica.ico" />
-    <Content Include="warning.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="app.manifest" />
+    <EmbeddedResource Include="warning.png" />
   </ItemGroup>
 
   <ItemGroup>

@@ -23,10 +23,10 @@ namespace AcuCleaner.Forms
 
             _progressHandler = new Progress<string>(message => this.toolStripStatusLabel.Text = message);
 
-            var warningImagePath = Path.Combine(AppContext.BaseDirectory, "warning.png");
-            if (File.Exists(warningImagePath))
+            var warningResourceName = "AcuCleaner.warning.png";
+            using var stream = typeof(MainForm).Assembly.GetManifestResourceStream(warningResourceName);
+            if (stream != null)
             {
-                using var stream = File.OpenRead(warningImagePath);
                 _warningImage = Image.FromStream(stream);
             }
 
