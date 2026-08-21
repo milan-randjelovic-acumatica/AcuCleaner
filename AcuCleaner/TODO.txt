@@ -1,1 +1,4 @@
-﻿//Installation dates for each type
+﻿//Password reset
+add web.config patching to enable Classic to Modern UI switching
+set the password to 123 without need to set it up to something complex
+set session timeout to something like 1-2 days
