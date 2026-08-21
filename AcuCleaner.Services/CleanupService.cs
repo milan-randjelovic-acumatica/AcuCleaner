@@ -81,7 +81,7 @@ namespace AcuCleaner.Services
             return _apps.ToList();
         }
 
-        public void Cleanup(CleanupParameters cleanupParameters)
+        public void Cleanup()
         {
             var iisService = Cleaners.OfType<IISCleaner>().FirstOrDefault();
 
@@ -89,7 +89,7 @@ namespace AcuCleaner.Services
 
             foreach (var cleaner in Cleaners)
             {
-                cleaner?.Cleanup(cleanupParameters);
+                cleaner?.Cleanup(CleanupParameters);
             }
             ;
 

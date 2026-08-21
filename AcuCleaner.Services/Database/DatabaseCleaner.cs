@@ -119,5 +119,27 @@ namespace AcuCleaner.Services.Database
                 }
             }
         }
+
+        public void ResetPassword(CleanupParameters cleanupParameters, string newPassword = "123")
+        {
+            int i = 1;
+            foreach (var iisApp in cleanupParameters.Apps)
+            {
+                if (!string.IsNullOrEmpty(iisApp.DatabaseName))
+                {
+                    _progressHandler?.Report($"Resetting password for SQL database {i++}/{cleanupParameters.Apps.Count()}: {iisApp.DatabaseName}");
+                    using (var connection = new SqlConnection($"{iisApp.DatabaseConnectionString};Initial Catalog={iisApp.DatabaseName}"))
+                    {
+                        connection.Open();
+                        var command = new SqlCommand(
+                            $"update PreferencesSecurity set PasswordMinLength = 3, PasswordComplexity = 0, PasswordSecurityType = 0;" +
+                            $"update users set password = '{newPassword}', PasswordChangeOnNextLogin =0, Guest = 0, FailedPasswordAttemptCount = 0, PasswordNeverExpires = 1,LockedOutDate=NULL,LastLockedOutDate=NULL,FailedPasswordAnswerAttemptCount=0,FailedPasswordAttemptWindowStart=NULL,PasswordRecoveryExpirationDate=NULL,IsApproved = 1 where source = 0;" +
+                            $"UPDATE AUSchedule SET IsActive =  0;" +
+                            $"update PushNotificationsHook set Active = 0", connection);
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
     }
 }

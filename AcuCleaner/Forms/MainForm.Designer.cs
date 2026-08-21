@@ -66,7 +66,6 @@ namespace AcuCleaner.Forms
             checkBoxCleanupFiles = new CheckBox();
             groupBoxFilter = new GroupBox();
             checkBoxRegistry = new CheckBox();
-            buttonRefresh = new Button();
             checkBoxDatabases = new CheckBox();
             checkBoxBackups = new CheckBox();
             checkBoxCustomizations = new CheckBox();
@@ -76,11 +75,15 @@ namespace AcuCleaner.Forms
             groupBoxInstances = new GroupBox();
             menuStrip = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
+            refreshToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator1 = new ToolStripSeparator();
             exitToolStripMenuItem = new ToolStripMenuItem();
             toolsToolStripMenuItem = new ToolStripMenuItem();
             resetToolStripMenuItem = new ToolStripMenuItem();
-            switchToModToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator2 = new ToolStripSeparator();
             switchToClasToolStripMenuItem = new ToolStripMenuItem();
+            switchToModToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator3 = new ToolStripSeparator();
             setSessionTimeoutToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource1).BeginInit();
@@ -213,7 +216,7 @@ namespace AcuCleaner.Forms
             // buttonDeleteSelected
             // 
             buttonDeleteSelected.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonDeleteSelected.Location = new Point(63, 230);
+            buttonDeleteSelected.Location = new Point(63, 269);
             buttonDeleteSelected.Name = "buttonDeleteSelected";
             buttonDeleteSelected.Size = new Size(75, 23);
             buttonDeleteSelected.TabIndex = 3;
@@ -224,7 +227,7 @@ namespace AcuCleaner.Forms
             // buttonDeleteAll
             // 
             buttonDeleteAll.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonDeleteAll.Location = new Point(144, 230);
+            buttonDeleteAll.Location = new Point(144, 269);
             buttonDeleteAll.Name = "buttonDeleteAll";
             buttonDeleteAll.Size = new Size(75, 23);
             buttonDeleteAll.TabIndex = 4;
@@ -311,9 +314,9 @@ namespace AcuCleaner.Forms
             groupBoxCleanup.Controls.Add(checkBoxCleanupFiles);
             groupBoxCleanup.Controls.Add(buttonDeleteSelected);
             groupBoxCleanup.Controls.Add(buttonDeleteAll);
-            groupBoxCleanup.Location = new Point(1033, 367);
+            groupBoxCleanup.Location = new Point(1033, 328);
             groupBoxCleanup.Name = "groupBoxCleanup";
-            groupBoxCleanup.Size = new Size(225, 259);
+            groupBoxCleanup.Size = new Size(225, 298);
             groupBoxCleanup.TabIndex = 10;
             groupBoxCleanup.TabStop = false;
             groupBoxCleanup.Text = "Cleanup";
@@ -418,7 +421,6 @@ namespace AcuCleaner.Forms
             // 
             groupBoxFilter.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             groupBoxFilter.Controls.Add(checkBoxRegistry);
-            groupBoxFilter.Controls.Add(buttonRefresh);
             groupBoxFilter.Controls.Add(checkBoxDatabases);
             groupBoxFilter.Controls.Add(checkBoxBackups);
             groupBoxFilter.Controls.Add(checkBoxCustomizations);
@@ -431,7 +433,7 @@ namespace AcuCleaner.Forms
             groupBoxFilter.Controls.Add(checkBoxJunk);
             groupBoxFilter.Location = new Point(1033, 27);
             groupBoxFilter.Name = "groupBoxFilter";
-            groupBoxFilter.Size = new Size(225, 334);
+            groupBoxFilter.Size = new Size(225, 295);
             groupBoxFilter.TabIndex = 11;
             groupBoxFilter.TabStop = false;
             groupBoxFilter.Text = "Filter";
@@ -448,17 +450,6 @@ namespace AcuCleaner.Forms
             checkBoxRegistry.Text = "Registry";
             checkBoxRegistry.UseVisualStyleBackColor = true;
             checkBoxRegistry.CheckedChanged += filter_CheckedChanged;
-            // 
-            // buttonRefresh
-            // 
-            buttonRefresh.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonRefresh.Location = new Point(144, 305);
-            buttonRefresh.Name = "buttonRefresh";
-            buttonRefresh.Size = new Size(75, 23);
-            buttonRefresh.TabIndex = 9;
-            buttonRefresh.Text = "Refresh";
-            buttonRefresh.UseVisualStyleBackColor = true;
-            buttonRefresh.Click += buttonRefresh_Click;
             // 
             // checkBoxDatabases
             // 
@@ -560,21 +551,36 @@ namespace AcuCleaner.Forms
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { exitToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { refreshToolStripMenuItem, toolStripSeparator1, exitToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(37, 20);
             fileToolStripMenuItem.Text = "File";
             // 
+            // refreshToolStripMenuItem
+            // 
+            refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
+            refreshToolStripMenuItem.ShortcutKeys = Keys.F5;
+            refreshToolStripMenuItem.Size = new Size(180, 22);
+            refreshToolStripMenuItem.Text = "Refresh";
+            refreshToolStripMenuItem.Click += refreshToolStripMenuItem_Click;
+            // 
+            // toolStripSeparator1
+            // 
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(177, 6);
+            // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(92, 22);
+            exitToolStripMenuItem.ShortcutKeyDisplayString = "";
+            exitToolStripMenuItem.ShortcutKeys = Keys.Alt | Keys.F4;
+            exitToolStripMenuItem.Size = new Size(180, 22);
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
             // toolsToolStripMenuItem
             // 
-            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { resetToolStripMenuItem, switchToModToolStripMenuItem, switchToClasToolStripMenuItem, setSessionTimeoutToolStripMenuItem });
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { resetToolStripMenuItem, toolStripSeparator2, switchToClasToolStripMenuItem, switchToModToolStripMenuItem, toolStripSeparator3, setSessionTimeoutToolStripMenuItem });
             toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             toolsToolStripMenuItem.Size = new Size(47, 20);
             toolsToolStripMenuItem.Text = "Tools";
@@ -582,25 +588,40 @@ namespace AcuCleaner.Forms
             // resetToolStripMenuItem
             // 
             resetToolStripMenuItem.Name = "resetToolStripMenuItem";
-            resetToolStripMenuItem.Size = new Size(184, 22);
+            resetToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.P;
+            resetToolStripMenuItem.Size = new Size(229, 22);
             resetToolStripMenuItem.Text = "Reset Password";
+            resetToolStripMenuItem.Click += resetToolStripMenuItem_Click;
             // 
-            // switchToModToolStripMenuItem
+            // toolStripSeparator2
             // 
-            switchToModToolStripMenuItem.Name = "switchToModToolStripMenuItem";
-            switchToModToolStripMenuItem.Size = new Size(184, 22);
-            switchToModToolStripMenuItem.Text = "Switch To Modern UI";
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new Size(226, 6);
             // 
             // switchToClasToolStripMenuItem
             // 
             switchToClasToolStripMenuItem.Name = "switchToClasToolStripMenuItem";
-            switchToClasToolStripMenuItem.Size = new Size(184, 22);
+            switchToClasToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.C;
+            switchToClasToolStripMenuItem.Size = new Size(229, 22);
             switchToClasToolStripMenuItem.Text = "Switch To Classic UI";
+            // 
+            // switchToModToolStripMenuItem
+            // 
+            switchToModToolStripMenuItem.Name = "switchToModToolStripMenuItem";
+            switchToModToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.M;
+            switchToModToolStripMenuItem.Size = new Size(229, 22);
+            switchToModToolStripMenuItem.Text = "Switch To Modern UI";
+            // 
+            // toolStripSeparator3
+            // 
+            toolStripSeparator3.Name = "toolStripSeparator3";
+            toolStripSeparator3.Size = new Size(226, 6);
             // 
             // setSessionTimeoutToolStripMenuItem
             // 
             setSessionTimeoutToolStripMenuItem.Name = "setSessionTimeoutToolStripMenuItem";
-            setSessionTimeoutToolStripMenuItem.Size = new Size(184, 22);
+            setSessionTimeoutToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.T;
+            setSessionTimeoutToolStripMenuItem.Size = new Size(229, 22);
             setSessionTimeoutToolStripMenuItem.Text = "Set Session Timeout";
             // 
             // MainForm
@@ -657,7 +678,6 @@ namespace AcuCleaner.Forms
         private CheckBox checkBoxCleanupAspTemp;
         private CheckBox checkBoxcleanupIISApps;
         private CheckBox checkBoxCleanupFiles;
-        private Button buttonRefresh;
         private CheckBox checkBoxCleanupSnapshots;
         private CheckBox checkBoxCleanupCustomizations;
         private CheckBox checkBoxCleanupBackups;
@@ -688,5 +708,9 @@ namespace AcuCleaner.Forms
         private ToolStripMenuItem switchToModToolStripMenuItem;
         private ToolStripMenuItem switchToClasToolStripMenuItem;
         private ToolStripMenuItem setSessionTimeoutToolStripMenuItem;
+        private ToolStripMenuItem refreshToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripSeparator toolStripSeparator2;
+        private ToolStripSeparator toolStripSeparator3;
     }
 }

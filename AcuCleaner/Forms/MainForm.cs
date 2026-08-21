@@ -53,9 +53,7 @@ namespace AcuCleaner.Forms
 
         private void RefreshAppList()
         {
-            SetCleanupParamerers();
-
-            SetFilterParameters();
+            SetParameters();
 
             _allApps = CleanupService
                 .GetAll()
@@ -70,15 +68,9 @@ namespace AcuCleaner.Forms
 
         private async Task DeleteSelectedAppsAsync()
         {
-            SetCleanupParamerers();
+            SetParameters();
 
-            foreach (DataGridViewRow selectedRow in dataGridView.SelectedRows)
-            {
-                if (selectedRow.DataBoundItem is IISApp app)
-                {
-                    (CleanupService.CleanupParameters.Apps as List<IISApp>)?.Add(app);
-                }
-            }
+            FilterSelectedApps();
 
             if (!CleanupService.CleanupParameters.Apps.Any())
             {
@@ -108,7 +100,7 @@ namespace AcuCleaner.Forms
 
             try
             {
-                await Task.Run(() => CleanupService.Cleanup(CleanupService.CleanupParameters));
+                await Task.Run(() => CleanupService.Cleanup());
                 toolStripStatusLabel.Text = $"Deleted {CleanupService.CleanupParameters.Apps.Count()} app(s).";
                 RefreshAppList();
             }
@@ -121,6 +113,17 @@ namespace AcuCleaner.Forms
                 toolStripProgressBar.Visible = false;
                 buttonDeleteSelected.Enabled = true;
                 buttonDeleteAll.Enabled = true;
+            }
+        }
+
+        private void FilterSelectedApps()
+        {
+            foreach (DataGridViewRow selectedRow in dataGridView.SelectedRows)
+            {
+                if (selectedRow.DataBoundItem is IISApp app)
+                {
+                    (CleanupService.CleanupParameters.Apps as List<IISApp>)?.Add(app);
+                }
             }
         }
 
@@ -156,6 +159,12 @@ namespace AcuCleaner.Forms
             };
         }
 
+        private void SetParameters()
+        {
+            SetFilterParameters();
+            SetCleanupParamerers();
+        }
+
         private void dateTimePicker_ValueChanged(object sender, EventArgs e)
         {
             RefreshAppList();
@@ -183,14 +192,27 @@ namespace AcuCleaner.Forms
             RefreshAppList();
         }
 
-        private void buttonRefresh_Click(object sender, EventArgs e)
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
             RefreshAppList();
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void resetToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            SetParameters();
+
+            FilterSelectedApps();
+
+            var result = MessageBox.Show($"This action will reset password for {CleanupService.CleanupParameters.Apps.Count()} selected instance(s). Are you sure you want to continue?", "Confirm Reset Password", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (result == DialogResult.Yes)
+            {
+                CleanupService.Cleaners.OfType<DatabaseCleaner>().FirstOrDefault()?.ResetPassword(CleanupService.CleanupParameters);
+            }
         }
     }
 }
