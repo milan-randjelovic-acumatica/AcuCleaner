@@ -12,6 +12,7 @@ namespace AcuCleaner.Forms
         private static MainForm? _instance;
         private List<IISApp> _allApps = new List<IISApp>();
         private readonly IProgress<string> _progressHandler;
+        private readonly Image? _warningImage;
 
         public CleanupService CleanupService { get; private set; }
 
@@ -21,6 +22,13 @@ namespace AcuCleaner.Forms
             _instance = this;
 
             _progressHandler = new Progress<string>(message => this.toolStripStatusLabel.Text = message);
+
+            var warningImagePath = Path.Combine(AppContext.BaseDirectory, "warning.png");
+            if (File.Exists(warningImagePath))
+            {
+                using var stream = File.OpenRead(warningImagePath);
+                _warningImage = Image.FromStream(stream);
+            }
 
             CleanupService = new CleanupService(new List<ICleanupService>()
             {
@@ -64,6 +72,46 @@ namespace AcuCleaner.Forms
 
             iISAppBindingSource1.DataSource = _allApps;
             iISAppBindingSource1.ResetBindings(false);
+        }
+
+        private void dataGridView_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex != Status.Index)
+            {
+                return;
+            }
+
+            if (dataGridView.Rows[e.RowIndex].DataBoundItem is not IISApp app || app.Active)
+            {
+                return;
+            }
+
+            e.Paint(e.CellBounds, DataGridViewPaintParts.Background | DataGridViewPaintParts.Border);
+
+            var iconSize = 16;
+            var padding = 4;
+            var textBounds = new Rectangle(
+                e.CellBounds.Left,
+                e.CellBounds.Top,
+                e.CellBounds.Width - iconSize,
+                e.CellBounds.Height);
+
+            TextRenderer.DrawText(
+                e.Graphics!,
+                app.Status,
+                e.CellStyle!.Font,
+                textBounds,
+                e.CellStyle.ForeColor,
+                TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis);
+
+            if (_warningImage != null)
+            {
+                var iconX = e.CellBounds.Right - iconSize - padding;
+                var iconY = e.CellBounds.Top + ((e.CellBounds.Height - iconSize) / 2);
+                e.Graphics!.DrawImage(_warningImage, new Rectangle(iconX, iconY, iconSize, iconSize));
+            }
+
+            e.Handled = true;
         }
 
         private async Task DeleteSelectedAppsAsync()

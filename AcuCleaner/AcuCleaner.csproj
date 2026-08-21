@@ -16,6 +16,9 @@
 
   <ItemGroup>
     <Content Include="acumatica.ico" />
+    <Content Include="warning.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
