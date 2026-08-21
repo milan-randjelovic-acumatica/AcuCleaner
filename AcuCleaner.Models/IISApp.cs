@@ -14,6 +14,7 @@
         public required string DatabaseConnectionString { get; set; }
         public required string RegistryPath { get; set; }
         public bool Active { get; set; }
+        public string Status => Active ? "Active" : "Inactive";
         public DateTime InstalledOn { get; set; } = DateTime.MinValue;
         public override string ToString()
         {

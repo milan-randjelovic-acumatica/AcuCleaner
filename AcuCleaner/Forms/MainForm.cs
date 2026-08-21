@@ -68,8 +68,6 @@ namespace AcuCleaner.Forms
 
         private async Task DeleteSelectedAppsAsync()
         {
-            SetParameters();
-
             FilterSelectedApps();
 
             if (!CleanupService.CleanupParameters.Apps.Any())
@@ -118,6 +116,8 @@ namespace AcuCleaner.Forms
 
         private void FilterSelectedApps()
         {
+            SetParameters();
+
             foreach (DataGridViewRow selectedRow in dataGridView.SelectedRows)
             {
                 if (selectedRow.DataBoundItem is IISApp app)
@@ -204,14 +204,34 @@ namespace AcuCleaner.Forms
 
         private void resetToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SetParameters();
-
             FilterSelectedApps();
 
-            var result = MessageBox.Show($"This action will reset password for {CleanupService.CleanupParameters.Apps.Count()} selected instance(s). Are you sure you want to continue?", "Confirm Reset Password", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            var result = MessageBox.Show($"This action will reset password for {CleanupService.CleanupParameters.Apps.Count()} selected instance(s). Are you sure you want to continue?", "Confirm Action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (result == DialogResult.Yes)
             {
                 CleanupService.Cleaners.OfType<DatabaseCleaner>().FirstOrDefault()?.ResetPassword(CleanupService.CleanupParameters);
+            }
+        }
+
+        private void enableModernUISwitchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FilterSelectedApps();
+
+            var result = MessageBox.Show($"This action will enable Modern UI switch for {CleanupService.CleanupParameters.Apps.Count()} selected instance(s). Are you sure you want to continue?", "Confirm Action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (result == DialogResult.Yes)
+            {
+                CleanupService.Cleaners.OfType<FileSystemCleaner>().FirstOrDefault()?.EnableModernUISwitch(CleanupService.CleanupParameters);
+            }
+        }
+
+        private void setSessionTimeoutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FilterSelectedApps();
+
+            var result = MessageBox.Show($"This action will set session timeout to 1 day for {CleanupService.CleanupParameters.Apps.Count()} selected instance(s). Are you sure you want to continue?", "Confirm Action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (result == DialogResult.Yes)
+            {
+                CleanupService.Cleaners.OfType<FileSystemCleaner>().FirstOrDefault()?.ExtendSessionTimeout(CleanupService.CleanupParameters);
             }
         }
     }

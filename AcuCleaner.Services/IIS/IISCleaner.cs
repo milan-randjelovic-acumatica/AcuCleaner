@@ -115,6 +115,7 @@ namespace AcuCleaner.Services.IIS
                         {
                             _progressHandler?.Report($"Removing IIS entry {i++}/{appsToRemove.Count}: {app.Path}");
                             site.Applications.Remove(app);
+                            _progressHandler?.Report($"Successfully removed IIS entry: {app.Path}");
                         }
 
                         serverManager.CommitChanges();

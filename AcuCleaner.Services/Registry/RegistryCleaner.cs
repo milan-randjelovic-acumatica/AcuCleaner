@@ -123,12 +123,15 @@ namespace AcuCleaner.Services.Registry
 
             using (var baseKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(_path, writable: true))
             {
+                int i = 1;
                 foreach (var app in cleanupParameters.Apps)
                 {
                     if (!string.IsNullOrEmpty(app.RegistryPath))
                     {
+                        _progressHandler?.Report($"Deleting registry entry {i++}/{cleanupParameters.Apps.Count()}: {app.RegistryPath}");
                         var registryPath = app.RegistryPath.Replace('/', '\\').TrimEnd('\\');
                         baseKey?.DeleteSubKeyTree(app.InstanceName, throwOnMissingSubKey: true);
+                        _progressHandler?.Report($"Successfully deleted registry entry: {app.RegistryPath}");
                     }
                 }
             }

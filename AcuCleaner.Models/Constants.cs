@@ -7,6 +7,7 @@
         public const string Customization = "Customization";
         public const string BackUp = "BackUp";
         public const string Sites = "Sites";
+        public const string WebConfig = "Web.config";
 
         public static readonly List<string> ConnectionStrings = new List<string>()
         {

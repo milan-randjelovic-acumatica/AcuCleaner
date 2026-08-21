@@ -116,6 +116,7 @@ namespace AcuCleaner.Services.Database
                         var command = new SqlCommand($"DROP DATABASE [{iisApp.DatabaseName}];", connection);
                         command.ExecuteNonQuery();
                     }
+                    _progressHandler?.Report($"Successfully deleted SQL database: {iisApp.DatabaseName}");
                 }
             }
         }
@@ -138,6 +139,7 @@ namespace AcuCleaner.Services.Database
                             $"update PushNotificationsHook set Active = 0", connection);
                         command.ExecuteNonQuery();
                     }
+                    _progressHandler?.Report($"Password reset successfully for SQL database: {iisApp.DatabaseName}");
                 }
             }
         }

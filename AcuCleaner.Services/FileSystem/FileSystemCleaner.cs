@@ -56,13 +56,13 @@ namespace AcuCleaner.Services.FileSystem
                     {
                         ProcessSpecialFolder(path, result, (app, normalizedPath) => app.SnapshotPath = normalizedPath);
                     }
-                    else if(folderName == Constants.Customization)
+                    else if (folderName == Constants.Customization)
                     {
                         ProcessSpecialFolder(path, result, (app, normalizedPath) => app.CustomizationPath = normalizedPath);
                     }
-                    else if(folderName == Constants.BackUp)
+                    else if (folderName == Constants.BackUp)
                     {
-                        ProcessSpecialFolder( Path.Combine(path, Constants.Sites), result, (app, normalizedPath) => app.BackupPath = normalizedPath);
+                        ProcessSpecialFolder(Path.Combine(path, Constants.Sites), result, (app, normalizedPath) => app.BackupPath = normalizedPath);
                     }
                     else
                     {
@@ -161,17 +161,17 @@ namespace AcuCleaner.Services.FileSystem
                 CleanupAspTempFolders(cleanupParameters);
             }
 
-            if(cleanupParameters.CleanupSnapshots)
+            if (cleanupParameters.CleanupSnapshots)
             {
                 CleanupSnapshotFolders(cleanupParameters);
             }
 
-            if(cleanupParameters.CleanupCustomizations)
+            if (cleanupParameters.CleanupCustomizations)
             {
                 CleanupCustomizationFolders(cleanupParameters);
             }
 
-            if(cleanupParameters.CleanupBackups)
+            if (cleanupParameters.CleanupBackups)
             {
                 CleanupBackupFolders(cleanupParameters);
             }
@@ -187,6 +187,7 @@ namespace AcuCleaner.Services.FileSystem
                     _progressHandler?.Report($"Cleaning folders {i++}/{cleanupParameters.Apps.Count()}: {app.Path}");
                     PrepareDirectoryForDeletion(app.Path);
                     Directory.Delete(app.Path, true);
+                    _progressHandler?.Report($"Successfully deleted folder: {app.Path}");
                 }
             }
         }
@@ -201,6 +202,7 @@ namespace AcuCleaner.Services.FileSystem
                     _progressHandler?.Report($"Deleting ASP temp files: {i++}/{cleanupParameters.Apps.Count()} {app.AspTempFilesPath}");
                     PrepareDirectoryForDeletion(app.AspTempFilesPath);
                     Directory.Delete(app.AspTempFilesPath, true);
+                    _progressHandler?.Report($"Successfully deleted ASP temp files: {app.AspTempFilesPath}");
                 }
             }
         }
@@ -215,6 +217,7 @@ namespace AcuCleaner.Services.FileSystem
                     _progressHandler?.Report($"Deleting snapshot files: {i++}/{cleanupParameters.Apps.Count()} {app.SnapshotPath}");
                     PrepareDirectoryForDeletion(app.SnapshotPath);
                     Directory.Delete(app.SnapshotPath, true);
+                    _progressHandler?.Report($"Successfully deleted snapshot files: {app.SnapshotPath}");
                 }
             }
         }
@@ -229,6 +232,7 @@ namespace AcuCleaner.Services.FileSystem
                     _progressHandler?.Report($"Deleting customization files: {i++}/{cleanupParameters.Apps.Count()} {app.CustomizationPath}");
                     PrepareDirectoryForDeletion(app.CustomizationPath);
                     Directory.Delete(app.CustomizationPath, true);
+                    _progressHandler?.Report($"Successfully deleted customization files: {app.CustomizationPath}");
                 }
             }
         }
@@ -243,6 +247,7 @@ namespace AcuCleaner.Services.FileSystem
                     _progressHandler?.Report($"Deleting backup files: {i++}/{cleanupParameters.Apps.Count()} {app.BackupPath}");
                     PrepareDirectoryForDeletion(app.BackupPath);
                     Directory.Delete(app.BackupPath, true);
+                    _progressHandler?.Report($"Successfully deleted backup files: {app.BackupPath}");
                 }
             }
         }
@@ -294,6 +299,71 @@ namespace AcuCleaner.Services.FileSystem
                     FileSystemRights.FullControl,
                     AccessControlType.Allow));
                 fileInfo.SetAccessControl(security);
+            }
+        }
+
+        public void EnableModernUISwitch(CleanupParameters cleanupParameters)
+        {
+            int i = 1;
+            foreach (var app in cleanupParameters.Apps)
+            {
+                if (!string.IsNullOrEmpty(app.Path) && Directory.Exists(app.Path))
+                {
+                    var webConfigFilePath = Path.Combine(app.Path, Constants.WebConfig);
+                    if (File.Exists(webConfigFilePath))
+                    {
+                        _progressHandler?.Report($"Enabling Modern UI switch {i++}/{cleanupParameters.Apps.Count()} for: {app.InstanceName}");
+
+                        var doc = new System.Xml.XmlDocument();
+                        doc.Load(webConfigFilePath);
+
+                        var appSettings = doc.SelectSingleNode("//appSettings");
+                        if (appSettings != null)
+                        {
+                            // Update existing key if present, otherwise add it
+                            var existing = appSettings.SelectSingleNode("add[@key='EnableSiteMapSwitchUI']");
+                            if (existing != null)
+                            {
+                                existing.Attributes!["value"]!.Value = "true";
+                            }
+                            else
+                            {
+                                var entry = doc.CreateElement("add");
+                                entry.SetAttribute("key", "EnableSiteMapSwitchUI");
+                                entry.SetAttribute("value", "true");
+                                appSettings.AppendChild(entry);
+                            }
+
+                            doc.Save(webConfigFilePath);
+                            _progressHandler?.Report($"Successfully enabled Modern UI switch for: {app.InstanceName}");
+                        }
+                    }
+                }
+            }
+        }
+
+        public void ExtendSessionTimeout(CleanupParameters cleanupParameters, int newTimeoutInMinutes = 24 * 60)
+        {
+            int i = 1;
+            foreach (var app in cleanupParameters.Apps)
+            {
+                if (!string.IsNullOrEmpty(app.Path) && Directory.Exists(app.Path))
+                {
+                    var webConfigFilePath = Path.Combine(app.Path, Constants.WebConfig);
+                    if (File.Exists(webConfigFilePath))
+                    {
+                        _progressHandler?.Report($"Extending session timeout {i++}/{cleanupParameters.Apps.Count()} for: {app.InstanceName}");
+                        var doc = new System.Xml.XmlDocument();
+                        doc.Load(webConfigFilePath);
+                        var sessionStateNode = doc.SelectSingleNode("//sessionState");
+                        if (sessionStateNode != null)
+                        {
+                            sessionStateNode.Attributes!["timeout"]!.Value = newTimeoutInMinutes.ToString();
+                            doc.Save(webConfigFilePath);
+                            _progressHandler?.Report($"Successfully extended session timeout for: {app.InstanceName}");
+                        }
+                    }
+                }
             }
         }
     }

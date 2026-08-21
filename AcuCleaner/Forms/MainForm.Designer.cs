@@ -34,8 +34,8 @@ namespace AcuCleaner.Forms
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             dataGridView = new DataGridView();
             Id = new DataGridViewTextBoxColumn();
+            Status = new DataGridViewTextBoxColumn();
             Instance = new DataGridViewTextBoxColumn();
-            Active = new DataGridViewCheckBoxColumn();
             InstalledOn = new DataGridViewTextBoxColumn();
             DatabaseName = new DataGridViewTextBoxColumn();
             pathDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
@@ -81,8 +81,7 @@ namespace AcuCleaner.Forms
             toolsToolStripMenuItem = new ToolStripMenuItem();
             resetToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
-            switchToClasToolStripMenuItem = new ToolStripMenuItem();
-            switchToModToolStripMenuItem = new ToolStripMenuItem();
+            enableModernUISwitchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator3 = new ToolStripSeparator();
             setSessionTimeoutToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
@@ -101,7 +100,7 @@ namespace AcuCleaner.Forms
             dataGridView.AllowUserToDeleteRows = false;
             dataGridView.AutoGenerateColumns = false;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Columns.AddRange(new DataGridViewColumn[] { Id, Instance, Active, InstalledOn, DatabaseName, pathDataGridViewTextBoxColumn, AspTempFilesPath, CustomizationPath, BackupPath, SnapshotPath, RegistryPath });
+            dataGridView.Columns.AddRange(new DataGridViewColumn[] { Id, Status, Instance, InstalledOn, DatabaseName, pathDataGridViewTextBoxColumn, AspTempFilesPath, CustomizationPath, BackupPath, SnapshotPath, RegistryPath });
             dataGridView.DataSource = iISAppBindingSource1;
             dataGridView.Dock = DockStyle.Fill;
             dataGridView.Location = new Point(3, 19);
@@ -121,6 +120,13 @@ namespace AcuCleaner.Forms
             Id.ReadOnly = true;
             Id.Width = 50;
             // 
+            // Status
+            // 
+            Status.DataPropertyName = "Status";
+            Status.HeaderText = "Status";
+            Status.Name = "Status";
+            Status.ReadOnly = true;
+            // 
             // Instance
             // 
             Instance.DataPropertyName = "InstanceName";
@@ -128,15 +134,6 @@ namespace AcuCleaner.Forms
             Instance.MinimumWidth = 6;
             Instance.Name = "Instance";
             Instance.ReadOnly = true;
-            // 
-            // Active
-            // 
-            Active.DataPropertyName = "Active";
-            Active.HeaderText = "Active/Junk";
-            Active.MinimumWidth = 6;
-            Active.Name = "Active";
-            Active.ReadOnly = true;
-            Active.SortMode = DataGridViewColumnSortMode.Automatic;
             // 
             // InstalledOn
             // 
@@ -272,9 +269,9 @@ namespace AcuCleaner.Forms
             checkBoxJunk.CheckState = CheckState.Checked;
             checkBoxJunk.Location = new Point(6, 91);
             checkBoxJunk.Name = "checkBoxJunk";
-            checkBoxJunk.Size = new Size(50, 19);
+            checkBoxJunk.Size = new Size(67, 19);
             checkBoxJunk.TabIndex = 8;
-            checkBoxJunk.Text = "Junk";
+            checkBoxJunk.Text = "Inactive";
             checkBoxJunk.UseVisualStyleBackColor = true;
             checkBoxJunk.CheckedChanged += filter_CheckedChanged;
             // 
@@ -560,27 +557,27 @@ namespace AcuCleaner.Forms
             // 
             refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
             refreshToolStripMenuItem.ShortcutKeys = Keys.F5;
-            refreshToolStripMenuItem.Size = new Size(180, 22);
+            refreshToolStripMenuItem.Size = new Size(134, 22);
             refreshToolStripMenuItem.Text = "Refresh";
             refreshToolStripMenuItem.Click += refreshToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(177, 6);
+            toolStripSeparator1.Size = new Size(131, 6);
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             exitToolStripMenuItem.ShortcutKeyDisplayString = "";
             exitToolStripMenuItem.ShortcutKeys = Keys.Alt | Keys.F4;
-            exitToolStripMenuItem.Size = new Size(180, 22);
+            exitToolStripMenuItem.Size = new Size(134, 22);
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
             // toolsToolStripMenuItem
             // 
-            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { resetToolStripMenuItem, toolStripSeparator2, switchToClasToolStripMenuItem, switchToModToolStripMenuItem, toolStripSeparator3, setSessionTimeoutToolStripMenuItem });
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { resetToolStripMenuItem, toolStripSeparator2, enableModernUISwitchToolStripMenuItem, toolStripSeparator3, setSessionTimeoutToolStripMenuItem });
             toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             toolsToolStripMenuItem.Size = new Size(47, 20);
             toolsToolStripMenuItem.Text = "Tools";
@@ -589,40 +586,35 @@ namespace AcuCleaner.Forms
             // 
             resetToolStripMenuItem.Name = "resetToolStripMenuItem";
             resetToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.P;
-            resetToolStripMenuItem.Size = new Size(229, 22);
+            resetToolStripMenuItem.Size = new Size(251, 22);
             resetToolStripMenuItem.Text = "Reset Password";
             resetToolStripMenuItem.Click += resetToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(226, 6);
+            toolStripSeparator2.Size = new Size(248, 6);
             // 
-            // switchToClasToolStripMenuItem
+            // enableModernUISwitchToolStripMenuItem
             // 
-            switchToClasToolStripMenuItem.Name = "switchToClasToolStripMenuItem";
-            switchToClasToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.C;
-            switchToClasToolStripMenuItem.Size = new Size(229, 22);
-            switchToClasToolStripMenuItem.Text = "Switch To Classic UI";
-            // 
-            // switchToModToolStripMenuItem
-            // 
-            switchToModToolStripMenuItem.Name = "switchToModToolStripMenuItem";
-            switchToModToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.M;
-            switchToModToolStripMenuItem.Size = new Size(229, 22);
-            switchToModToolStripMenuItem.Text = "Switch To Modern UI";
+            enableModernUISwitchToolStripMenuItem.Name = "enableModernUISwitchToolStripMenuItem";
+            enableModernUISwitchToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.M;
+            enableModernUISwitchToolStripMenuItem.Size = new Size(251, 22);
+            enableModernUISwitchToolStripMenuItem.Text = "Enable Modern UI Switch";
+            enableModernUISwitchToolStripMenuItem.Click += enableModernUISwitchToolStripMenuItem_Click;
             // 
             // toolStripSeparator3
             // 
             toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new Size(226, 6);
+            toolStripSeparator3.Size = new Size(248, 6);
             // 
             // setSessionTimeoutToolStripMenuItem
             // 
             setSessionTimeoutToolStripMenuItem.Name = "setSessionTimeoutToolStripMenuItem";
             setSessionTimeoutToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.T;
-            setSessionTimeoutToolStripMenuItem.Size = new Size(229, 22);
-            setSessionTimeoutToolStripMenuItem.Text = "Set Session Timeout";
+            setSessionTimeoutToolStripMenuItem.Size = new Size(251, 22);
+            setSessionTimeoutToolStripMenuItem.Text = "Extend Session Timeout";
+            setSessionTimeoutToolStripMenuItem.Click += setSessionTimeoutToolStripMenuItem_Click;
             // 
             // MainForm
             // 
@@ -681,17 +673,6 @@ namespace AcuCleaner.Forms
         private CheckBox checkBoxCleanupSnapshots;
         private CheckBox checkBoxCleanupCustomizations;
         private CheckBox checkBoxCleanupBackups;
-        private DataGridViewTextBoxColumn Id;
-        private DataGridViewTextBoxColumn Instance;
-        private DataGridViewCheckBoxColumn Active;
-        private DataGridViewTextBoxColumn InstalledOn;
-        private DataGridViewTextBoxColumn DatabaseName;
-        private DataGridViewTextBoxColumn pathDataGridViewTextBoxColumn;
-        private DataGridViewTextBoxColumn AspTempFilesPath;
-        private DataGridViewTextBoxColumn CustomizationPath;
-        private DataGridViewTextBoxColumn BackupPath;
-        private DataGridViewTextBoxColumn SnapshotPath;
-        private DataGridViewTextBoxColumn RegistryPath;
         private CheckBox checkBoxAspTmpFiles;
         private CheckBox checkBoxIISFiles;
         private CheckBox checkBoxCustomizations;
@@ -705,12 +686,22 @@ namespace AcuCleaner.Forms
         private ToolStripMenuItem toolsToolStripMenuItem;
         private ToolStripMenuItem resetToolStripMenuItem;
         private ToolStripMenuItem exitToolStripMenuItem;
-        private ToolStripMenuItem switchToModToolStripMenuItem;
-        private ToolStripMenuItem switchToClasToolStripMenuItem;
         private ToolStripMenuItem setSessionTimeoutToolStripMenuItem;
         private ToolStripMenuItem refreshToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripSeparator toolStripSeparator3;
+        private ToolStripMenuItem enableModernUISwitchToolStripMenuItem;
+        private DataGridViewTextBoxColumn Id;
+        private DataGridViewTextBoxColumn Status;
+        private DataGridViewTextBoxColumn Instance;
+        private DataGridViewTextBoxColumn InstalledOn;
+        private DataGridViewTextBoxColumn DatabaseName;
+        private DataGridViewTextBoxColumn pathDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn AspTempFilesPath;
+        private DataGridViewTextBoxColumn CustomizationPath;
+        private DataGridViewTextBoxColumn BackupPath;
+        private DataGridViewTextBoxColumn SnapshotPath;
+        private DataGridViewTextBoxColumn RegistryPath;
     }
 }
