@@ -86,7 +86,12 @@ namespace AcuCleaner.Forms
                 return;
             }
 
-            e.Paint(e.CellBounds, DataGridViewPaintParts.Background | DataGridViewPaintParts.Border);
+            var isSelected = (e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected;
+            using (var backgroundBrush = new SolidBrush(isSelected ? e.CellStyle!.SelectionBackColor : e.CellStyle!.BackColor))
+            {
+                e.Graphics!.FillRectangle(backgroundBrush, e.CellBounds);
+            }
+            e.Paint(e.CellBounds, DataGridViewPaintParts.Border);
 
             var iconSize = 16;
             var padding = 4;
@@ -101,7 +106,7 @@ namespace AcuCleaner.Forms
                 app.Status,
                 e.CellStyle!.Font,
                 textBounds,
-                e.CellStyle.ForeColor,
+                isSelected ? e.CellStyle.SelectionForeColor : e.CellStyle.ForeColor,
                 TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis);
 
             if (_warningImage != null)
