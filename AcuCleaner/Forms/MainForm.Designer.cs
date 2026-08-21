@@ -66,14 +66,22 @@ namespace AcuCleaner.Forms
             checkBoxCleanupFiles = new CheckBox();
             groupBoxFilter = new GroupBox();
             checkBoxRegistry = new CheckBox();
+            buttonRefresh = new Button();
             checkBoxDatabases = new CheckBox();
             checkBoxBackups = new CheckBox();
             checkBoxCustomizations = new CheckBox();
             checkBoxSnapshots = new CheckBox();
             checkBoxAspTmpFiles = new CheckBox();
             checkBoxIISFiles = new CheckBox();
-            buttonRefresh = new Button();
             groupBoxInstances = new GroupBox();
+            menuStrip = new MenuStrip();
+            fileToolStripMenuItem = new ToolStripMenuItem();
+            exitToolStripMenuItem = new ToolStripMenuItem();
+            toolsToolStripMenuItem = new ToolStripMenuItem();
+            resetToolStripMenuItem = new ToolStripMenuItem();
+            switchToModToolStripMenuItem = new ToolStripMenuItem();
+            switchToClasToolStripMenuItem = new ToolStripMenuItem();
+            setSessionTimeoutToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource).BeginInit();
@@ -81,23 +89,24 @@ namespace AcuCleaner.Forms
             groupBoxCleanup.SuspendLayout();
             groupBoxFilter.SuspendLayout();
             groupBoxInstances.SuspendLayout();
+            menuStrip.SuspendLayout();
             SuspendLayout();
             // 
             // dataGridView
             // 
             dataGridView.AllowUserToAddRows = false;
             dataGridView.AllowUserToDeleteRows = false;
-            dataGridView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView.AutoGenerateColumns = false;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView.Columns.AddRange(new DataGridViewColumn[] { Id, Instance, Active, InstalledOn, DatabaseName, pathDataGridViewTextBoxColumn, AspTempFilesPath, CustomizationPath, BackupPath, SnapshotPath, RegistryPath });
             dataGridView.DataSource = iISAppBindingSource1;
-            dataGridView.Location = new Point(6, 44);
+            dataGridView.Dock = DockStyle.Fill;
+            dataGridView.Location = new Point(3, 19);
             dataGridView.Name = "dataGridView";
             dataGridView.ReadOnly = true;
             dataGridView.RowHeadersWidth = 51;
             dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView.Size = new Size(997, 564);
+            dataGridView.Size = new Size(1009, 577);
             dataGridView.TabIndex = 2;
             // 
             // Id
@@ -204,7 +213,7 @@ namespace AcuCleaner.Forms
             // buttonDeleteSelected
             // 
             buttonDeleteSelected.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonDeleteSelected.Location = new Point(63, 289);
+            buttonDeleteSelected.Location = new Point(63, 230);
             buttonDeleteSelected.Name = "buttonDeleteSelected";
             buttonDeleteSelected.Size = new Size(75, 23);
             buttonDeleteSelected.TabIndex = 3;
@@ -215,7 +224,7 @@ namespace AcuCleaner.Forms
             // buttonDeleteAll
             // 
             buttonDeleteAll.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonDeleteAll.Location = new Point(144, 289);
+            buttonDeleteAll.Location = new Point(144, 230);
             buttonDeleteAll.Name = "buttonDeleteAll";
             buttonDeleteAll.Size = new Size(75, 23);
             buttonDeleteAll.TabIndex = 4;
@@ -302,9 +311,9 @@ namespace AcuCleaner.Forms
             groupBoxCleanup.Controls.Add(checkBoxCleanupFiles);
             groupBoxCleanup.Controls.Add(buttonDeleteSelected);
             groupBoxCleanup.Controls.Add(buttonDeleteAll);
-            groupBoxCleanup.Location = new Point(1027, 308);
+            groupBoxCleanup.Location = new Point(1033, 367);
             groupBoxCleanup.Name = "groupBoxCleanup";
-            groupBoxCleanup.Size = new Size(225, 318);
+            groupBoxCleanup.Size = new Size(225, 259);
             groupBoxCleanup.TabIndex = 10;
             groupBoxCleanup.TabStop = false;
             groupBoxCleanup.Text = "Cleanup";
@@ -409,6 +418,7 @@ namespace AcuCleaner.Forms
             // 
             groupBoxFilter.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             groupBoxFilter.Controls.Add(checkBoxRegistry);
+            groupBoxFilter.Controls.Add(buttonRefresh);
             groupBoxFilter.Controls.Add(checkBoxDatabases);
             groupBoxFilter.Controls.Add(checkBoxBackups);
             groupBoxFilter.Controls.Add(checkBoxCustomizations);
@@ -419,9 +429,9 @@ namespace AcuCleaner.Forms
             groupBoxFilter.Controls.Add(labelOlderThan);
             groupBoxFilter.Controls.Add(checkBoxActive);
             groupBoxFilter.Controls.Add(checkBoxJunk);
-            groupBoxFilter.Location = new Point(1027, 12);
+            groupBoxFilter.Location = new Point(1033, 27);
             groupBoxFilter.Name = "groupBoxFilter";
-            groupBoxFilter.Size = new Size(225, 290);
+            groupBoxFilter.Size = new Size(225, 334);
             groupBoxFilter.TabIndex = 11;
             groupBoxFilter.TabStop = false;
             groupBoxFilter.Text = "Filter";
@@ -438,6 +448,17 @@ namespace AcuCleaner.Forms
             checkBoxRegistry.Text = "Registry";
             checkBoxRegistry.UseVisualStyleBackColor = true;
             checkBoxRegistry.CheckedChanged += filter_CheckedChanged;
+            // 
+            // buttonRefresh
+            // 
+            buttonRefresh.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            buttonRefresh.Location = new Point(144, 305);
+            buttonRefresh.Name = "buttonRefresh";
+            buttonRefresh.Size = new Size(75, 23);
+            buttonRefresh.TabIndex = 9;
+            buttonRefresh.Text = "Refresh";
+            buttonRefresh.UseVisualStyleBackColor = true;
+            buttonRefresh.Click += buttonRefresh_Click;
             // 
             // checkBoxDatabases
             // 
@@ -517,28 +538,70 @@ namespace AcuCleaner.Forms
             checkBoxIISFiles.UseVisualStyleBackColor = true;
             checkBoxIISFiles.CheckedChanged += filter_CheckedChanged;
             // 
-            // buttonRefresh
-            // 
-            buttonRefresh.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            buttonRefresh.Location = new Point(928, 15);
-            buttonRefresh.Name = "buttonRefresh";
-            buttonRefresh.Size = new Size(75, 23);
-            buttonRefresh.TabIndex = 9;
-            buttonRefresh.Text = "Refresh";
-            buttonRefresh.UseVisualStyleBackColor = true;
-            buttonRefresh.Click += buttonRefresh_Click;
-            // 
             // groupBoxInstances
             // 
             groupBoxInstances.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             groupBoxInstances.Controls.Add(dataGridView);
-            groupBoxInstances.Controls.Add(buttonRefresh);
-            groupBoxInstances.Location = new Point(12, 12);
+            groupBoxInstances.Location = new Point(12, 27);
             groupBoxInstances.Name = "groupBoxInstances";
-            groupBoxInstances.Size = new Size(1009, 614);
+            groupBoxInstances.Size = new Size(1015, 599);
             groupBoxInstances.TabIndex = 12;
             groupBoxInstances.TabStop = false;
             groupBoxInstances.Text = "Instances";
+            // 
+            // menuStrip
+            // 
+            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, toolsToolStripMenuItem });
+            menuStrip.Location = new Point(0, 0);
+            menuStrip.Name = "menuStrip";
+            menuStrip.Size = new Size(1264, 24);
+            menuStrip.TabIndex = 13;
+            menuStrip.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { exitToolStripMenuItem });
+            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            fileToolStripMenuItem.Size = new Size(37, 20);
+            fileToolStripMenuItem.Text = "File";
+            // 
+            // exitToolStripMenuItem
+            // 
+            exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            exitToolStripMenuItem.Size = new Size(92, 22);
+            exitToolStripMenuItem.Text = "Exit";
+            exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
+            // 
+            // toolsToolStripMenuItem
+            // 
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { resetToolStripMenuItem, switchToModToolStripMenuItem, switchToClasToolStripMenuItem, setSessionTimeoutToolStripMenuItem });
+            toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            toolsToolStripMenuItem.Size = new Size(47, 20);
+            toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // resetToolStripMenuItem
+            // 
+            resetToolStripMenuItem.Name = "resetToolStripMenuItem";
+            resetToolStripMenuItem.Size = new Size(184, 22);
+            resetToolStripMenuItem.Text = "Reset Password";
+            // 
+            // switchToModToolStripMenuItem
+            // 
+            switchToModToolStripMenuItem.Name = "switchToModToolStripMenuItem";
+            switchToModToolStripMenuItem.Size = new Size(184, 22);
+            switchToModToolStripMenuItem.Text = "Switch To Modern UI";
+            // 
+            // switchToClasToolStripMenuItem
+            // 
+            switchToClasToolStripMenuItem.Name = "switchToClasToolStripMenuItem";
+            switchToClasToolStripMenuItem.Size = new Size(184, 22);
+            switchToClasToolStripMenuItem.Text = "Switch To Classic UI";
+            // 
+            // setSessionTimeoutToolStripMenuItem
+            // 
+            setSessionTimeoutToolStripMenuItem.Name = "setSessionTimeoutToolStripMenuItem";
+            setSessionTimeoutToolStripMenuItem.Size = new Size(184, 22);
+            setSessionTimeoutToolStripMenuItem.Text = "Set Session Timeout";
             // 
             // MainForm
             // 
@@ -550,7 +613,9 @@ namespace AcuCleaner.Forms
             Controls.Add(groupBoxFilter);
             Controls.Add(groupBoxCleanup);
             Controls.Add(statusStrip);
+            Controls.Add(menuStrip);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MainMenuStrip = menuStrip;
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "AcuCleaner";
@@ -565,6 +630,8 @@ namespace AcuCleaner.Forms
             groupBoxFilter.ResumeLayout(false);
             groupBoxFilter.PerformLayout();
             groupBoxInstances.ResumeLayout(false);
+            menuStrip.ResumeLayout(false);
+            menuStrip.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -613,5 +680,13 @@ namespace AcuCleaner.Forms
         private CheckBox checkBoxDatabases;
         private CheckBox checkBoxBackups;
         private GroupBox groupBoxInstances;
+        private MenuStrip menuStrip;
+        private ToolStripMenuItem fileToolStripMenuItem;
+        private ToolStripMenuItem toolsToolStripMenuItem;
+        private ToolStripMenuItem resetToolStripMenuItem;
+        private ToolStripMenuItem exitToolStripMenuItem;
+        private ToolStripMenuItem switchToModToolStripMenuItem;
+        private ToolStripMenuItem switchToClasToolStripMenuItem;
+        private ToolStripMenuItem setSessionTimeoutToolStripMenuItem;
     }
 }
