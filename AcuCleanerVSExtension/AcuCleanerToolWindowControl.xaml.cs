@@ -1,5 +1,6 @@
 ﻿using AcuCleaner.Models;
 using AcuCleaner.Services;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
@@ -127,6 +128,24 @@ namespace AcuCleanerVSExtension
             SetCleanupParameters();
         }
 
+        private bool ShowConfirmation(string message, string title)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            if (AcuCleanerToolWindow.Package == null)
+                return false;
+
+            int result = VsShellUtilities.ShowMessageBox(
+                AcuCleanerToolWindow.Package,
+                message,
+                title,
+                OLEMSGICON.OLEMSGICON_WARNING,
+                OLEMSGBUTTON.OLEMSGBUTTON_YESNO,
+                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_SECOND);
+
+            return result == (int)VSConstants.MessageBoxResult.IDYES;
+        }
+
         private void DeleteSelectedApps()
         {
             FilterSelectedApps();
@@ -138,13 +157,11 @@ namespace AcuCleanerVSExtension
             }
 
             int count = AcuManager.CleanupParameters.Apps.Count();
-            var result = MessageBox.Show(
+            bool confirmed = ShowConfirmation(
                 $"Delete {count} selected app(s)?",
-                "Confirm delete",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning);
+                "Confirm delete");
 
-            if (result != MessageBoxResult.Yes)
+            if (!confirmed)
             {
                 statusLabel.Text = "Delete canceled.";
                 return;
@@ -210,33 +227,36 @@ namespace AcuCleanerVSExtension
         {
             FilterSelectedApps();
             int count = AcuManager.CleanupParameters.Apps.Count();
-            var result = MessageBox.Show(
+            if (ShowConfirmation(
                 $"This action will reset password for {count} selected instance(s). Are you sure you want to continue?",
-                "Confirm Action", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-            if (result == MessageBoxResult.Yes)
+                "Confirm Action"))
+            {
                 AcuManager.DatabaseManager.ResetPassword(AcuManager.CleanupParameters);
+            }
         }
 
         private void EnableModernUISwitchMenuItem_Click(object sender, RoutedEventArgs e)
         {
             FilterSelectedApps();
             int count = AcuManager.CleanupParameters.Apps.Count();
-            var result = MessageBox.Show(
+            if (ShowConfirmation(
                 $"This action will enable Modern UI switch for {count} selected instance(s). Are you sure you want to continue?",
-                "Confirm Action", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-            if (result == MessageBoxResult.Yes)
+                "Confirm Action"))
+            {
                 AcuManager.WebConfigManager.EnableModernUISwitch(AcuManager.CleanupParameters);
+            }
         }
 
         private void ExtendSessionTimeoutMenuItem_Click(object sender, RoutedEventArgs e)
         {
             FilterSelectedApps();
             int count = AcuManager.CleanupParameters.Apps.Count();
-            var result = MessageBox.Show(
+            if (ShowConfirmation(
                 $"This action will set session timeout to 1 day for {count} selected instance(s). Are you sure you want to continue?",
-                "Confirm Action", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-            if (result == MessageBoxResult.Yes)
+                "Confirm Action"))
+            {
                 AcuManager.WebConfigManager.ExtendSessionTimeout(AcuManager.CleanupParameters);
+            }
         }
     }
 }
