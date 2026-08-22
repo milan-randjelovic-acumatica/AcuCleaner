@@ -13,6 +13,9 @@ namespace AcuCleanerVSExtension
     {
         public const string ToolWindowGuidString = "b1c2d3e4-f5a6-7890-bcde-f01234567890";
 
+        /// <summary>The owning package — set during InitializeAsync.</summary>
+        internal static AsyncPackage? Package { get; set; }
+
         public AcuCleanerToolWindow() : base(null)
         {
             Caption = "AcuCleaner";

@@ -82,7 +82,7 @@ namespace AcuCleaner.Services
 
         public static string GetCurrentFolder(string path)
         {
-            return path.Split("\\").Last().Replace("\\", "");
+            return path.Split('\\').Last();
         }
 
         public static string NormalizePath(this string path)

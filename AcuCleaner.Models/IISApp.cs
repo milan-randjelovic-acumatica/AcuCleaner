@@ -3,16 +3,16 @@
     public class IISApp
     {
         public int Id { get; set; }
-        public required string InstanceName { get; set; }
-        public required string Path { get; set; }
-        public required string RootPath { get; set; }
-        public required string AspTempFilesPath { get; set; }
-        public required string SnapshotPath { get; set; }
-        public required string CustomizationPath { get; set; }
-        public required string BackupPath { get; set; }
-        public required string DatabaseName { get; set; }
-        public required string DatabaseConnectionString { get; set; }
-        public required string RegistryPath { get; set; }
+        public string InstanceName { get; set; } = string.Empty;
+        public string Path { get; set; } = string.Empty;
+        public string RootPath { get; set; } = string.Empty;
+        public string AspTempFilesPath { get; set; } = string.Empty;
+        public string SnapshotPath { get; set; } = string.Empty;
+        public string CustomizationPath { get; set; } = string.Empty;
+        public string BackupPath { get; set; } = string.Empty;
+        public string DatabaseName { get; set; } = string.Empty;
+        public string DatabaseConnectionString { get; set; } = string.Empty;
+        public string RegistryPath { get; set; } = string.Empty;
         public bool Active { get; set; }
         public string Status => Active ? "Active" : "Inactive";
         public DateTime InstalledOn { get; set; } = DateTime.MinValue;

@@ -25,6 +25,10 @@
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="18.9.820" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AcuCleaner.Models\AcuCleaner.Models.csproj" />
+    <ProjectReference Include="..\AcuCleaner.Services\AcuCleaner.Services.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <!-- AcuCleaner tool window content -->
     <Compile Update="AcuCleanerToolWindowControl.xaml.cs">
       <DependentUpon>AcuCleanerToolWindowControl.xaml</DependentUpon>

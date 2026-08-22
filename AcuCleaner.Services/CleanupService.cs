@@ -24,7 +24,10 @@ namespace AcuCleaner.Services
                 var appsForCleanup = cleaner?.GetAppsForCleanup(CleanupParameters) ?? Enumerable.Empty<IISApp>();
                 if (appsForCleanup.Any())
                 {
-                    CleanupParameters.Apps = CleanupParameters.Apps.UnionBy(appsForCleanup, x => x.InstanceName);
+                    CleanupParameters.Apps = CleanupParameters.Apps
+                        .Concat(appsForCleanup)
+                        .GroupBy(x => x.InstanceName)
+                        .Select(g => g.First());
                 }
             }
 

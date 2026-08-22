@@ -35,6 +35,8 @@ namespace AcuCleanerVSExtension
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
+            AcuCleanerToolWindow.Package = package;
+
             var commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as IMenuCommandService;
             if (commandService != null)
                 _ = new AcuCleanerCommand(package, commandService);

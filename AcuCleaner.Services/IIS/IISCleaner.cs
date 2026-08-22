@@ -1,5 +1,6 @@
 ﻿using AcuCleaner.Models;
 using Microsoft.Web.Administration;
+using System.Linq;
 using System.ServiceProcess;
 
 namespace AcuCleaner.Services.IIS
@@ -67,7 +68,7 @@ namespace AcuCleaner.Services.IIS
                             continue;
                         }
 
-                        var rootContent = Directory.GetFiles(rootPath).Select(x => x.Split("\\").Last());
+                        var rootContent = Directory.GetFiles(rootPath).Select(x => x.Split('\\').Last());
                         if (rootContent.Contains("Pure.sln") || rootContent.Contains("Pure"))
                         {
                             continue;
@@ -93,7 +94,7 @@ namespace AcuCleaner.Services.IIS
                 }
             }
 
-            return result.DistinctBy(app => app.Path);
+            return result.GroupBy(app => app.Path).Select(g => g.First());
         }
 
         public IEnumerable<IISApp> GetAppsForCleanup(CleanupParameters cleanupParameters)
