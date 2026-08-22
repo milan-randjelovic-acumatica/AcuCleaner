@@ -11,6 +11,6 @@
         public bool ShowSnapshots { get; set; } = true;
         public bool ShowCustomizations { get; set; } = true;
         public bool ShowBackups { get; set; } = true;
-        public DateTime CutoffDate { get; set; } 
+        public DateTime CutoffDate { get; set; }
     }
 }

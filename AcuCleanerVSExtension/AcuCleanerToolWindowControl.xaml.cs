@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -46,7 +45,7 @@ namespace AcuCleanerVSExtension
         public static void HandleError(string message)
         {
             if (_instance == null) return;
-            
+
             _instance.Dispatcher.Invoke(() =>
                 _instance.statusLabel.Text = $"Error: {message}");
             _instance.AcuManager.IISManager.Start();
@@ -94,16 +93,16 @@ namespace AcuCleanerVSExtension
         {
             AcuManager.FilterParameters = new FilterParameters
             {
-                ShowActiveApps     = checkBoxActive.IsChecked == true,
-                ShowJunk           = checkBoxJunk.IsChecked == true,
-                ShowFiles          = checkBoxIISFiles.IsChecked == true,
-                ShowAspTempFiles   = checkBoxAspTmpFiles.IsChecked == true,
-                ShowDatabases      = checkBoxDatabases.IsChecked == true,
-                ShowRegistry       = checkBoxRegistry.IsChecked == true,
-                ShowSnapshots      = checkBoxSnapshots.IsChecked == true,
+                ShowActiveApps = checkBoxActive.IsChecked == true,
+                ShowJunk = checkBoxJunk.IsChecked == true,
+                ShowFiles = checkBoxIISFiles.IsChecked == true,
+                ShowAspTempFiles = checkBoxAspTmpFiles.IsChecked == true,
+                ShowDatabases = checkBoxDatabases.IsChecked == true,
+                ShowRegistry = checkBoxRegistry.IsChecked == true,
+                ShowSnapshots = checkBoxSnapshots.IsChecked == true,
                 ShowCustomizations = checkBoxCustomizations.IsChecked == true,
-                ShowBackups        = checkBoxBackups.IsChecked == true,
-                CutoffDate         = datePicker.SelectedDate?.Date ?? DateTime.MinValue,
+                ShowBackups = checkBoxBackups.IsChecked == true,
+                CutoffDate = datePicker.SelectedDate?.Date ?? DateTime.MinValue,
             };
         }
 
@@ -111,14 +110,14 @@ namespace AcuCleanerVSExtension
         {
             AcuManager.CleanupParameters = new CleanupParameters
             {
-                CleanupIISApps       = checkBoxCleanupIISApps.IsChecked == true,
-                CleanupFiles         = checkBoxCleanupFiles.IsChecked == true,
-                CleanupDatabases     = checkBoxCleanupDatabases.IsChecked == true,
-                CleanupAspTemp       = checkBoxCleanupAspTemp.IsChecked == true,
-                CleanupSnapshots     = checkBoxCleanupSnapshots.IsChecked == true,
-                CleanupRegistry      = checkBoxCleanupRegistry.IsChecked == true,
+                CleanupIISApps = checkBoxCleanupIISApps.IsChecked == true,
+                CleanupFiles = checkBoxCleanupFiles.IsChecked == true,
+                CleanupDatabases = checkBoxCleanupDatabases.IsChecked == true,
+                CleanupAspTemp = checkBoxCleanupAspTemp.IsChecked == true,
+                CleanupSnapshots = checkBoxCleanupSnapshots.IsChecked == true,
+                CleanupRegistry = checkBoxCleanupRegistry.IsChecked == true,
                 CleanupCustomizations = checkBoxCleanupCustomizations.IsChecked == true,
-                CleanupBackups       = checkBoxCleanupBackups.IsChecked == true,
+                CleanupBackups = checkBoxCleanupBackups.IsChecked == true,
             };
         }
 
@@ -167,10 +166,10 @@ namespace AcuCleanerVSExtension
                 return;
             }
 
-            buttonClean.IsEnabled    = false;
+            buttonClean.IsEnabled = false;
             buttonCleanAll.IsEnabled = false;
-            progressBar.Visibility   = Visibility.Visible;
-            statusLabel.Text         = $"Deleting {count} app(s)...";
+            progressBar.Visibility = Visibility.Visible;
+            statusLabel.Text = $"Deleting {count} app(s)...";
 
             try
             {
@@ -184,8 +183,8 @@ namespace AcuCleanerVSExtension
             }
             finally
             {
-                progressBar.Visibility   = Visibility.Collapsed;
-                buttonClean.IsEnabled    = true;
+                progressBar.Visibility = Visibility.Collapsed;
+                buttonClean.IsEnabled = true;
                 buttonCleanAll.IsEnabled = true;
             }
         }

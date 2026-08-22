@@ -9,7 +9,7 @@ namespace AcuCleaner.Services.IIS
         private readonly IProgress<string>? _progressHandler;
 
         public IISManager()
-        {           
+        {
         }
 
         public IISManager(IProgress<string>? progressHandler)

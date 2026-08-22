@@ -8,7 +8,7 @@ namespace AcuCleaner.Services.FileSystem
 
         public WebConfigManager()
         {
-            
+
         }
 
         public WebConfigManager(IProgress<string> progressHandler)
