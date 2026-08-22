@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable"
+			  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!--
+	This file defines the commands (menus, groups, buttons) provided by the extension.
+	A command is uniquely identified by a GUID/ID pair.
+  -->
+
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+
+  <Commands package="guidAcuCleanerPackage">
+
+	<Groups>
+	  <!-- A group placed inside the built-in Tools menu -->
+	  <Group guid="guidAcuCleanerPackageCmdSet" id="AcuCleanerToolsMenuGroup" priority="0x0600">
+		<Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
+	  </Group>
+	</Groups>
+
+	<Buttons>
+	  <!-- The "AcuCleaner" command button inside Tools menu -->
+	  <Button guid="guidAcuCleanerPackageCmdSet" id="AcuCleanerCommandId" priority="0x0100" type="Button">
+		<Parent guid="guidAcuCleanerPackageCmdSet" id="AcuCleanerToolsMenuGroup"/>
+		<Strings>
+		  <ButtonText>AcuCleaner</ButtonText>
+		</Strings>
+	  </Button>
+	</Buttons>
+
+  </Commands>
+
+  <Symbols>
+	<!-- Package GUID — must match AcuCleanerVSExtensionPackage.PackageGuidString -->
+	<GuidSymbol name="guidAcuCleanerPackage" value="{395e9902-d87a-465e-b0c0-e23adadf5092}"/>
+
+	<!-- Command set GUID — used for all commands defined in this extension -->
+	<GuidSymbol name="guidAcuCleanerPackageCmdSet" value="{a1b2c3d4-e5f6-7890-abcd-ef1234567890}">
+	  <IDSymbol name="AcuCleanerToolsMenuGroup" value="0x1020"/>
+	  <IDSymbol name="AcuCleanerCommandId"      value="0x0100"/>
+	</GuidSymbol>
+  </Symbols>
+
+</CommandTable>

@@ -2,4 +2,7 @@
   <Project Path="AcuCleaner.Models/AcuCleaner.Models.csproj" Id="aab61996-47c6-47a2-a6f3-d70e519e494f" />
   <Project Path="AcuCleaner.Services/AcuCleaner.Services.csproj" Id="2a41ecd8-3055-4554-9cf8-1fcb4310701f" />
   <Project Path="AcuCleaner/AcuCleaner.csproj" />
+  <Project Path="AcuCleanerVSExtension/AcuCleanerVSExtension.csproj" Id="ef794050-de5c-4f12-bd1b-0301ee3350a5">
+    <Deploy />
+  </Project>
 </Solution>
