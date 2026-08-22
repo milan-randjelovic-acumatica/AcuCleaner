@@ -7,14 +7,25 @@
              Foreground="White"
              Loaded="UserControl_Loaded" d:DesignHeight="670.472">
 	<UserControl.Resources>
-		<SolidColorBrush x:Key="{x:Static SystemColors.MenuBrushKey}" Color="#1E1E1E"/>
+		<SolidColorBrush x:Key="{x:Static SystemColors.MenuBrushKey}" Color="Black"/>
 		<SolidColorBrush x:Key="{x:Static SystemColors.MenuTextBrushKey}" Color="White"/>
-		<SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#2D2D30"/>
-		<SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="White"/>
+		<SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="White"/>
+		<SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black"/>
 
 		<Style TargetType="{x:Type MenuItem}">
 			<Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.CommandBarMenuBackgroundGradientKey}}"/>
 			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderBrush" Value="Transparent"/>
+			<Style.Triggers>
+				<Trigger Property="IsHighlighted" Value="True">
+					<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+					<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}"/>
+				</Trigger>
+				<Trigger Property="IsSubmenuOpen" Value="True">
+					<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+					<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}"/>
+				</Trigger>
+			</Style.Triggers>
 		</Style>
 		<Style TargetType="{x:Type GroupBox}">
 			<Setter Property="BorderThickness" Value="0.5"/>
@@ -28,19 +39,29 @@
 			<Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}"/>
 			<Setter Property="Foreground" Value="White"/>
 			<Setter Property="BorderBrush" Value="#FF808080"/>
+			<Style.Triggers>
+				<Trigger Property="IsMouseOver" Value="True">
+					<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+					<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}"/>
+				</Trigger>
+				<Trigger Property="IsPressed" Value="True">
+					<Setter Property="Background" Value="#FF3A3D41"/>
+					<Setter Property="Foreground" Value="White"/>
+				</Trigger>
+			</Style.Triggers>
 		</Style>
 		<Style TargetType="{x:Type DataGridColumnHeader}">
 			<Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}"/>
 			<Setter Property="Foreground" Value="White"/>
-			<Setter Property="BorderBrush" Value="#FF808080"/>
+			<Setter Property="BorderBrush" Value="White"/>
 		</Style>
 	</UserControl.Resources>
 	<DockPanel>
 
 		<!-- Menu bar (File / Tools) -->
 		<Menu DockPanel.Dock="Top"
-              Background="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}"
-              Foreground="White">
+			  Background="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}"
+			  Foreground="White">
 			<MenuItem Header="File" Background="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}" Foreground="White">
 				<MenuItem Header="Refresh"       InputGestureText="F5"      Background="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}" Foreground="White" Click="RefreshMenuItem_Click"/>
 				<Separator/>
@@ -59,7 +80,7 @@
 		<StatusBar DockPanel.Dock="Bottom"
                    Background="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}">
 			<StatusBarItem>
-				<TextBlock x:Name="statusLabel" Text="Ready"/>
+				<TextBlock x:Name="statusLabel" Text="Ready" Foreground="White"/>
 			</StatusBarItem>
 			<StatusBarItem HorizontalAlignment="Right">
 				<ProgressBar x:Name="progressBar"
