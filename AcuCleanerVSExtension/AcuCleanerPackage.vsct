@@ -24,7 +24,7 @@
 	  <Button guid="guidAcuCleanerPackageCmdSet" id="AcuCleanerCommandId" priority="0x0100" type="Button">
 		<Parent guid="guidAcuCleanerPackageCmdSet" id="AcuCleanerToolsMenuGroup"/>
 		<Strings>
-		  <ButtonText>AcuCleaner</ButtonText>
+		  <ButtonText>Acu Cleaner</ButtonText>
 		</Strings>
 	  </Button>
 	</Buttons>
