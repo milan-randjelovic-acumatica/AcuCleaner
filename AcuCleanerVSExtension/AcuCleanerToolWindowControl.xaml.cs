@@ -60,8 +60,6 @@ namespace AcuCleanerVSExtension
             _instance.CleanupService.Cleaners.OfType<IISCleaner>().FirstOrDefault()?.Start();
         }
 
-        // â”€â”€ Lifecycle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             progressBar.Visibility = Visibility.Collapsed;
@@ -69,8 +67,6 @@ namespace AcuCleanerVSExtension
             datePicker.SelectedDate = DateTime.Today;
             RefreshAppList();
         }
-
-        // â”€â”€ Data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
         private void RefreshAppList()
         {
@@ -186,8 +182,6 @@ namespace AcuCleanerVSExtension
             }
         }
 
-        // â”€â”€ Event handlers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
         private void UserControl_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == System.Windows.Input.Key.F5)
@@ -207,8 +201,6 @@ namespace AcuCleanerVSExtension
             dataGrid.SelectAll();
             await DeleteSelectedAppsAsync();
         }
-
-        // â”€â”€ Menu handlers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
         private void RefreshMenuItem_Click(object sender, RoutedEventArgs e)
             => RefreshAppList();

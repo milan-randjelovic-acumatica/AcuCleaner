@@ -12,20 +12,114 @@
 		<SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="White"/>
 		<SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black"/>
 
+		<Style TargetType="{x:Type Menu}">
+			<Setter Property="OverridesDefaultStyle" Value="True"/>
+			<Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Menu}">
+						<Border Background="{TemplateBinding Background}"
+								BorderBrush="#FF808080"
+								BorderThickness="0,0,0,1"
+								Padding="2,1">
+							<ItemsPresenter KeyboardNavigation.DirectionalNavigation="Cycle"/>
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
 		<Style TargetType="{x:Type MenuItem}">
-			<Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.CommandBarMenuBackgroundGradientKey}}"/>
+			<Setter Property="OverridesDefaultStyle" Value="True"/>
+			<Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}"/>
 			<Setter Property="Foreground" Value="White"/>
 			<Setter Property="BorderBrush" Value="Transparent"/>
-			<Style.Triggers>
-				<Trigger Property="IsHighlighted" Value="True">
-					<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
-					<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}"/>
-				</Trigger>
-				<Trigger Property="IsSubmenuOpen" Value="True">
-					<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
-					<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}"/>
-				</Trigger>
-			</Style.Triggers>
+			<Setter Property="Padding" Value="10,4"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type MenuItem}">
+						<Grid SnapsToDevicePixels="True">
+							<Border x:Name="ItemBorder"
+									Background="{TemplateBinding Background}"
+									BorderBrush="{TemplateBinding BorderBrush}"
+									BorderThickness="1">
+								<Grid Margin="2,0">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="Auto"/>
+										<ColumnDefinition Width="*"/>
+										<ColumnDefinition Width="Auto"/>
+										<ColumnDefinition Width="Auto"/>
+									</Grid.ColumnDefinitions>
+									<ContentPresenter x:Name="IconHost"
+												  ContentSource="Icon"
+												  Margin="4,2,6,2"
+												  VerticalAlignment="Center"/>
+									<ContentPresenter x:Name="HeaderHost"
+												  Grid.Column="1"
+												  ContentSource="Header"
+												  Margin="{TemplateBinding Padding}"
+												  RecognizesAccessKey="True"
+												  VerticalAlignment="Center"/>
+									<TextBlock x:Name="GestureText"
+											   Grid.Column="2"
+											   Margin="20,0,12,0"
+											   VerticalAlignment="Center"
+											   Foreground="{TemplateBinding Foreground}"
+											   Text="{TemplateBinding InputGestureText}"/>
+									<Path x:Name="SubmenuArrow"
+										  Grid.Column="3"
+										  Margin="8,0,4,0"
+										  VerticalAlignment="Center"
+										  Fill="{TemplateBinding Foreground}"
+										  Data="M 0 0 L 4 3.5 L 0 7 Z"
+										  Visibility="Collapsed"/>
+								</Grid>
+							</Border>
+							<Popup x:Name="PART_Popup"
+								   AllowsTransparency="True"
+								   Focusable="False"
+								   IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
+								   Placement="Bottom"
+								   PopupAnimation="Fade">
+								<Border Background="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}"
+										BorderBrush="#FF808080"
+										BorderThickness="1"
+										Padding="1">
+									<StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle"/>
+								</Border>
+							</Popup>
+						</Grid>
+						<ControlTemplate.Triggers>
+							<Trigger Property="Role" Value="TopLevelHeader">
+								<Setter Property="Padding" Value="10,4"/>
+								<Setter TargetName="ItemBorder" Property="BorderThickness" Value="0"/>
+							</Trigger>
+							<Trigger Property="Role" Value="SubmenuHeader">
+								<Setter Property="Padding" Value="8,4"/>
+								<Setter TargetName="PART_Popup" Property="Placement" Value="Right"/>
+								<Setter TargetName="SubmenuArrow" Property="Visibility" Value="Visible"/>
+							</Trigger>
+							<Trigger Property="Role" Value="SubmenuItem">
+								<Setter Property="Padding" Value="8,4"/>
+							</Trigger>
+							<Trigger Property="IsHighlighted" Value="True">
+								<Setter TargetName="ItemBorder" Property="Background" Value="#FF2D2D30"/>
+								<Setter Property="Foreground" Value="White"/>
+							</Trigger>
+							<Trigger Property="IsSubmenuOpen" Value="True">
+								<Setter TargetName="ItemBorder" Property="Background" Value="#FF2D2D30"/>
+								<Setter Property="Foreground" Value="White"/>
+							</Trigger>
+							<Trigger Property="Icon" Value="{x:Null}">
+								<Setter TargetName="IconHost" Property="Visibility" Value="Collapsed"/>
+							</Trigger>
+							<Trigger Property="IsEnabled" Value="False">
+								<Setter Property="Foreground" Value="#FF7A7A7A"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
 		</Style>
 		<Style TargetType="{x:Type GroupBox}">
 			<Setter Property="BorderThickness" Value="0.5"/>
@@ -62,17 +156,14 @@
 		<Menu DockPanel.Dock="Top"
 			  Background="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}"
 			  Foreground="White">
-			<MenuItem Header="File" Background="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}" Foreground="White">
-				<MenuItem Header="Refresh"       InputGestureText="F5"      Background="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}" Foreground="White" Click="RefreshMenuItem_Click"/>
-				<Separator/>
-				<MenuItem Header="Exit"          InputGestureText="Alt+F4"  Background="{DynamicResource {x:Static vsshell:VsBrushes.CommandBarMenuBackgroundGradientKey}}" Foreground="White" Click="ExitMenuItem_Click"/>
+			<MenuItem Header="File">
+				<MenuItem Header="Refresh"       InputGestureText="F5"      Click="RefreshMenuItem_Click"/>
+				<MenuItem Header="Exit"          InputGestureText="Alt+F4"  Click="ExitMenuItem_Click"/>
 			</MenuItem>
-			<MenuItem Header="Tools" Background="{DynamicResource {x:Static vsshell:VsBrushes.CommandBarMenuBackgroundGradientKey}}" Foreground="White">
-				<MenuItem Header="Reset Password"          InputGestureText="Ctrl+P" Background="{DynamicResource {x:Static vsshell:VsBrushes.CommandBarMenuBackgroundGradientKey}}" Foreground="White" Click="ResetPasswordMenuItem_Click"/>
-				<Separator/>
-				<MenuItem Header="Enable Modern UI Switch" InputGestureText="Ctrl+M" Background="{DynamicResource {x:Static vsshell:VsBrushes.CommandBarMenuBackgroundGradientKey}}" Foreground="White" Click="EnableModernUISwitchMenuItem_Click"/>
-				<Separator/>
-				<MenuItem Header="Extend Session Timeout"  InputGestureText="Ctrl+T" Background="{DynamicResource {x:Static vsshell:VsBrushes.CommandBarMenuBackgroundGradientKey}}" Foreground="White" Click="ExtendSessionTimeoutMenuItem_Click"/>
+			<MenuItem Header="Tools">
+				<MenuItem Header="Reset Password"          InputGestureText="Ctrl+P" Click="ResetPasswordMenuItem_Click"/>
+				<MenuItem Header="Enable Modern UI Switch" InputGestureText="Ctrl+M" Click="EnableModernUISwitchMenuItem_Click"/>
+				<MenuItem Header="Extend Session Timeout"  InputGestureText="Ctrl+T" Click="ExtendSessionTimeoutMenuItem_Click"/>
 			</MenuItem>
 		</Menu>
 
@@ -120,7 +211,7 @@
 							<Style.Triggers>
 								<DataTrigger Binding="{Binding Active}" Value="False">
 									<Setter Property="Foreground" Value="Orange"/>
-									<Setter Property="ToolTip"    Value="Inactive â€” not currently running in IIS"/>
+									<Setter Property="ToolTip"    Value="App doesn`t exist in IIS"/>
 								</DataTrigger>
 							</Style.Triggers>
 						</Style>
@@ -219,11 +310,11 @@
 										Content="Clean"
 										Width="72" Height="23"
 										Margin="0,0,6,0"
-										Click="ButtonClean_Click"/>
+										Click="ButtonClean_Click" Background="#FF323232"/>
 							<Button x:Name="buttonCleanAll"
 										Content="Clean all"
 										Width="72" Height="23"
-										Click="ButtonCleanAll_Click"/>
+										Click="ButtonCleanAll_Click" Background="#FF323232"/>
 						</StackPanel>
 					</Grid>
 				</GroupBox>
