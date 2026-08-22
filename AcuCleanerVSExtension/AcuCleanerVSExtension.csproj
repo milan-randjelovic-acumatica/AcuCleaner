@@ -21,18 +21,13 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
-    <!-- AcuCleaner dialog window (DependentUpon for Solution Explorer nesting) -->
-    <Compile Update="AcuCleanerDialog.xaml.cs">
-      <DependentUpon>AcuCleanerDialog.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.14.40265" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="18.9.820" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="AcuCleanerDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
+    <!-- AcuCleaner tool window content -->
+    <Compile Update="AcuCleanerToolWindowControl.xaml.cs">
+      <DependentUpon>AcuCleanerToolWindowControl.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

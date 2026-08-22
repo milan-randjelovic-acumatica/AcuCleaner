@@ -43,10 +43,11 @@ namespace AcuCleanerVSExtension
         /// <summary>Called when the user clicks Tools &gt; AcuCleaner.</summary>
         private void Execute(object sender, EventArgs e)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
-
-            var dialog = new AcuCleanerDialog();
-            dialog.ShowModal();
+            _ = _package.ShowToolWindowAsync(
+                toolWindowType: typeof(AcuCleanerToolWindow),
+                id: 0,
+                create: true,
+                cancellationToken: _package.DisposalToken);
         }
     }
 }

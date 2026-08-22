@@ -25,6 +25,7 @@ namespace AcuCleanerVSExtension
     /// </remarks>
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
+    [ProvideToolWindow(typeof(AcuCleanerToolWindow), Style = VsDockStyle.Tabbed, Window = EnvDTE.Constants.vsWindowKindOutput)]
     [Guid(AcuCleanerVSExtensionPackage.PackageGuidString)]
     public sealed class AcuCleanerVSExtensionPackage : AsyncPackage
     {
