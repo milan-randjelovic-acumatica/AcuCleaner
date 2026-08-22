@@ -1,9 +1,5 @@
 using AcuCleaner.Models;
 using AcuCleaner.Services;
-using AcuCleaner.Services.Database;
-using AcuCleaner.Services.FileSystem;
-using AcuCleaner.Services.IIS;
-using AcuCleaner.Services.Registry;
 
 namespace AcuCleaner.Forms
 {
@@ -14,7 +10,7 @@ namespace AcuCleaner.Forms
         private readonly IProgress<string> _progressHandler;
         private readonly Image? _warningImage;
 
-        public CleanupService CleanupService { get; private set; }
+        public AcuManager AcuManager { get; private set; }
 
         public MainForm()
         {
@@ -30,13 +26,7 @@ namespace AcuCleaner.Forms
                 _warningImage = Image.FromStream(stream);
             }
 
-            CleanupService = new CleanupService(new List<ICleanupService>()
-            {
-                new IISCleaner(_progressHandler),
-                new FileSystemCleaner(_progressHandler),
-                new DatabaseCleaner(_progressHandler),
-                new RegistryCleaner(_progressHandler)
-            });
+            AcuManager = new AcuManager(_progressHandler);
         }
 
         public static void HandleError(string message)
@@ -48,7 +38,7 @@ namespace AcuCleaner.Forms
             else
                 _instance.toolStripStatusLabel.Text = $"Error: {message}";
 
-            _instance.CleanupService.Cleaners.OfType<IISCleaner>().FirstOrDefault()?.Start();
+            _instance.AcuManager.IISManager.Start();
         }
 
         private void Form_Load(object sender, EventArgs e)
@@ -63,8 +53,8 @@ namespace AcuCleaner.Forms
         {
             SetParameters();
 
-            _allApps = CleanupService
-                .GetAll()
+            _allApps = AcuManager
+                .GetAllInstances()
                 .Filter()
                 .OrderBy(x => x.InstanceName)
                 .AddRowNumbers()
@@ -72,6 +62,8 @@ namespace AcuCleaner.Forms
 
             iISAppBindingSource1.DataSource = _allApps;
             iISAppBindingSource1.ResetBindings(false);
+
+            toolStripStatusLabel.Text = $"{_allApps.Count} instance(s) loaded.";
         }
 
         private void dataGridView_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
@@ -119,17 +111,17 @@ namespace AcuCleaner.Forms
             e.Handled = true;
         }
 
-        private async Task DeleteSelectedAppsAsync()
+        private void DeleteSelectedApps()
         {
             FilterSelectedApps();
 
-            if (!CleanupService.CleanupParameters.Apps.Any())
+            if (!AcuManager.CleanupParameters.Apps.Any())
             {
                 toolStripStatusLabel.Text = "No rows selected.";
                 return;
             }
 
-            var message = $"Delete {CleanupService.CleanupParameters.Apps.Count()} selected app(s)?";
+            var message = $"Delete {AcuManager.CleanupParameters.Apps.Count()} selected app(s)?";
 
             var confirmation = MessageBox.Show(
                 message,
@@ -147,12 +139,12 @@ namespace AcuCleaner.Forms
             buttonDeleteSelected.Enabled = false;
             buttonDeleteAll.Enabled = false;
             toolStripProgressBar.Visible = true;
-            toolStripStatusLabel.Text = $"Deleting {CleanupService.CleanupParameters.Apps.Count()} app(s)...";
+            toolStripStatusLabel.Text = $"Deleting {AcuManager.CleanupParameters.Apps.Count()} app(s)...";
 
             try
             {
-                await Task.Run(() => CleanupService.Cleanup());
-                toolStripStatusLabel.Text = $"Deleted {CleanupService.CleanupParameters.Apps.Count()} app(s).";
+                AcuManager.Cleanup();
+                toolStripStatusLabel.Text = $"Deleted {AcuManager.CleanupParameters.Apps.Count()} app(s).";
                 RefreshAppList();
             }
             catch (Exception ex)
@@ -175,14 +167,14 @@ namespace AcuCleaner.Forms
             {
                 if (selectedRow.DataBoundItem is IISApp app)
                 {
-                    (CleanupService.CleanupParameters.Apps as List<IISApp>)?.Add(app);
+                    (AcuManager.CleanupParameters.Apps as List<IISApp>)?.Add(app);
                 }
             }
         }
 
         private void SetCleanupParamerers()
         {
-            CleanupService.CleanupParameters = new CleanupParameters
+            AcuManager.CleanupParameters = new CleanupParameters
             {
                 CleanupIISApps = checkBoxcleanupIISApps.Checked,
                 CleanupFiles = checkBoxCleanupFiles.Checked,
@@ -197,7 +189,7 @@ namespace AcuCleaner.Forms
 
         private void SetFilterParameters()
         {
-            CleanupService.FilterParameters = new FilterParameters
+            AcuManager.FilterParameters = new FilterParameters
             {
                 ShowActiveApps = checkBoxActive.Checked,
                 ShowJunk = checkBoxJunk.Checked,
@@ -223,16 +215,16 @@ namespace AcuCleaner.Forms
             RefreshAppList();
         }
 
-        private async void buttonDeleteSelected_Click(object sender, EventArgs e)
+        private void buttonDeleteSelected_Click(object sender, EventArgs e)
         {
-            await DeleteSelectedAppsAsync();
+            DeleteSelectedApps();
         }
 
-        private async void buttonDeleteAll_Click(object sender, EventArgs e)
+        private void buttonDeleteAll_Click(object sender, EventArgs e)
         {
             dataGridView.SelectAll();
 
-            await DeleteSelectedAppsAsync();
+            DeleteSelectedApps();
         }
 
         private void filter_CheckedChanged(object sender, EventArgs e)
@@ -259,10 +251,10 @@ namespace AcuCleaner.Forms
         {
             FilterSelectedApps();
 
-            var result = MessageBox.Show($"This action will reset password for {CleanupService.CleanupParameters.Apps.Count()} selected instance(s). Are you sure you want to continue?", "Confirm Action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            var result = MessageBox.Show($"This action will reset password for {AcuManager.CleanupParameters.Apps.Count()} selected instance(s). Are you sure you want to continue?", "Confirm Action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (result == DialogResult.Yes)
             {
-                CleanupService.Cleaners.OfType<DatabaseCleaner>().FirstOrDefault()?.ResetPassword(CleanupService.CleanupParameters);
+                AcuManager.DatabaseManager.ResetPassword(AcuManager.CleanupParameters);
             }
         }
 
@@ -270,10 +262,10 @@ namespace AcuCleaner.Forms
         {
             FilterSelectedApps();
 
-            var result = MessageBox.Show($"This action will enable Modern UI switch for {CleanupService.CleanupParameters.Apps.Count()} selected instance(s). Are you sure you want to continue?", "Confirm Action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            var result = MessageBox.Show($"This action will enable Modern UI switch for {AcuManager.CleanupParameters.Apps.Count()} selected instance(s). Are you sure you want to continue?", "Confirm Action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (result == DialogResult.Yes)
             {
-                CleanupService.Cleaners.OfType<FileSystemCleaner>().FirstOrDefault()?.EnableModernUISwitch(CleanupService.CleanupParameters);
+                AcuManager.WebConfigManager.EnableModernUISwitch(AcuManager.CleanupParameters);
             }
         }
 
@@ -281,10 +273,10 @@ namespace AcuCleaner.Forms
         {
             FilterSelectedApps();
 
-            var result = MessageBox.Show($"This action will set session timeout to 1 day for {CleanupService.CleanupParameters.Apps.Count()} selected instance(s). Are you sure you want to continue?", "Confirm Action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            var result = MessageBox.Show($"This action will set session timeout to 1 day for {AcuManager.CleanupParameters.Apps.Count()} selected instance(s). Are you sure you want to continue?", "Confirm Action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (result == DialogResult.Yes)
             {
-                CleanupService.Cleaners.OfType<FileSystemCleaner>().FirstOrDefault()?.ExtendSessionTimeout(CleanupService.CleanupParameters);
+                AcuManager.WebConfigManager.ExtendSessionTimeout(AcuManager.CleanupParameters);
             }
         }
     }

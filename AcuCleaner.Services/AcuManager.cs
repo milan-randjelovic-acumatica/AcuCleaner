@@ -1,25 +1,51 @@
 ﻿using AcuCleaner.Models;
+using AcuCleaner.Services.Database;
+using AcuCleaner.Services.FileSystem;
 using AcuCleaner.Services.IIS;
+using AcuCleaner.Services.Registry;
 
 namespace AcuCleaner.Services
 {
-    public class CleanupService : IAppsCollection
+    public class AcuManager : IAppsCollection
     {
-        public IEnumerable<ICleanupService> Cleaners { get; private set; }
+        private IEnumerable<ICleanupService> _cleaners { get; set; }
+        private IEnumerable<IUtilityService> _utils { get; set; }
         private IEnumerable<IISApp> _apps = new List<IISApp>();
         public CleanupParameters CleanupParameters { get; set; } = new CleanupParameters();
         public FilterParameters FilterParameters { get; set; } = new FilterParameters();
+        public WebConfigManager WebConfigManager { get; private set; }
+        public IISManager IISManager { get; private set; }
+        public DatabaseManager DatabaseManager { get; private set; }
+        public FileSystemCleaner FileSystemCleaner { get; private set; }
+        public RegistryCleaner RegistryCleaner { get; private set; }
 
-        public CleanupService(IEnumerable<ICleanupService> cleaners)
+        public AcuManager(IProgress<string> progressHandler)
         {
-            Cleaners = cleaners;
+            IISManager = new IISManager(progressHandler);
+            DatabaseManager = new DatabaseManager(progressHandler);
+            FileSystemCleaner = new FileSystemCleaner(progressHandler);
+            RegistryCleaner = new RegistryCleaner(progressHandler);
+            _cleaners = new List<ICleanupService>()
+            {
+                IISManager,
+                FileSystemCleaner,
+                DatabaseManager,
+                RegistryCleaner
+            };
+
+            WebConfigManager = new WebConfigManager(progressHandler);
+            _utils = new List<IUtilityService>()
+            {
+                IISManager,
+                WebConfigManager
+            };
         }
 
-        public IAppsCollection GetAll()
+        public IAppsCollection GetAllInstances()
         {
             _apps = new List<IISApp>();
 
-            foreach (var cleaner in Cleaners)
+            foreach (var cleaner in _cleaners)
             {
                 var appsForCleanup = cleaner?.GetAppsForCleanup(CleanupParameters) ?? Enumerable.Empty<IISApp>();
                 if (appsForCleanup.Any())
@@ -86,11 +112,11 @@ namespace AcuCleaner.Services
 
         public void Cleanup()
         {
-            var iisService = Cleaners.OfType<IISCleaner>().FirstOrDefault();
+            var iisService = _cleaners.OfType<IISManager>().FirstOrDefault();
 
             iisService?.Stop();
 
-            foreach (var cleaner in Cleaners)
+            foreach (var cleaner in _cleaners)
             {
                 cleaner?.Cleanup(CleanupParameters);
             }

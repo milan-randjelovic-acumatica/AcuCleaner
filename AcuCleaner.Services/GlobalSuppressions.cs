@@ -5,7 +5,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>", Scope = "member", Target = "~M:AcuCleaner.Services.CleanupService.Cleanup(AcuCleaner.Models.CleanupParameters)")]
+[assembly: SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>", Scope = "member", Target = "~M:AcuCleaner.Services.AcuManager.Cleanup(AcuCleaner.Models.CleanupParameters)")]
 [assembly: SuppressMessage("Style", "IDE0063:Use simple 'using' statement", Justification = "<Pending>", Scope = "member", Target = "~M:AcuCleaner.Services.Registry.RegistryCleaner.Cleanup(AcuCleaner.Models.CleanupParameters)")]
 [assembly: SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>", Scope = "member", Target = "~M:AcuCleaner.Services.Registry.RegistryCleaner.Cleanup(AcuCleaner.Models.CleanupParameters)")]
 [assembly: SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>", Scope = "member", Target = "~M:AcuCleaner.Services.Registry.RegistryCleaner.GetAllApps~System.Collections.Generic.IEnumerable{AcuCleaner.Models.IISApp}")]

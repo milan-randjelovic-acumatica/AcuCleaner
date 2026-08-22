@@ -3,15 +3,15 @@ using Microsoft.Data.SqlClient;
 
 namespace AcuCleaner.Services.Database
 {
-    public class DatabaseCleaner : ICleanupService
+    public class DatabaseManager : ICleanupService
     {
         private readonly IProgress<string>? _progressHandler;
 
-        public DatabaseCleaner()
+        public DatabaseManager()
         {
         }
 
-        public DatabaseCleaner(IProgress<string> progressHandler)
+        public DatabaseManager(IProgress<string> progressHandler)
         {
             _progressHandler = progressHandler;
         }
