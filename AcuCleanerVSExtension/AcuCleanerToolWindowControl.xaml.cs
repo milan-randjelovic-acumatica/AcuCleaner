@@ -1,4 +1,4 @@
-using AcuCleaner.Models;
+﻿using AcuCleaner.Models;
 using AcuCleaner.Services;
 using AcuCleaner.Services.Database;
 using AcuCleaner.Services.FileSystem;
@@ -60,16 +60,17 @@ namespace AcuCleanerVSExtension
             _instance.CleanupService.Cleaners.OfType<IISCleaner>().FirstOrDefault()?.Start();
         }
 
-        // ── Lifecycle ────────────────────────────────────────────────────────────
+        // â”€â”€ Lifecycle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             progressBar.Visibility = Visibility.Collapsed;
             statusLabel.Text = "Ready";
+            datePicker.SelectedDate = DateTime.Today;
             RefreshAppList();
         }
 
-        // ── Data ─────────────────────────────────────────────────────────────────
+        // â”€â”€ Data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
         private void RefreshAppList()
         {
@@ -185,7 +186,7 @@ namespace AcuCleanerVSExtension
             }
         }
 
-        // ── Event handlers ───────────────────────────────────────────────────────
+        // â”€â”€ Event handlers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
         private void UserControl_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
@@ -207,7 +208,7 @@ namespace AcuCleanerVSExtension
             await DeleteSelectedAppsAsync();
         }
 
-        // ── Menu handlers ────────────────────────────────────────────────────────
+        // â”€â”€ Menu handlers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
         private void RefreshMenuItem_Click(object sender, RoutedEventArgs e)
             => RefreshAppList();
@@ -258,3 +259,7 @@ namespace AcuCleanerVSExtension
         }
     }
 }
+
+
+
+
