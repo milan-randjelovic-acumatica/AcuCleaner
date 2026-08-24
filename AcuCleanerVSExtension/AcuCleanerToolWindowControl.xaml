@@ -91,8 +91,9 @@
 						</Grid>
 						<ControlTemplate.Triggers>
 							<Trigger Property="Role" Value="TopLevelHeader">
-								<Setter Property="Padding" Value="10,4"/>
+								<Setter Property="Padding" Value="6,2"/>
 								<Setter TargetName="ItemBorder" Property="BorderThickness" Value="0"/>
+								<Setter TargetName="GestureText" Property="Visibility" Value="Collapsed"/>
 							</Trigger>
 							<Trigger Property="Role" Value="SubmenuHeader">
 								<Setter Property="Padding" Value="8,4"/>
@@ -156,7 +157,7 @@
 		<Menu DockPanel.Dock="Top"
 			  Background="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}"
 			  Foreground="White">
-			<MenuItem Header="File">
+			<MenuItem Header="Files">
 				<MenuItem Header="Refresh"       InputGestureText="F5"      Click="RefreshMenuItem_Click"/>
 				<MenuItem Header="Exit"          InputGestureText="Alt+F4"  Click="ExitMenuItem_Click"/>
 			</MenuItem>
