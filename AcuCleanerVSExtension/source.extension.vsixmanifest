@@ -4,6 +4,7 @@
     <Identity Id="AcuCleanerVSExtension.629eeb21-3c89-4916-9228-94a90611015b" Version="1.0" Language="en-US" Publisher="AcuCleanerVSExtension" />
     <DisplayName>AcuCleanerVSExtension</DisplayName>
     <Description>Empty VSIX Project.</Description>
+    <Icon>acumatica.ico</Icon>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.14, )">

@@ -10,12 +10,8 @@ namespace AcuCleanerVSExtension
     /// </summary>
     internal sealed class AcuCleanerCommand
     {
-        /// <summary>Command set GUID — must match the value in AcuCleanerPackage.vsct.</summary>
         public static readonly Guid CommandSet = new Guid("a1b2c3d4-e5f6-7890-abcd-ef1234567890");
-
-        /// <summary>Command ID — must match AcuCleanerCommandId in AcuCleanerPackage.vsct.</summary>
         public const int CommandId = 0x0100;
-
         private readonly AsyncPackage _package;
 
         private AcuCleanerCommand(AsyncPackage package, IMenuCommandService commandService)
@@ -27,10 +23,6 @@ namespace AcuCleanerVSExtension
             commandService.AddCommand(menuItem);
         }
 
-        /// <summary>
-        /// Initializes the singleton instance of the command.
-        /// Must be called from <see cref="AcuCleanerVSExtensionPackage.InitializeAsync"/>.
-        /// </summary>
         public static async Task InitializeAsync(AsyncPackage package)
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
@@ -42,7 +34,6 @@ namespace AcuCleanerVSExtension
                 _ = new AcuCleanerCommand(package, commandService);
         }
 
-        /// <summary>Called when the user clicks Tools &gt; AcuCleaner.</summary>
         private void Execute(object sender, EventArgs e)
         {
             _ = _package.ShowToolWindowAsync(

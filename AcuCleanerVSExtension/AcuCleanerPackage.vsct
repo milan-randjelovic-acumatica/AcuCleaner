@@ -13,9 +13,9 @@
   <Commands package="guidAcuCleanerPackage">
 
 	<Groups>
-	  <!-- A group placed inside the built-in Tools menu -->
+	  <!-- A group placed inside the built-in Extensions menu -->
 	  <Group guid="guidAcuCleanerPackageCmdSet" id="AcuCleanerToolsMenuGroup" priority="0x0600">
-		<Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
+		<Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_EXTENSIONS"/>
 	  </Group>
 	</Groups>
 
