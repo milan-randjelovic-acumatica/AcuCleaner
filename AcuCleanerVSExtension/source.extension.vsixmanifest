@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="AcuCleanerVSExtension.629eeb21-3c89-4916-9228-94a90611015b" Version="1.0" Language="en-US" Publisher="AcuCleanerVSExtension" />
-    <DisplayName>AcuCleanerVSExtension</DisplayName>
-    <Description>Empty VSIX Project.</Description>
+    <Identity Id="AcuCleanerVSExtension.629eeb21-3c89-4916-9228-94a90611015b" Version="1.0" Language="en-US" Publisher="Acumatica" />
+    <DisplayName>AcuCleaner</DisplayName>
+    <Description>AcuCleaner is a utility designed to clean up residual artifacts from uninstalled Acumatica instances. It also extends the Tools menu with administrative functions, including password reset, Modern UI enablement, and session timeout configuration.</Description>
     <Icon>acumatica.ico</Icon>
   </Metadata>
   <Installation>
