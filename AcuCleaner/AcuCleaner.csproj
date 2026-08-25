@@ -16,12 +16,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Images\database.png" />
+    <None Remove="Images\folder.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="acumatica.ico" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="app.manifest" />
-    <EmbeddedResource Include="warning.png" />
+    <EmbeddedResource Include="Images\database.png" />
+    <EmbeddedResource Include="Images\folder.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Images\warning.png" />
   </ItemGroup>
 
   <ItemGroup>

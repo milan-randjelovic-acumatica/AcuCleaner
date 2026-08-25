@@ -79,7 +79,7 @@ namespace AcuCleaner.Forms
             Instance = new DataGridViewTextBoxColumn();
             InstalledOn = new DataGridViewTextBoxColumn();
             DatabaseName = new DataGridViewTextBoxColumn();
-            pathDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            FilesPath = new DataGridViewTextBoxColumn();
             AspTempFilesPath = new DataGridViewTextBoxColumn();
             CustomizationPath = new DataGridViewTextBoxColumn();
             BackupPath = new DataGridViewTextBoxColumn();
@@ -101,7 +101,7 @@ namespace AcuCleaner.Forms
             dataGridView.AllowUserToDeleteRows = false;
             dataGridView.AutoGenerateColumns = false;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Columns.AddRange(new DataGridViewColumn[] { Id, Status, Instance, InstalledOn, DatabaseName, pathDataGridViewTextBoxColumn, AspTempFilesPath, CustomizationPath, BackupPath, SnapshotPath, RegistryPath });
+            dataGridView.Columns.AddRange(new DataGridViewColumn[] { Id, Status, Instance, InstalledOn, DatabaseName, FilesPath, AspTempFilesPath, CustomizationPath, BackupPath, SnapshotPath, RegistryPath });
             dataGridView.DataSource = iISAppBindingSource1;
             dataGridView.Dock = DockStyle.Fill;
             dataGridView.Location = new Point(3, 19);
@@ -571,12 +571,12 @@ namespace AcuCleaner.Forms
             // 
             // pathDataGridViewTextBoxColumn
             // 
-            pathDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            pathDataGridViewTextBoxColumn.DataPropertyName = "Path";
-            pathDataGridViewTextBoxColumn.HeaderText = "Path";
-            pathDataGridViewTextBoxColumn.MinimumWidth = 6;
-            pathDataGridViewTextBoxColumn.Name = "pathDataGridViewTextBoxColumn";
-            pathDataGridViewTextBoxColumn.ReadOnly = true;
+            FilesPath.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            FilesPath.DataPropertyName = "Path";
+            FilesPath.HeaderText = "Path";
+            FilesPath.MinimumWidth = 6;
+            FilesPath.Name = "pathDataGridViewTextBoxColumn";
+            FilesPath.ReadOnly = true;
             // 
             // AspTempFilesPath
             // 
@@ -701,7 +701,7 @@ namespace AcuCleaner.Forms
         private DataGridViewTextBoxColumn Instance;
         private DataGridViewTextBoxColumn InstalledOn;
         private DataGridViewTextBoxColumn DatabaseName;
-        private DataGridViewTextBoxColumn pathDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn FilesPath;
         private DataGridViewTextBoxColumn AspTempFilesPath;
         private DataGridViewTextBoxColumn CustomizationPath;
         private DataGridViewTextBoxColumn BackupPath;

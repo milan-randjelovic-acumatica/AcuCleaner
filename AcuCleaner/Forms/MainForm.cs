@@ -9,6 +9,8 @@ namespace AcuCleaner.Forms
         private List<IISApp> _allApps = new List<IISApp>();
         private readonly IProgress<string> _progressHandler;
         private readonly Image? _warningImage;
+        private readonly Image? _folderImage;
+        private readonly Image? _databaseImage;
 
         public AcuManager AcuManager { get; private set; }
 
@@ -19,14 +21,21 @@ namespace AcuCleaner.Forms
 
             _progressHandler = new Progress<string>(message => this.toolStripStatusLabel.Text = message);
 
-            var warningResourceName = "AcuCleaner.warning.png";
-            using var stream = typeof(MainForm).Assembly.GetManifestResourceStream(warningResourceName);
-            if (stream != null)
-            {
-                _warningImage = Image.FromStream(stream);
-            }
+            _warningImage = LoadImage("AcuCleaner.Images.warning.png");
+            _folderImage = LoadImage("AcuCleaner.Images.folder.png");
+            _databaseImage = LoadImage("AcuCleaner.Images.database.png");
 
             AcuManager = new AcuManager(_progressHandler);
+        }
+
+        private Image? LoadImage(string resourceName)
+        {
+            using var stream = typeof(MainForm).Assembly.GetManifestResourceStream(resourceName);
+            if (stream != null)
+            {
+                return Image.FromStream(stream);
+            }
+            return null;
         }
 
         public static void HandleError(string message)
@@ -68,12 +77,50 @@ namespace AcuCleaner.Forms
 
         private void dataGridView_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
-            if (e.RowIndex < 0 || e.ColumnIndex != Status.Index)
+            if (e.RowIndex < 0) return;
+
+            var app = dataGridView.Rows[e.RowIndex].DataBoundItem as IISApp;
+            if (app == null) return;
+
+            if (!app.Active)
             {
-                return;
+                PaintCell(e, Status.Index, app.Status, _warningImage);
             }
 
-            if (dataGridView.Rows[e.RowIndex].DataBoundItem is not IISApp app || app.Active)
+            if (!string.IsNullOrEmpty(app.DatabaseName))
+            {
+                PaintCell(e, DatabaseName.Index, app.DatabaseName, _databaseImage);
+            }
+
+            if (!string.IsNullOrEmpty(app.Path))
+            {
+                PaintCell(e, FilesPath.Index, app.Path, _folderImage);
+            }
+
+            if (!string.IsNullOrEmpty(app.AspTempFilesPath))
+            {
+                PaintCell(e, AspTempFilesPath.Index, app.AspTempFilesPath, _folderImage);
+            }
+
+            if (!string.IsNullOrEmpty(app.SnapshotPath))
+            {
+                PaintCell(e, SnapshotPath.Index, app.SnapshotPath, _folderImage);
+            }
+
+            if (!string.IsNullOrEmpty(app.CustomizationPath))
+            {
+                PaintCell(e, CustomizationPath.Index, app.CustomizationPath, _folderImage);
+            }
+
+            if (!string.IsNullOrEmpty(app.BackupPath))
+            {
+                PaintCell(e, BackupPath.Index, app.BackupPath, _folderImage);
+            }
+        }
+
+        private void PaintCell(DataGridViewCellPaintingEventArgs e, int index, string text, Image? image)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex != index)
             {
                 return;
             }
@@ -95,17 +142,17 @@ namespace AcuCleaner.Forms
 
             TextRenderer.DrawText(
                 e.Graphics!,
-                app.Status,
+                text,
                 e.CellStyle!.Font,
                 textBounds,
                 isSelected ? e.CellStyle.SelectionForeColor : e.CellStyle.ForeColor,
                 TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis);
 
-            if (_warningImage != null)
+            if (image != null)
             {
                 var iconX = e.CellBounds.Right - iconSize - padding;
                 var iconY = e.CellBounds.Top + ((e.CellBounds.Height - iconSize) / 2);
-                e.Graphics!.DrawImage(_warningImage, new Rectangle(iconX, iconY, iconSize, iconSize));
+                e.Graphics!.DrawImage(image, new Rectangle(iconX, iconY, iconSize, iconSize));
             }
 
             e.Handled = true;
