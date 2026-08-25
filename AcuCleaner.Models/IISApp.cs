@@ -12,6 +12,7 @@
         public string BackupPath { get; set; } = string.Empty;
         public string DatabaseName { get; set; } = string.Empty;
         public string DatabaseConnectionString { get; set; } = string.Empty;
+        public string DatabaseVersion { get; set; } = string.Empty;
         public string RegistryPath { get; set; } = string.Empty;
         public bool Active { get; set; }
         public string Status => Active ? "Active" : "Inactive";

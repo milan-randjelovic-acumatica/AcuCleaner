@@ -32,12 +32,18 @@ namespace AcuCleaner.Services.Database
                     {
                         while (reader.Read())
                         {
-                            Console.WriteLine(reader.GetString(0));
+                            var databaseName = reader.GetString(0);
+                            if (string.IsNullOrEmpty(databaseName))
+                                continue;
+
+                           var version = GetDatabaseVersion(connectionString, databaseName) ?? string.Empty;
+
                             result.Add(new IISApp
                             {
                                 InstanceName = string.Empty,
-                                DatabaseName = reader.GetString(0),
+                                DatabaseName = databaseName,
                                 DatabaseConnectionString = connectionString,
+                                DatabaseVersion = version,
                                 Path = string.Empty,
                                 RootPath = string.Empty,
                                 AspTempFilesPath = string.Empty,
@@ -54,6 +60,24 @@ namespace AcuCleaner.Services.Database
             }
 
             return result;
+        }
+
+        private string? GetDatabaseVersion(string connectionString, string databaseName)
+        {
+            try
+            {
+                using (var connection = new SqlConnection($"{connectionString};Initial Catalog={databaseName}"))
+                {
+                    connection.Open();
+                    var command = new SqlCommand($"SELECT Version.Version FROM Version;", connection);
+                    var version = command.ExecuteScalar()?.ToString();
+                    return version;
+                }
+            }
+            catch (Exception ex) 
+            {
+                return null;
+            }
         }
 
         public IEnumerable<IISApp> GetAppsForCleanup(CleanupParameters cleanupParameters)
