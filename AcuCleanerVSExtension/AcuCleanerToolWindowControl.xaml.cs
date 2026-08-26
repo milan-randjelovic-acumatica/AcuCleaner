@@ -53,7 +53,7 @@ namespace AcuCleanerVSExtension
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             progressBar.Visibility = Visibility.Collapsed;
-            statusLabel.Text = "Ready";
+            _progressHandler.Report("Ready");
             datePicker.SelectedDate = DateTime.Today;
             RefreshAppList();
         }
@@ -77,7 +77,7 @@ namespace AcuCleanerVSExtension
             foreach (var app in _allApps)
                 _apps.Add(app);
 
-            statusLabel.Text = $"{_apps.Count} instance(s) loaded.";
+            _progressHandler.Report($"{_apps.Count} instance(s) loaded.");
         }
 
         private void FilterSelectedApps()
@@ -168,17 +168,17 @@ namespace AcuCleanerVSExtension
             buttonClean.IsEnabled = false;
             buttonCleanAll.IsEnabled = false;
             progressBar.Visibility = Visibility.Visible;
-            statusLabel.Text = $"Deleting {count} app(s)...";
+            _progressHandler.Report($"Deleting {count} app(s)...");
 
             try
             {
                 AcuManager.Cleanup();
-                statusLabel.Text = $"Deleted {count} app(s).";
+                _progressHandler.Report($"Deleted {count} app(s).");
                 RefreshAppList();
             }
             catch (Exception ex)
             {
-                statusLabel.Text = $"Delete failed: {ex.Message}";
+                _progressHandler.Report($"Delete failed: {ex.Message}");
             }
             finally
             {
@@ -263,13 +263,19 @@ namespace AcuCleanerVSExtension
 
         private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var cell = FindVisualParent<DataGridCell>(e.OriginalSource as DependencyObject);
+            var originalSource = e.OriginalSource as DependencyObject;
+            if(originalSource == null)
+                return;
+
+            var cell = FindVisualParent<DataGridCell>(originalSource);
             if (cell == null || !(cell.DataContext is IISApp app))
                 return;
 
-            var propertyName = (cell.Column as DataGridBoundColumn)?.Binding is System.Windows.Data.Binding binding
-                ? binding.Path.Path
-                : null;
+            var propertyName = !string.IsNullOrEmpty(cell.Column?.SortMemberPath)
+                ? cell?.Column?.SortMemberPath
+                : (cell.Column as DataGridBoundColumn)?.Binding is System.Windows.Data.Binding binding
+                    ? binding.Path.Path
+                    : null;
 
             switch (propertyName)
             {
@@ -294,7 +300,7 @@ namespace AcuCleanerVSExtension
             }
         }
 
-        private static T FindVisualParent<T>(DependencyObject child) where T : DependencyObject
+        private static T? FindVisualParent<T>(DependencyObject child) where T : DependencyObject
         {
             while (child != null)
             {

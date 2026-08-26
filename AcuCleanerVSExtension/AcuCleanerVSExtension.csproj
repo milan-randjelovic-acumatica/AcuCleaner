@@ -16,6 +16,12 @@
     <Content Include="acumatica.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\database.png" />
+    <Resource Include="Images\folder.png" />
+    <Resource Include="Images\registry.png" />
+    <Resource Include="Images\warning.png" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectCapability Include="CreateVsixContainer" />
   </ItemGroup>
   <ItemGroup>
