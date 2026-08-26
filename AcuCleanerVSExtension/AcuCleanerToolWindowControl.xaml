@@ -223,38 +223,23 @@
 					</DataGrid.RowStyle>
 					<DataGrid.Columns>
 						<DataGridTextColumn Header="#"                  Binding="{Binding Id}"               Width="45"  IsReadOnly="True"/>
-						<DataGridTemplateColumn Header="Status" Width="70" SortMemberPath="Status">
-							<DataGridTemplateColumn.CellTemplate>
-								<DataTemplate>
-									<Grid>
-										<Grid.ColumnDefinitions>
-											<ColumnDefinition Width="*"/>
-											<ColumnDefinition Width="Auto"/>
-										</Grid.ColumnDefinitions>
-										<TextBlock Text="{Binding Status}" VerticalAlignment="Center" Margin="4,0" TextTrimming="CharacterEllipsis"/>
-										<Image Grid.Column="1" Source="/AcuCleanerVSExtension;component/Images/warning.png" Width="16" Height="16" Margin="2,0,4,0" VerticalAlignment="Center"
-											   Visibility="{Binding Active, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
-									</Grid>
-								</DataTemplate>
-							</DataGridTemplateColumn.CellTemplate>
-						</DataGridTemplateColumn>
 						<DataGridTextColumn Header="Instance"           Binding="{Binding InstanceName}"     Width="150" IsReadOnly="True"/>
-						<DataGridTextColumn Header="Installed On"       Binding="{Binding InstalledOn, StringFormat=\{0:d\}}" Width="90" IsReadOnly="True"/>
-						<DataGridTemplateColumn Header="Database" Width="130" SortMemberPath="DatabaseName">
-							<DataGridTemplateColumn.CellTemplate>
-								<DataTemplate>
-									<Grid>
-										<Grid.ColumnDefinitions>
-											<ColumnDefinition Width="*"/>
-											<ColumnDefinition Width="Auto"/>
-										</Grid.ColumnDefinitions>
-										<TextBlock Text="{Binding DatabaseName}" VerticalAlignment="Center" Margin="4,0" TextTrimming="CharacterEllipsis"/>
-										<Image Grid.Column="1" Source="/AcuCleanerVSExtension;component/Images/database.png" Width="16" Height="16" Margin="2,0,4,0" VerticalAlignment="Center"
-											   Visibility="{Binding DatabaseName, Converter={StaticResource StringToVisibilityConverter}}"/>
-									</Grid>
-								</DataTemplate>
-							</DataGridTemplateColumn.CellTemplate>
-						</DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Status" Width="70" SortMemberPath="Status">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Status}" VerticalAlignment="Center" Margin="4,0" TextTrimming="CharacterEllipsis"/>
+                                        <Image Grid.Column="1" Source="/AcuCleanerVSExtension;component/Images/warning.png" Width="16" Height="16" Margin="2,0,4,0" VerticalAlignment="Center"
+											   Visibility="{Binding Active, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Installed On"       Binding="{Binding InstalledOn, StringFormat=\{0:d\}}" Width="90" IsReadOnly="True"/>
 						<DataGridTemplateColumn Header="Path" Width="160" SortMemberPath="Path">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate>
@@ -330,7 +315,22 @@
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
-						<DataGridTemplateColumn Header="Registry Path" Width="*" SortMemberPath="RegistryPath">
+                        <DataGridTemplateColumn Header="Database" Width="130" SortMemberPath="Database">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Database}" VerticalAlignment="Center" Margin="4,0" TextTrimming="CharacterEllipsis"/>
+                                        <Image Grid.Column="1" Source="/AcuCleanerVSExtension;component/Images/database.png" Width="16" Height="16" Margin="2,0,4,0" VerticalAlignment="Center"
+											   Visibility="{Binding Database, Converter={StaticResource StringToVisibilityConverter}}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Registry Path" Width="*" SortMemberPath="RegistryPath">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate>
 									<Grid>
