@@ -43,8 +43,8 @@ namespace AcuCleaner.Forms
             checkBoxJunk = new CheckBox();
             statusStrip = new StatusStrip();
             toolStripProgressBar = new ToolStripProgressBar();
-            toolStripWarningLabel = new ToolStripStatusLabel();
             toolStripStatusLabel = new ToolStripStatusLabel();
+            toolStripWarningLabel = new ToolStripStatusLabel();
             groupBoxCleanup = new GroupBox();
             checkBoxCleanupBackups = new CheckBox();
             checkBoxCleanupCustomizations = new CheckBox();
@@ -75,10 +75,10 @@ namespace AcuCleaner.Forms
             toolStripSeparator3 = new ToolStripSeparator();
             setSessionTimeoutToolStripMenuItem = new ToolStripMenuItem();
             Id = new DataGridViewTextBoxColumn();
-            Status = new DataGridViewTextBoxColumn();
             Instance = new DataGridViewTextBoxColumn();
+            Status = new DataGridViewTextBoxColumn();
             InstalledOn = new DataGridViewTextBoxColumn();
-            DatabaseName = new DataGridViewTextBoxColumn();
+            Database = new DataGridViewTextBoxColumn();
             FilesPath = new DataGridViewTextBoxColumn();
             AspTempFilesPath = new DataGridViewTextBoxColumn();
             CustomizationPath = new DataGridViewTextBoxColumn();
@@ -101,7 +101,7 @@ namespace AcuCleaner.Forms
             dataGridView.AllowUserToDeleteRows = false;
             dataGridView.AutoGenerateColumns = false;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Columns.AddRange(new DataGridViewColumn[] { Id, Status, Instance, InstalledOn, DatabaseName, FilesPath, AspTempFilesPath, CustomizationPath, BackupPath, SnapshotPath, RegistryPath });
+            dataGridView.Columns.AddRange(new DataGridViewColumn[] { Id, Instance, Status, InstalledOn, Database, FilesPath, AspTempFilesPath, CustomizationPath, BackupPath, SnapshotPath, RegistryPath });
             dataGridView.DataSource = iISAppBindingSource1;
             dataGridView.Dock = DockStyle.Fill;
             dataGridView.Location = new Point(3, 19);
@@ -111,6 +111,8 @@ namespace AcuCleaner.Forms
             dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView.Size = new Size(1009, 577);
             dataGridView.TabIndex = 2;
+            dataGridView.CellMouseDoubleClick += dataGridView_CellMouseDoubleClick;
+            dataGridView.CellPainting += dataGridView_CellPainting;
             // 
             // iISAppBindingSource1
             // 
@@ -189,8 +191,6 @@ namespace AcuCleaner.Forms
             // 
             statusStrip.ImageScalingSize = new Size(20, 20);
             statusStrip.Items.AddRange(new ToolStripItem[] { toolStripProgressBar, toolStripStatusLabel });
-            dataGridView.CellPainting += dataGridView_CellPainting;
-            dataGridView.CellMouseDoubleClick += dataGridView_CellMouseDoubleClick;
             statusStrip.Location = new Point(0, 629);
             statusStrip.Name = "statusStrip";
             statusStrip.Size = new Size(1264, 22);
@@ -209,6 +209,11 @@ namespace AcuCleaner.Forms
             toolStripStatusLabel.Name = "toolStripStatusLabel";
             toolStripStatusLabel.Size = new Size(42, 17);
             toolStripStatusLabel.Text = "Status:";
+            // 
+            // toolStripWarningLabel
+            // 
+            toolStripWarningLabel.Name = "toolStripWarningLabel";
+            toolStripWarningLabel.Size = new Size(23, 23);
             // 
             // groupBoxCleanup
             // 
@@ -537,46 +542,47 @@ namespace AcuCleaner.Forms
             Id.ReadOnly = true;
             Id.Width = 50;
             // 
-            // Status
-            // 
-            Status.DataPropertyName = "Status";
-            Status.HeaderText = "Status";
-            Status.Name = "Status";
-            Status.ReadOnly = true;
-            Status.Width = 90;
-            // 
             // Instance
             // 
+            Instance.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             Instance.DataPropertyName = "InstanceName";
             Instance.HeaderText = "Instance";
             Instance.MinimumWidth = 6;
             Instance.Name = "Instance";
             Instance.ReadOnly = true;
             // 
+            // Status
+            // 
+            Status.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            Status.DataPropertyName = "Status";
+            Status.HeaderText = "Status";
+            Status.Name = "Status";
+            Status.ReadOnly = true;
+            // 
             // InstalledOn
             // 
+            InstalledOn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             InstalledOn.DataPropertyName = "InstalledOn";
             InstalledOn.HeaderText = "Installed On";
             InstalledOn.MinimumWidth = 6;
             InstalledOn.Name = "InstalledOn";
             InstalledOn.ReadOnly = true;
             // 
-            // DatabaseName
+            // Database
             // 
-            DatabaseName.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            DatabaseName.DataPropertyName = "DatabaseName";
-            DatabaseName.HeaderText = "Database";
-            DatabaseName.MinimumWidth = 6;
-            DatabaseName.Name = "DatabaseName";
-            DatabaseName.ReadOnly = true;
+            Database.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            Database.DataPropertyName = "Database";
+            Database.HeaderText = "Database";
+            Database.Name = "Database";
+            Database.ReadOnly = true;
             // 
-            // pathDataGridViewTextBoxColumn
+            // FilesPath
             // 
             FilesPath.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             FilesPath.DataPropertyName = "Path";
             FilesPath.HeaderText = "Path";
             FilesPath.MinimumWidth = 6;
-            FilesPath.Name = "pathDataGridViewTextBoxColumn";
+            FilesPath.Name = "FilesPath";
             FilesPath.ReadOnly = true;
             // 
             // AspTempFilesPath
@@ -698,10 +704,10 @@ namespace AcuCleaner.Forms
         private ToolStripSeparator toolStripSeparator3;
         private ToolStripMenuItem enableModernUISwitchToolStripMenuItem;
         private DataGridViewTextBoxColumn Id;
-        private DataGridViewTextBoxColumn Status;
         private DataGridViewTextBoxColumn Instance;
+        private DataGridViewTextBoxColumn Status;
         private DataGridViewTextBoxColumn InstalledOn;
-        private DataGridViewTextBoxColumn DatabaseName;
+        private DataGridViewTextBoxColumn Database;
         private DataGridViewTextBoxColumn FilesPath;
         private DataGridViewTextBoxColumn AspTempFilesPath;
         private DataGridViewTextBoxColumn CustomizationPath;

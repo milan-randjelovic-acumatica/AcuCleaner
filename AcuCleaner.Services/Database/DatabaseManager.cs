@@ -96,6 +96,7 @@ namespace AcuCleaner.Services.Database
                     existingApp.DatabaseName = sqlDatabase.DatabaseName;
                     existingApp.DatabaseConnectionString = sqlDatabase.DatabaseConnectionString;
                     existingApp.InstalledOn = existingApp.InstalledOn == DateTime.MinValue ? sqlDatabase.InstalledOn : existingApp.InstalledOn;
+                    existingApp.DatabaseVersion = sqlDatabase.DatabaseVersion;
                     result.Add(existingApp);
                 }
                 else
@@ -105,6 +106,7 @@ namespace AcuCleaner.Services.Database
                         InstanceName = sqlDatabase.DatabaseName,
                         DatabaseName = sqlDatabase.DatabaseName,
                         DatabaseConnectionString = sqlDatabase.DatabaseConnectionString,
+                        DatabaseVersion = sqlDatabase.DatabaseVersion,
                         Path = string.Empty,
                         RootPath = string.Empty,
                         AspTempFilesPath = string.Empty,

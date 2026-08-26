@@ -92,9 +92,9 @@ namespace AcuCleaner.Forms
                 PaintCell(e, Status.Index, app.Status, _warningImage, () => { });
             }
 
-            if (!string.IsNullOrEmpty(app.DatabaseName))
+            if (!string.IsNullOrEmpty(app.Database))
             {
-                PaintCell(e, DatabaseName.Index, app.DatabaseName, _databaseImage, () => { });
+                PaintCell(e, Database.Index, app.Database, _databaseImage, () => { });
 
             }
 
