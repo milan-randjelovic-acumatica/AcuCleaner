@@ -9,6 +9,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace AcuCleanerVSExtension
 {
@@ -39,9 +41,6 @@ namespace AcuCleanerVSExtension
             AcuManager = new AcuManager(_progressHandler);
         }
 
-        /// <summary>
-        /// Called by IIS cleaner or other services to surface an error in the status bar.
-        /// </summary>
         public static void HandleError(string message)
         {
             if (_instance == null) return;
@@ -201,7 +200,9 @@ namespace AcuCleanerVSExtension
             SelectionChangedEventArgs e) => RefreshAppList();
 
         private void ButtonClean_Click(object sender, RoutedEventArgs e)
-            => DeleteSelectedApps();
+        {
+            DeleteSelectedApps();
+        }
 
         private void ButtonCleanAll_Click(object sender, RoutedEventArgs e)
         {
@@ -210,7 +211,9 @@ namespace AcuCleanerVSExtension
         }
 
         private void RefreshMenuItem_Click(object sender, RoutedEventArgs e)
-            => RefreshAppList();
+        {
+            RefreshAppList();
+        }
 
         private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
         {
@@ -256,6 +259,52 @@ namespace AcuCleanerVSExtension
             {
                 AcuManager.WebConfigManager.ExtendSessionTimeout(AcuManager.CleanupParameters);
             }
+        }
+
+        private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var cell = FindVisualParent<DataGridCell>(e.OriginalSource as DependencyObject);
+            if (cell == null || !(cell.DataContext is IISApp app))
+                return;
+
+            var propertyName = (cell.Column as DataGridBoundColumn)?.Binding is System.Windows.Data.Binding binding
+                ? binding.Path.Path
+                : null;
+
+            switch (propertyName)
+            {
+                case nameof(IISApp.Path):
+                    AcuManager.FileSystemManager.OpenInExplorer(app.Path);
+                    break;
+                case nameof(IISApp.AspTempFilesPath):
+                    AcuManager.FileSystemManager.OpenInExplorer(app.AspTempFilesPath);
+                    break;
+                case nameof(IISApp.CustomizationPath):
+                    AcuManager.FileSystemManager.OpenInExplorer(app.CustomizationPath);
+                    break;
+                case nameof(IISApp.BackupPath):
+                    AcuManager.FileSystemManager.OpenInExplorer(app.BackupPath);
+                    break;
+                case nameof(IISApp.SnapshotPath):
+                    AcuManager.FileSystemManager.OpenInExplorer(app.SnapshotPath);
+                    break;
+                case nameof(IISApp.RegistryPath):
+                    AcuManager.RegistryManager.OpenInRegedit(app.RegistryPath);
+                    break;
+            }
+        }
+
+        private static T FindVisualParent<T>(DependencyObject child) where T : DependencyObject
+        {
+            while (child != null)
+            {
+                if (child is T typed)
+                    return typed;
+
+                child = VisualTreeHelper.GetParent(child);
+            }
+
+            return null;
         }
     }
 }

@@ -206,7 +206,8 @@
                           RowBackground="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}"
                           AlternatingRowBackground="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}"
                           HorizontalGridLinesBrush="#FF303030"
-                          VerticalGridLinesBrush="#FF303030">
+                          VerticalGridLinesBrush="#FF303030"
+                          MouseDoubleClick="DataGrid_MouseDoubleClick">
 					<DataGrid.RowStyle>
 						<Style TargetType="{x:Type DataGridRow}">
 							<Style.Triggers>
