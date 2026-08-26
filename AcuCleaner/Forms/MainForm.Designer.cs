@@ -190,6 +190,7 @@ namespace AcuCleaner.Forms
             statusStrip.ImageScalingSize = new Size(20, 20);
             statusStrip.Items.AddRange(new ToolStripItem[] { toolStripProgressBar, toolStripStatusLabel });
             dataGridView.CellPainting += dataGridView_CellPainting;
+            dataGridView.CellMouseDoubleClick += dataGridView_CellMouseDoubleClick;
             statusStrip.Location = new Point(0, 629);
             statusStrip.Name = "statusStrip";
             statusStrip.Size = new Size(1264, 22);

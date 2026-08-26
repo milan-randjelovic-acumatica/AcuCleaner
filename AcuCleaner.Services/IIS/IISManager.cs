@@ -4,7 +4,7 @@ using System.ServiceProcess;
 
 namespace AcuCleaner.Services.IIS
 {
-    public class IISManager : ICleanupService, IUtilityService
+    public class IISManager : ICleanupService
     {
         private readonly IProgress<string>? _progressHandler;
 

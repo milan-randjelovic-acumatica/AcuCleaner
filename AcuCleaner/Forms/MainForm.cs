@@ -7,10 +7,12 @@ namespace AcuCleaner.Forms
     {
         private static MainForm? _instance;
         private List<IISApp> _allApps = new List<IISApp>();
-        private readonly IProgress<string> _progressHandler;
+        protected readonly IProgress<string> ProgressHandler;
         private readonly Image? _warningImage;
         private readonly Image? _folderImage;
         private readonly Image? _databaseImage;
+        private readonly Image? _registryImage;
+        private readonly Dictionary<(int RowIndex, int ColumnIndex), Action> _cellIconActions = new();
 
         public AcuManager AcuManager { get; private set; }
 
@@ -19,13 +21,14 @@ namespace AcuCleaner.Forms
             InitializeComponent();
             _instance = this;
 
-            _progressHandler = new Progress<string>(message => this.toolStripStatusLabel.Text = message);
+            ProgressHandler = new Progress<string>(message => this.toolStripStatusLabel.Text = message);
 
             _warningImage = LoadImage("AcuCleaner.Images.warning.png");
             _folderImage = LoadImage("AcuCleaner.Images.folder.png");
             _databaseImage = LoadImage("AcuCleaner.Images.database.png");
+            _registryImage = LoadImage("AcuCleaner.Images.registry.png");
 
-            AcuManager = new AcuManager(_progressHandler);
+            AcuManager = new AcuManager(ProgressHandler);
         }
 
         private Image? LoadImage(string resourceName)
@@ -43,9 +46,9 @@ namespace AcuCleaner.Forms
             if (_instance == null) return;
 
             if (_instance.InvokeRequired)
-                _instance.Invoke(() => _instance.toolStripStatusLabel.Text = $"Error: {message}");
+                _instance.Invoke(() => _instance.ProgressHandler.Report($"Error: {message}"));
             else
-                _instance.toolStripStatusLabel.Text = $"Error: {message}";
+                _instance.ProgressHandler.Report($"Error: {message}");
 
             _instance.AcuManager.IISManager.Start();
         }
@@ -53,7 +56,7 @@ namespace AcuCleaner.Forms
         private void Form_Load(object sender, EventArgs e)
         {
             toolStripProgressBar.Visible = false;
-            toolStripStatusLabel.Text = "Ready";
+            ProgressHandler.Report("Ready");
 
             RefreshAppList();
         }
@@ -72,7 +75,7 @@ namespace AcuCleaner.Forms
             iISAppBindingSource1.DataSource = _allApps;
             iISAppBindingSource1.ResetBindings(false);
 
-            toolStripStatusLabel.Text = $"{_allApps.Count} instance(s) loaded.";
+            ProgressHandler.Report($"{_allApps.Count} instance(s) loaded.");
         }
 
         private void dataGridView_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
@@ -82,43 +85,51 @@ namespace AcuCleaner.Forms
             var app = dataGridView.Rows[e.RowIndex].DataBoundItem as IISApp;
             if (app == null) return;
 
+            _cellIconActions.Remove((e.RowIndex, e.ColumnIndex));
+
             if (!app.Active)
             {
-                PaintCell(e, Status.Index, app.Status, _warningImage);
+                PaintCell(e, Status.Index, app.Status, _warningImage, () => { });
             }
 
             if (!string.IsNullOrEmpty(app.DatabaseName))
             {
-                PaintCell(e, DatabaseName.Index, app.DatabaseName, _databaseImage);
+                PaintCell(e, DatabaseName.Index, app.DatabaseName, _databaseImage, () => { });
+
             }
 
             if (!string.IsNullOrEmpty(app.Path))
             {
-                PaintCell(e, FilesPath.Index, app.Path, _folderImage);
+                PaintCell(e, FilesPath.Index, app.Path, _folderImage, () => AcuManager.FileSystemManager.OpenInExplorer(app.Path));
             }
 
             if (!string.IsNullOrEmpty(app.AspTempFilesPath))
             {
-                PaintCell(e, AspTempFilesPath.Index, app.AspTempFilesPath, _folderImage);
+                PaintCell(e, AspTempFilesPath.Index, app.AspTempFilesPath, _folderImage, () => AcuManager.FileSystemManager.OpenInExplorer(app.AspTempFilesPath));
             }
 
             if (!string.IsNullOrEmpty(app.SnapshotPath))
             {
-                PaintCell(e, SnapshotPath.Index, app.SnapshotPath, _folderImage);
+                PaintCell(e, SnapshotPath.Index, app.SnapshotPath, _folderImage, () => AcuManager.FileSystemManager.OpenInExplorer(app.SnapshotPath));
             }
 
             if (!string.IsNullOrEmpty(app.CustomizationPath))
             {
-                PaintCell(e, CustomizationPath.Index, app.CustomizationPath, _folderImage);
+                PaintCell(e, CustomizationPath.Index, app.CustomizationPath, _folderImage, () => AcuManager.FileSystemManager.OpenInExplorer(app.CustomizationPath));
             }
 
             if (!string.IsNullOrEmpty(app.BackupPath))
             {
-                PaintCell(e, BackupPath.Index, app.BackupPath, _folderImage);
+                PaintCell(e, BackupPath.Index, app.BackupPath, _folderImage, () => AcuManager.FileSystemManager.OpenInExplorer(app.BackupPath));
+            }
+
+            if (!string.IsNullOrEmpty(app.RegistryPath))
+            {
+                PaintCell(e, RegistryPath.Index, app.RegistryPath, _registryImage, () => AcuManager.RegistryManager.OpenInRegedit(app.RegistryPath));
             }
         }
 
-        private void PaintCell(DataGridViewCellPaintingEventArgs e, int index, string text, Image? image)
+        private void PaintCell(DataGridViewCellPaintingEventArgs e, int index, string text, Image? image, Action action)
         {
             if (e.RowIndex < 0 || e.ColumnIndex != index)
             {
@@ -155,7 +166,19 @@ namespace AcuCleaner.Forms
                 e.Graphics!.DrawImage(image, new Rectangle(iconX, iconY, iconSize, iconSize));
             }
 
+            _cellIconActions[(e.RowIndex, e.ColumnIndex)] = action;
+
             e.Handled = true;
+        }
+
+        private void dataGridView_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+
+            if (_cellIconActions.TryGetValue((e.RowIndex, e.ColumnIndex), out var action))
+            {
+                action();
+            }
         }
 
         private void DeleteSelectedApps()
@@ -164,7 +187,7 @@ namespace AcuCleaner.Forms
 
             if (!AcuManager.CleanupParameters.Apps.Any())
             {
-                toolStripStatusLabel.Text = "No rows selected.";
+                ProgressHandler.Report("No rows selected.");
                 return;
             }
 
@@ -179,24 +202,24 @@ namespace AcuCleaner.Forms
 
             if (confirmation != DialogResult.Yes)
             {
-                toolStripStatusLabel.Text = "Delete canceled.";
+                ProgressHandler.Report("Delete canceled.");
                 return;
             }
 
             buttonDeleteSelected.Enabled = false;
             buttonDeleteAll.Enabled = false;
             toolStripProgressBar.Visible = true;
-            toolStripStatusLabel.Text = $"Deleting {AcuManager.CleanupParameters.Apps.Count()} app(s)...";
+            ProgressHandler.Report($"Deleting {AcuManager.CleanupParameters.Apps.Count()} app(s)...");
 
             try
             {
                 AcuManager.Cleanup();
-                toolStripStatusLabel.Text = $"Deleted {AcuManager.CleanupParameters.Apps.Count()} app(s).";
+                ProgressHandler.Report($"Deleted {AcuManager.CleanupParameters.Apps.Count()} app(s).");
                 RefreshAppList();
             }
             catch (Exception ex)
             {
-                toolStripStatusLabel.Text = $"Delete failed: {ex.Message}";
+                ProgressHandler.Report($"Delete failed: {ex.Message}");
             }
             finally
             {

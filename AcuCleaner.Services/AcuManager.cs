@@ -8,46 +8,40 @@ namespace AcuCleaner.Services
 {
     public class AcuManager : IAppsCollection
     {
-        private IEnumerable<ICleanupService> _cleaners { get; set; }
-        private IEnumerable<IUtilityService> _utils { get; set; }
+        private IEnumerable<ICleanupService> _utilityServices { get; set; }
         private IEnumerable<IISApp> _apps = new List<IISApp>();
         public CleanupParameters CleanupParameters { get; set; } = new CleanupParameters();
         public FilterParameters FilterParameters { get; set; } = new FilterParameters();
         public WebConfigManager WebConfigManager { get; private set; }
         public IISManager IISManager { get; private set; }
         public DatabaseManager DatabaseManager { get; private set; }
-        public FileSystemCleaner FileSystemCleaner { get; private set; }
-        public RegistryCleaner RegistryCleaner { get; private set; }
+        public FileSystemManager FileSystemManager { get; private set; }
+        public RegistryManager RegistryManager { get; private set; }
 
         public AcuManager(IProgress<string> progressHandler)
         {
             IISManager = new IISManager(progressHandler);
             DatabaseManager = new DatabaseManager(progressHandler);
-            FileSystemCleaner = new FileSystemCleaner(progressHandler);
-            RegistryCleaner = new RegistryCleaner(progressHandler);
-            _cleaners = new List<ICleanupService>()
+            FileSystemManager = new FileSystemManager(progressHandler);
+            RegistryManager = new RegistryManager(progressHandler);
+            _utilityServices = new List<ICleanupService>()
             {
                 IISManager,
-                FileSystemCleaner,
+                FileSystemManager,
                 DatabaseManager,
-                RegistryCleaner
+                RegistryManager
             };
 
             WebConfigManager = new WebConfigManager(progressHandler);
-            _utils = new List<IUtilityService>()
-            {
-                IISManager,
-                WebConfigManager
-            };
         }
 
         public IAppsCollection GetAllInstances()
         {
             _apps = new List<IISApp>();
 
-            foreach (var cleaner in _cleaners)
+            foreach (var utilityService in _utilityServices)
             {
-                var appsForCleanup = cleaner?.GetAppsForCleanup(CleanupParameters) ?? Enumerable.Empty<IISApp>();
+                var appsForCleanup = utilityService?.GetAppsForCleanup(CleanupParameters) ?? Enumerable.Empty<IISApp>();
                 if (appsForCleanup.Any())
                 {
                     CleanupParameters.Apps = CleanupParameters.Apps
@@ -112,13 +106,13 @@ namespace AcuCleaner.Services
 
         public void Cleanup()
         {
-            var iisService = _cleaners.OfType<IISManager>().FirstOrDefault();
+            var iisService = _utilityServices.OfType<IISManager>().FirstOrDefault();
 
             iisService?.Stop();
 
-            foreach (var cleaner in _cleaners)
+            foreach (var utilityService in _utilityServices)
             {
-                cleaner?.Cleanup(CleanupParameters);
+                utilityService?.Cleanup(CleanupParameters);
             }
             ;
 

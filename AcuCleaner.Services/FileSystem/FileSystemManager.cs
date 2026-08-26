@@ -1,18 +1,19 @@
 ﻿using AcuCleaner.Models;
+using System.Diagnostics;
 using System.Security.AccessControl;
 using System.Security.Principal;
 
 namespace AcuCleaner.Services.FileSystem
 {
-    public class FileSystemCleaner : ICleanupService
+    public class FileSystemManager : ICleanupService
     {
         private readonly IProgress<string>? _progressHandler;
 
-        public FileSystemCleaner()
+        public FileSystemManager()
         {
         }
 
-        public FileSystemCleaner(IProgress<string> progressHandler)
+        public FileSystemManager(IProgress<string> progressHandler)
         {
             _progressHandler = progressHandler;
         }
@@ -299,6 +300,29 @@ namespace AcuCleaner.Services.FileSystem
                     FileSystemRights.FullControl,
                     AccessControlType.Allow));
                 fileInfo.SetAccessControl(security);
+            }
+        }
+
+        public void OpenInExplorer(string path)
+        {
+            try
+            {
+                if (Directory.Exists(path))
+                {
+                    Process.Start(new ProcessStartInfo("explorer.exe", $"\"{path}\"") { UseShellExecute = true });
+                }
+                else if (File.Exists(path))
+                {
+                    Process.Start(new ProcessStartInfo("explorer.exe", $"/select,\"{path}\"") { UseShellExecute = true });
+                }
+                else
+                {
+                    _progressHandler?.Report($"Path not found: {path}");
+                }
+            }
+            catch (Exception ex)
+            {
+                _progressHandler?.Report($"Error opening path: {ex.Message}");
             }
         }
     }

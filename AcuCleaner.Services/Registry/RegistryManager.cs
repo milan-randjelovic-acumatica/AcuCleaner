@@ -1,15 +1,16 @@
 ﻿using AcuCleaner.Models;
 using Microsoft.Win32;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace AcuCleaner.Services.Registry
 {
-    public class RegistryCleaner : ICleanupService
+    public class RegistryManager : ICleanupService, IUtilityService
     {
         private readonly string _path = @"SOFTWARE\ACUMATICA ERP";
         private readonly IProgress<string>? _progressHandler;
 
-        public RegistryCleaner(IProgress<string> progressHandler)
+        public RegistryManager(IProgress<string> progressHandler)
         {
             _progressHandler = progressHandler;
         }
@@ -134,6 +135,32 @@ namespace AcuCleaner.Services.Registry
                         _progressHandler?.Report($"Successfully deleted registry entry: {app.RegistryPath}");
                     }
                 }
+            }
+        }
+
+        public void OpenInRegedit(string registryPath)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(registryPath))
+                {
+                    _progressHandler?.Report("Registry path not found.");
+                    return;
+                }
+
+                var normalizedPath = registryPath.Replace('/', '\\').TrimEnd('\\');
+                var lastKeyPath = $@"Computer\HKEY_LOCAL_MACHINE\{normalizedPath}";
+
+                using (var regeditKey = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Applets\Regedit"))
+                {
+                    regeditKey?.SetValue("LastKey", lastKeyPath, RegistryValueKind.String);
+                }
+
+                Process.Start(new ProcessStartInfo("regedit.exe") { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                _progressHandler?.Report($"Error opening registry path: {ex.Message}");
             }
         }
     }

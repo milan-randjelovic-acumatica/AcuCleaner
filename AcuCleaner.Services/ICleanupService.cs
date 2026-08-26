@@ -2,7 +2,7 @@
 
 namespace AcuCleaner.Services
 {
-    public interface ICleanupService
+    public interface ICleanupService : IUtilityService
     {
         IEnumerable<IISApp> GetAllApps();
         IEnumerable<IISApp> GetAppsForCleanup(CleanupParameters cleanupParameters);
