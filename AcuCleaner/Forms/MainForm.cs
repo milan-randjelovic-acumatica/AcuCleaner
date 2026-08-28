@@ -181,7 +181,7 @@ namespace AcuCleaner.Forms
             }
         }
 
-        private void DeleteSelectedApps()
+        private async Task DeleteSelectedApps()
         {
             FilterSelectedApps();
 
@@ -213,7 +213,7 @@ namespace AcuCleaner.Forms
 
             try
             {
-                AcuManager.Cleanup();
+                await Task.Run(() => AcuManager.Cleanup());
                 ProgressHandler.Report($"Deleted {AcuManager.CleanupParameters.Apps.Count()} app(s).");
                 RefreshAppList();
             }
@@ -285,9 +285,9 @@ namespace AcuCleaner.Forms
             RefreshAppList();
         }
 
-        private void buttonDeleteSelected_Click(object sender, EventArgs e)
+        private async void buttonDeleteSelected_Click(object sender, EventArgs e)
         {
-            DeleteSelectedApps();
+            await DeleteSelectedApps();
         }
 
         private void buttonDeleteAll_Click(object sender, EventArgs e)

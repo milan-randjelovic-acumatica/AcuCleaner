@@ -114,7 +114,6 @@ namespace AcuCleaner.Services
             {
                 utilityService?.Cleanup(CleanupParameters);
             }
-            ;
 
             iisService?.Start();
         }

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -144,7 +145,7 @@ namespace AcuCleanerVSExtension
             return result == (int)VSConstants.MessageBoxResult.IDYES;
         }
 
-        private void DeleteSelectedApps()
+        private async Task DeleteSelectedAppsAsync()
         {
             FilterSelectedApps();
 
@@ -172,7 +173,7 @@ namespace AcuCleanerVSExtension
 
             try
             {
-                AcuManager.Cleanup();
+                await Task.Run(() => AcuManager.Cleanup());
                 _progressHandler.Report($"Deleted {count} app(s).");
                 RefreshAppList();
             }
@@ -199,15 +200,15 @@ namespace AcuCleanerVSExtension
         private void DatePicker_SelectedDateChanged(object sender,
             SelectionChangedEventArgs e) => RefreshAppList();
 
-        private void ButtonClean_Click(object sender, RoutedEventArgs e)
+        private async void ButtonClean_Click(object sender, RoutedEventArgs e)
         {
-            DeleteSelectedApps();
+            await DeleteSelectedAppsAsync();
         }
 
-        private void ButtonCleanAll_Click(object sender, RoutedEventArgs e)
+        private async void ButtonCleanAll_Click(object sender, RoutedEventArgs e)
         {
             dataGrid.SelectAll();
-            DeleteSelectedApps();
+            await DeleteSelectedAppsAsync();
         }
 
         private void RefreshMenuItem_Click(object sender, RoutedEventArgs e)
@@ -314,7 +315,3 @@ namespace AcuCleanerVSExtension
         }
     }
 }
-
-
-
-
