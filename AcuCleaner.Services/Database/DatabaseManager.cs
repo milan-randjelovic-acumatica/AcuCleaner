@@ -139,7 +139,9 @@ namespace AcuCleaner.Services.Database
                     using (var connection = new SqlConnection(iisApp.DatabaseConnectionString))
                     {
                         connection.Open();
-                        var command = new SqlCommand($"DROP DATABASE [{iisApp.DatabaseName}];", connection);
+                        var command = new SqlCommand(
+                            $"ALTER DATABASE [{iisApp.DatabaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;" +
+                            $"DROP DATABASE [{iisApp.DatabaseName}];", connection);
                         command.ExecuteNonQuery();
                     }
                     _progressHandler?.Report($"Successfully deleted SQL database: {iisApp.DatabaseName}");
