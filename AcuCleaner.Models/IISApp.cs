@@ -13,7 +13,7 @@
         public string DatabaseName { get; set; } = string.Empty;
         public string DatabaseConnectionString { get; set; } = string.Empty;
         public string DatabaseVersion { get; set; } = string.Empty;
-        public string Database => $"{DatabaseName} ({DatabaseVersion})";
+        public string Database => $"{DatabaseName}{(string.IsNullOrEmpty(DatabaseVersion) ? string.Empty : $" ({DatabaseVersion})")}";
         public string RegistryPath { get; set; } = string.Empty;
         public bool Active { get; set; }
         public string Status => Active ? "Active" : "Inactive";

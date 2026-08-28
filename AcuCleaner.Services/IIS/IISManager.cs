@@ -103,25 +103,29 @@ namespace AcuCleaner.Services.IIS
 
         public void Cleanup(CleanupParameters cleanupParameters)
         {
-            if (cleanupParameters.CleanupIISApps)
-            {
-                using (ServerManager serverManager = new ServerManager())
-                {
-                    foreach (var site in serverManager.Sites)
-                    {
-                        var appsToRemove = FindAppsToRemove(site, cleanupParameters.Apps);
-                        int i = 1;
-                        foreach (var app in appsToRemove)
-                        {
-                            _progressHandler?.Report($"Removing IIS entry {i++}/{appsToRemove.Count}: {app.Path}");
-                            site.Applications.Remove(app);
-                            _progressHandler?.Report($"Successfully removed IIS entry: {app.Path}");
-                        }
+            if (!cleanupParameters.CleanupIISApps)
+                return;
 
-                        serverManager.CommitChanges();
+            Stop();
+
+            using (ServerManager serverManager = new ServerManager())
+            {
+                foreach (var site in serverManager.Sites)
+                {
+                    var appsToRemove = FindAppsToRemove(site, cleanupParameters.Apps);
+                    int i = 1;
+                    foreach (var app in appsToRemove)
+                    {
+                        _progressHandler?.Report($"Removing IIS entry {i++}/{appsToRemove.Count}: {app.Path}");
+                        site.Applications.Remove(app);
+                        _progressHandler?.Report($"Successfully removed IIS entry: {app.Path}");
                     }
+
+                    serverManager.CommitChanges();
                 }
             }
+
+            Start();
         }
 
         public List<Application> FindAppsToRemove(Site site, IEnumerable<IISApp> iisApps)

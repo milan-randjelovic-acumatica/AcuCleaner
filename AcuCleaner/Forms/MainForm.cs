@@ -181,7 +181,7 @@ namespace AcuCleaner.Forms
             }
         }
 
-        private async Task DeleteSelectedApps()
+        private async Task DeleteSelectedAppsAsync()
         {
             FilterSelectedApps();
 
@@ -206,8 +206,8 @@ namespace AcuCleaner.Forms
                 return;
             }
 
-            buttonDeleteSelected.Enabled = false;
-            buttonDeleteAll.Enabled = false;
+            groupBoxCleanup.Enabled = false;
+            groupBoxFilter.Enabled = false;
             toolStripProgressBar.Visible = true;
             ProgressHandler.Report($"Deleting {AcuManager.CleanupParameters.Apps.Count()} app(s)...");
 
@@ -224,8 +224,8 @@ namespace AcuCleaner.Forms
             finally
             {
                 toolStripProgressBar.Visible = false;
-                buttonDeleteSelected.Enabled = true;
-                buttonDeleteAll.Enabled = true;
+                groupBoxCleanup.Enabled = true;
+                groupBoxFilter.Enabled = true;
             }
         }
 
@@ -287,14 +287,14 @@ namespace AcuCleaner.Forms
 
         private async void buttonDeleteSelected_Click(object sender, EventArgs e)
         {
-            await DeleteSelectedApps();
+            await DeleteSelectedAppsAsync();
         }
 
         private void buttonDeleteAll_Click(object sender, EventArgs e)
         {
             dataGridView.SelectAll();
 
-            DeleteSelectedApps();
+            DeleteSelectedAppsAsync();
         }
 
         private void filter_CheckedChanged(object sender, EventArgs e)

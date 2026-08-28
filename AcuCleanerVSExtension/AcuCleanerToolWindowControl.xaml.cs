@@ -166,8 +166,8 @@ namespace AcuCleanerVSExtension
                 return;
             }
 
-            buttonClean.IsEnabled = false;
-            buttonCleanAll.IsEnabled = false;
+            groupBoxCleanup.IsEnabled = false;
+            groupBoxFilter.IsEnabled = false;
             progressBar.Visibility = Visibility.Visible;
             _progressHandler.Report($"Deleting {count} app(s)...");
 
@@ -184,8 +184,8 @@ namespace AcuCleanerVSExtension
             finally
             {
                 progressBar.Visibility = Visibility.Collapsed;
-                buttonClean.IsEnabled = true;
-                buttonCleanAll.IsEnabled = true;
+                groupBoxCleanup.IsEnabled = true;
+                groupBoxFilter.IsEnabled = true;
             }
         }
 

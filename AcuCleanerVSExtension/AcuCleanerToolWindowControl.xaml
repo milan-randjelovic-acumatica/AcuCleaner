@@ -160,7 +160,7 @@
 		<Menu DockPanel.Dock="Top"
 			  Background="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}"
 			  Foreground="White">
-			<MenuItem Header="Files">
+			<MenuItem Header="File">
 				<MenuItem Header="Refresh"       InputGestureText="F5"      Click="RefreshMenuItem_Click"/>
 				<MenuItem Header="Exit"          InputGestureText="Alt+F4"  Click="ExitMenuItem_Click"/>
 			</MenuItem>
@@ -357,7 +357,7 @@
 				</Grid.RowDefinitions>
 
 				<!-- Filter GroupBox -->
-				<GroupBox Grid.Row="0" Header="Filter" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+				<GroupBox x:Name="groupBoxFilter" Grid.Row="0" Header="Filter" HorizontalAlignment="Stretch" VerticalAlignment="Top">
 					<StackPanel Margin="4,2,4,4">
 						<TextBlock Text="Older than:" Margin="0,4,0,2"/>
 						<DatePicker x:Name="datePicker"
@@ -403,7 +403,7 @@
 				</GroupBox>
 
 				<!-- Cleanup GroupBox -->
-				<GroupBox Grid.Row="1" Header="Cleanup" Margin="0,8,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				<GroupBox x:Name="groupBoxCleanup" Grid.Row="1" Header="Cleanup" Margin="0,8,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 					<Grid Margin="4,2,4,4">
 						<Grid.RowDefinitions>
 							<RowDefinition Height="*"/>
