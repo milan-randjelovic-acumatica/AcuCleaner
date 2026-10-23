@@ -226,53 +226,100 @@ namespace AcuCleanerVSExtension
             }
         }
 
-        private void ResetPasswordMenuItem_Click(object sender, RoutedEventArgs e)
+        private void ResetPassword(bool showWarning = true)
         {
             FilterSelectedApps();
-            int count = AcuManager.CleanupParameters.Apps.Count();
-            if (ShowConfirmation(
-                $"This action will reset password for {count} selected instance(s). Are you sure you want to continue?",
-                "Confirm Action"))
+
+            if (showWarning)
+            {
+                int count = AcuManager.CleanupParameters.Apps.Count();
+                if (ShowConfirmation(
+                    $"This action will reset password for {count} selected instance(s). Are you sure you want to continue?",
+                    "Confirm Action"))
+                {
+                    AcuManager.DatabaseManager.ResetPassword(AcuManager.CleanupParameters);
+                }
+            }
+            else
             {
                 AcuManager.DatabaseManager.ResetPassword(AcuManager.CleanupParameters);
             }
         }
 
-        private void EnableModernUISwitchMenuItem_Click(object sender, RoutedEventArgs e)
+        private void EnableModernUISwitch(bool showWarning = true)
         {
             FilterSelectedApps();
-            int count = AcuManager.CleanupParameters.Apps.Count();
-            if (ShowConfirmation(
-                $"This action will enable Modern UI switch for {count} selected instance(s). Are you sure you want to continue?",
-                "Confirm Action"))
+
+            if (showWarning)
+            {
+                int count = AcuManager.CleanupParameters.Apps.Count();
+                if (ShowConfirmation(
+                    $"This action will enable Modern UI switch for {count} selected instance(s). Are you sure you want to continue?",
+                    "Confirm Action"))
+                {
+                    AcuManager.WebConfigManager.EnableModernUISwitch(AcuManager.CleanupParameters);
+                }
+            }
+            else
             {
                 AcuManager.WebConfigManager.EnableModernUISwitch(AcuManager.CleanupParameters);
             }
         }
 
-        private void ExtendSessionTimeoutMenuItem_Click(object sender, RoutedEventArgs e)
+        private void ExtendSessionTimeout(bool showWarning = true)
         {
             FilterSelectedApps();
-            int count = AcuManager.CleanupParameters.Apps.Count();
-            if (ShowConfirmation(
-                $"This action will set session timeout to 1 day for {count} selected instance(s). Are you sure you want to continue?",
-                "Confirm Action"))
+
+            if (showWarning)
+            {
+                int count = AcuManager.CleanupParameters.Apps.Count();
+                if (ShowConfirmation(
+                    $"This action will set session timeout to 1 day for {count} selected instance(s). Are you sure you want to continue?",
+                    "Confirm Action"))
+                {
+                    AcuManager.WebConfigManager.ExtendSessionTimeout(AcuManager.CleanupParameters);
+                }
+            }
+            else
             {
                 AcuManager.WebConfigManager.ExtendSessionTimeout(AcuManager.CleanupParameters);
             }
         }
 
+        private void ResetPasswordMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ResetPassword();
+        }
+
+        private void EnableModernUISwitchMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            EnableModernUISwitch();
+        }
+
+        private void ExtendSessionTimeoutMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ExtendSessionTimeout();
+        }
+
         private void ApplyAllPatchesMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            ResetPasswordMenuItem_Click(sender, e);
-            EnableModernUISwitchMenuItem_Click(sender, e);
-            ExtendSessionTimeoutMenuItem_Click(sender, e);
+            FilterSelectedApps();
+
+            int count = AcuManager.CleanupParameters.Apps.Count();
+            if (ShowConfirmation(
+                     $"This action will set session timeout to 1 day for {count} selected instance(s). Are you sure you want to continue?",
+                     "Confirm Action"))
+            {
+                ResetPasswordMenuItem_Click(sender, e);
+                EnableModernUISwitchMenuItem_Click(sender, e);
+                ExtendSessionTimeoutMenuItem_Click(sender, e);
+            }
         }
 
         private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var originalSource = e.OriginalSource as DependencyObject;
-            if(originalSource == null)
+            if (originalSource == null)
                 return;
 
             var cell = FindVisualParent<DataGridCell>(originalSource);

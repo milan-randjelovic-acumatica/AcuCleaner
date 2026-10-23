@@ -324,34 +324,55 @@ namespace AcuCleaner.Forms
             RefreshAppList();
         }
 
-        private void ResetPassword()
+        private void ResetPassword(bool showWarning = true)
         {
             FilterSelectedApps();
 
-            var result = MessageBox.Show($"This action will reset password for {AcuManager.CleanupParameters.Apps.Count()} selected instance(s). Are you sure you want to continue?", "Confirm Action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            if (result == DialogResult.Yes)
+            if (showWarning)
+            {
+                var result = MessageBox.Show($"This action will reset password for {AcuManager.CleanupParameters.Apps.Count()} selected instance(s). Are you sure you want to continue?", "Confirm Action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
+                {
+                    AcuManager.DatabaseManager.ResetPassword(AcuManager.CleanupParameters);
+                }
+            }
+            else
             {
                 AcuManager.DatabaseManager.ResetPassword(AcuManager.CleanupParameters);
             }
         }
 
-        private void EnableModernUISwitch()
+        private void EnableModernUISwitch(bool showWarning = true)
         {
             FilterSelectedApps();
 
-            var result = MessageBox.Show($"This action will enable Modern UI switch for {AcuManager.CleanupParameters.Apps.Count()} selected instance(s). Are you sure you want to continue?", "Confirm Action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            if (result == DialogResult.Yes)
+            if (showWarning)
+            {
+                var result = MessageBox.Show($"This action will enable Modern UI switch for {AcuManager.CleanupParameters.Apps.Count()} selected instance(s). Are you sure you want to continue?", "Confirm Action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
+                {
+                    AcuManager.WebConfigManager.EnableModernUISwitch(AcuManager.CleanupParameters);
+                }
+            }
+            else
             {
                 AcuManager.WebConfigManager.EnableModernUISwitch(AcuManager.CleanupParameters);
             }
         }
 
-        private void SetSessionTimeout()
+        private void SetSessionTimeout(bool showWarning = true)
         {
             FilterSelectedApps();
 
-            var result = MessageBox.Show($"This action will set session timeout to 1 day for {AcuManager.CleanupParameters.Apps.Count()} selected instance(s). Are you sure you want to continue?", "Confirm Action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            if (result == DialogResult.Yes)
+            if (showWarning)
+            {
+                var result = MessageBox.Show($"This action will set session timeout to 1 day for {AcuManager.CleanupParameters.Apps.Count()} selected instance(s). Are you sure you want to continue?", "Confirm Action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
+                {
+                    AcuManager.WebConfigManager.ExtendSessionTimeout(AcuManager.CleanupParameters);
+                }
+            }
+            else
             {
                 AcuManager.WebConfigManager.ExtendSessionTimeout(AcuManager.CleanupParameters);
             }
@@ -374,9 +395,15 @@ namespace AcuCleaner.Forms
 
         private void applyAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ResetPassword();
-            EnableModernUISwitch();
-            SetSessionTimeout();
+            FilterSelectedApps();
+
+            var result = MessageBox.Show($"This action will apply all patches for {AcuManager.CleanupParameters.Apps.Count()} selected instance(s). Are you sure you want to continue?", "Confirm Action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (result == DialogResult.Yes)
+            {
+                ResetPassword(showWarning: false);
+                EnableModernUISwitch(showWarning: false);
+                SetSessionTimeout(showWarning: false);
+            }   
         }
     }
 }
