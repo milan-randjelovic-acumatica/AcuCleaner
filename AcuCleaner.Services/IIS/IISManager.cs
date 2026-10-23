@@ -150,19 +150,19 @@ namespace AcuCleaner.Services.IIS
             return appsToRemove;
         }
 
-        public void OpenInBrowser(IISApp app)
+        public void OpenInBrowser(string url)
         {
             try
             {
                 System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                 {
-                    FileName = app.InstanceUrl,
+                    FileName = url,
                     UseShellExecute = true
                 });
             }
             catch (Exception ex)
             {
-                _progressHandler?.Report($"Failed to open URL {app.InstanceUrl} in browser: {ex.Message}");
+                _progressHandler?.Report($"Failed to open URL {url} in browser: {ex.Message}");
 
             }
         }

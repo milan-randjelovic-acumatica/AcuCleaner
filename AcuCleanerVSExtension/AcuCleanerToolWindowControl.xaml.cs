@@ -287,6 +287,9 @@ namespace AcuCleanerVSExtension
 
             switch (propertyName)
             {
+                case nameof(IISApp.InstanceName):
+                    AcuManager.IISManager.OpenInBrowser(app.InstanceUrl);
+                    break;
                 case nameof(IISApp.Path):
                     AcuManager.FileSystemManager.OpenInExplorer(app.Path);
                     break;

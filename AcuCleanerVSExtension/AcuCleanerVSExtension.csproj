@@ -13,11 +13,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\instance.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="acumatica.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\database.png" />
     <Resource Include="Images\folder.png" />
+    <Resource Include="Images\instance.png" />
     <Resource Include="Images\registry.png" />
     <Resource Include="Images\warning.png" />
   </ItemGroup>

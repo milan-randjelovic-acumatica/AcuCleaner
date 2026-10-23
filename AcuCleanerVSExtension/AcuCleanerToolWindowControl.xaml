@@ -225,7 +225,21 @@
 					</DataGrid.RowStyle>
 					<DataGrid.Columns>
 						<DataGridTextColumn Header="#"                  Binding="{Binding Id}"               Width="45"  IsReadOnly="True"/>
-						<DataGridTextColumn Header="Instance"           Binding="{Binding InstanceName}"     Width="150" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Instance" SortMemberPath="InstanceName">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding InstanceName}" VerticalAlignment="Center" Margin="4,0" TextTrimming="CharacterEllipsis"/>
+                                        <Image Grid.Column="1" Source="/AcuCleanerVSExtension;component/Images/instance.png" Width="16" Height="16" Margin="2,0,4,0" VerticalAlignment="Center"
+											   Visibility="{Binding InstanceName, Converter={StaticResource StringToVisibilityConverter}}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTemplateColumn Header="Status" Width="70" SortMemberPath="Status">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>

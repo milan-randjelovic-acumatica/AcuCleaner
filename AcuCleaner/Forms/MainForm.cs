@@ -96,7 +96,7 @@ namespace AcuCleaner.Forms
 
             if (!string.IsNullOrEmpty(app.InstanceName))
             {
-                PaintCell(e, Instance.Index, app.InstanceName, _instanceImage, () => { AcuManager.IISManager.OpenInBrowser(app); });
+                PaintCell(e, Instance.Index, app.InstanceName, _instanceImage, () => { AcuManager.IISManager.OpenInBrowser(app.InstanceUrl); });
             }
 
             if (!string.IsNullOrEmpty(app.Database))
