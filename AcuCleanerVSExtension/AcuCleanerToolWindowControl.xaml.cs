@@ -262,6 +262,13 @@ namespace AcuCleanerVSExtension
             }
         }
 
+        private void ApplyAllPatchesMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ResetPasswordMenuItem_Click(sender, e);
+            EnableModernUISwitchMenuItem_Click(sender, e);
+            ExtendSessionTimeoutMenuItem_Click(sender, e);
+        }
+
         private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var originalSource = e.OriginalSource as DependencyObject;

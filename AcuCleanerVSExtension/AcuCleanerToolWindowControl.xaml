@@ -165,9 +165,11 @@
 				<MenuItem Header="Exit"          InputGestureText="Alt+F4"  Click="ExitMenuItem_Click"/>
 			</MenuItem>
 			<MenuItem Header="Tools">
-				<MenuItem Header="Reset Password"          InputGestureText="Ctrl+P" Click="ResetPasswordMenuItem_Click"/>
+				<MenuItem Header="Reset Password"          InputGestureText="Ctrl+R" Click="ResetPasswordMenuItem_Click"/>
 				<MenuItem Header="Enable Modern UI Switch" InputGestureText="Ctrl+M" Click="EnableModernUISwitchMenuItem_Click"/>
 				<MenuItem Header="Extend Session Timeout"  InputGestureText="Ctrl+T" Click="ExtendSessionTimeoutMenuItem_Click"/>
+				<Separator/>
+				<MenuItem Header="Apply All Patches"       InputGestureText="Ctrl+P" Click="ApplyAllPatchesMenuItem_Click"/>
 			</MenuItem>
 		</Menu>
 
