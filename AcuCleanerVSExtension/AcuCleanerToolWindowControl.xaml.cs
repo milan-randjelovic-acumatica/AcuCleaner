@@ -310,9 +310,9 @@ namespace AcuCleanerVSExtension
                      $"This action will set session timeout to 1 day for {count} selected instance(s). Are you sure you want to continue?",
                      "Confirm Action"))
             {
-                ResetPasswordMenuItem_Click(sender, e);
-                EnableModernUISwitchMenuItem_Click(sender, e);
-                ExtendSessionTimeoutMenuItem_Click(sender, e);
+                ResetPassword(showWarning: false);
+                EnableModernUISwitch(showWarning: false);
+                ExtendSessionTimeout(showWarning: false);
             }
         }
 
