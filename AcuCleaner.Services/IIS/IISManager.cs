@@ -77,6 +77,7 @@ namespace AcuCleaner.Services.IIS
                         result.Add(new IISApp
                         {
                             InstanceName = instanceName,
+                            InstanceUrl = $"http://localhost/{instanceName}",
                             Path = path.NormalizePath(),
                             RootPath = rootPath.NormalizePath(),
                             AspTempFilesPath = Path.Combine(rootPath, Constants.TemporaryAspFiles, instanceName).NormalizePath(),
@@ -147,6 +148,23 @@ namespace AcuCleaner.Services.IIS
             }
 
             return appsToRemove;
+        }
+
+        public void OpenInBrowser(IISApp app)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = app.InstanceUrl,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                _progressHandler?.Report($"Failed to open URL {app.InstanceUrl} in browser: {ex.Message}");
+
+            }
         }
     }
 }

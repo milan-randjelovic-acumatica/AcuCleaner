@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public string InstanceName { get; set; } = string.Empty;
+        public string InstanceUrl { get; set; } = string.Empty;
         public string Path { get; set; } = string.Empty;
         public string RootPath { get; set; } = string.Empty;
         public string AspTempFilesPath { get; set; } = string.Empty;

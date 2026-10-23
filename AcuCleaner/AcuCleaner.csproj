@@ -18,6 +18,7 @@
   <ItemGroup>
     <None Remove="Images\database.png" />
     <None Remove="Images\folder.png" />
+    <None Remove="Images\instance.png" />
     <None Remove="Images\registry.png" />
   </ItemGroup>
 
@@ -31,13 +32,14 @@
     <EmbeddedResource Include="Images\folder.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Images\instance.png" />
     <EmbeddedResource Include="Images\registry.png" />
     <EmbeddedResource Include="Images\warning.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.1" />
-    <PackageReference Include="Microsoft.Data.SqlClient.SNI.Runtime" Version="7.1.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.3" />
+    <PackageReference Include="Microsoft.Data.SqlClient.SNI.Runtime" Version="6.0.3" />
     <PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
   </ItemGroup>
 

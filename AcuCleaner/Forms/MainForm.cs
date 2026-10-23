@@ -8,6 +8,7 @@ namespace AcuCleaner.Forms
         private static MainForm? _instance;
         private List<IISApp> _allApps = new List<IISApp>();
         protected readonly IProgress<string> ProgressHandler;
+        private readonly Image? _instanceImage;
         private readonly Image? _warningImage;
         private readonly Image? _folderImage;
         private readonly Image? _databaseImage;
@@ -23,6 +24,7 @@ namespace AcuCleaner.Forms
 
             ProgressHandler = new Progress<string>(message => this.toolStripStatusLabel.Text = message);
 
+            _instanceImage = LoadImage("AcuCleaner.Images.instance.png");
             _warningImage = LoadImage("AcuCleaner.Images.warning.png");
             _folderImage = LoadImage("AcuCleaner.Images.folder.png");
             _databaseImage = LoadImage("AcuCleaner.Images.database.png");
@@ -90,6 +92,11 @@ namespace AcuCleaner.Forms
             if (!app.Active)
             {
                 PaintCell(e, Status.Index, app.Status, _warningImage, () => { });
+            }
+
+            if (!string.IsNullOrEmpty(app.InstanceName))
+            {
+                PaintCell(e, Instance.Index, app.InstanceName, _instanceImage, () => { AcuManager.IISManager.OpenInBrowser(app); });
             }
 
             if (!string.IsNullOrEmpty(app.Database))
