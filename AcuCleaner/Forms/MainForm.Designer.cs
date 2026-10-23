@@ -33,6 +33,17 @@ namespace AcuCleaner.Forms
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             dataGridView = new DataGridView();
+            Id = new DataGridViewTextBoxColumn();
+            Instance = new DataGridViewTextBoxColumn();
+            Status = new DataGridViewTextBoxColumn();
+            InstalledOn = new DataGridViewTextBoxColumn();
+            Database = new DataGridViewTextBoxColumn();
+            FilesPath = new DataGridViewTextBoxColumn();
+            AspTempFilesPath = new DataGridViewTextBoxColumn();
+            CustomizationPath = new DataGridViewTextBoxColumn();
+            BackupPath = new DataGridViewTextBoxColumn();
+            SnapshotPath = new DataGridViewTextBoxColumn();
+            RegistryPath = new DataGridViewTextBoxColumn();
             iISAppBindingSource1 = new BindingSource(components);
             iISAppBindingSource = new BindingSource(components);
             buttonDeleteSelected = new Button();
@@ -70,21 +81,10 @@ namespace AcuCleaner.Forms
             exitToolStripMenuItem = new ToolStripMenuItem();
             toolsToolStripMenuItem = new ToolStripMenuItem();
             resetToolStripMenuItem = new ToolStripMenuItem();
-            toolStripSeparator2 = new ToolStripSeparator();
             enableModernUISwitchToolStripMenuItem = new ToolStripMenuItem();
-            toolStripSeparator3 = new ToolStripSeparator();
             setSessionTimeoutToolStripMenuItem = new ToolStripMenuItem();
-            Id = new DataGridViewTextBoxColumn();
-            Instance = new DataGridViewTextBoxColumn();
-            Status = new DataGridViewTextBoxColumn();
-            InstalledOn = new DataGridViewTextBoxColumn();
-            Database = new DataGridViewTextBoxColumn();
-            FilesPath = new DataGridViewTextBoxColumn();
-            AspTempFilesPath = new DataGridViewTextBoxColumn();
-            CustomizationPath = new DataGridViewTextBoxColumn();
-            BackupPath = new DataGridViewTextBoxColumn();
-            SnapshotPath = new DataGridViewTextBoxColumn();
-            RegistryPath = new DataGridViewTextBoxColumn();
+            toolStripSeparator4 = new ToolStripSeparator();
+            applyAllToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource).BeginInit();
@@ -104,434 +104,16 @@ namespace AcuCleaner.Forms
             dataGridView.Columns.AddRange(new DataGridViewColumn[] { Id, Instance, Status, InstalledOn, Database, FilesPath, AspTempFilesPath, CustomizationPath, BackupPath, SnapshotPath, RegistryPath });
             dataGridView.DataSource = iISAppBindingSource1;
             dataGridView.Dock = DockStyle.Fill;
-            dataGridView.Location = new Point(3, 19);
+            dataGridView.Location = new Point(3, 24);
+            dataGridView.Margin = new Padding(3, 4, 3, 4);
             dataGridView.Name = "dataGridView";
             dataGridView.ReadOnly = true;
             dataGridView.RowHeadersWidth = 51;
             dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView.Size = new Size(1009, 577);
+            dataGridView.Size = new Size(1154, 771);
             dataGridView.TabIndex = 2;
             dataGridView.CellMouseDoubleClick += dataGridView_CellMouseDoubleClick;
             dataGridView.CellPainting += dataGridView_CellPainting;
-            // 
-            // iISAppBindingSource1
-            // 
-            iISAppBindingSource1.DataSource = typeof(IISApp);
-            // 
-            // iISAppBindingSource
-            // 
-            iISAppBindingSource.DataSource = typeof(IISApp);
-            // 
-            // buttonDeleteSelected
-            // 
-            buttonDeleteSelected.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonDeleteSelected.Location = new Point(63, 269);
-            buttonDeleteSelected.Name = "buttonDeleteSelected";
-            buttonDeleteSelected.Size = new Size(75, 23);
-            buttonDeleteSelected.TabIndex = 3;
-            buttonDeleteSelected.Text = "Clean";
-            buttonDeleteSelected.UseVisualStyleBackColor = true;
-            buttonDeleteSelected.Click += buttonDeleteSelected_Click;
-            // 
-            // buttonDeleteAll
-            // 
-            buttonDeleteAll.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonDeleteAll.Location = new Point(144, 269);
-            buttonDeleteAll.Name = "buttonDeleteAll";
-            buttonDeleteAll.Size = new Size(75, 23);
-            buttonDeleteAll.TabIndex = 4;
-            buttonDeleteAll.Text = "Clean all";
-            buttonDeleteAll.UseVisualStyleBackColor = true;
-            buttonDeleteAll.Click += buttonDeleteAll_Click;
-            // 
-            // dateTimePicker
-            // 
-            dateTimePicker.Location = new Point(6, 37);
-            dateTimePicker.Name = "dateTimePicker";
-            dateTimePicker.Size = new Size(210, 23);
-            dateTimePicker.TabIndex = 5;
-            dateTimePicker.ValueChanged += dateTimePicker_ValueChanged;
-            // 
-            // labelOlderThan
-            // 
-            labelOlderThan.AutoSize = true;
-            labelOlderThan.Location = new Point(6, 19);
-            labelOlderThan.Name = "labelOlderThan";
-            labelOlderThan.Size = new Size(66, 15);
-            labelOlderThan.TabIndex = 6;
-            labelOlderThan.Text = "Older than:";
-            // 
-            // checkBoxActive
-            // 
-            checkBoxActive.AutoSize = true;
-            checkBoxActive.Checked = true;
-            checkBoxActive.CheckState = CheckState.Checked;
-            checkBoxActive.Location = new Point(6, 66);
-            checkBoxActive.Name = "checkBoxActive";
-            checkBoxActive.Size = new Size(59, 19);
-            checkBoxActive.TabIndex = 7;
-            checkBoxActive.Text = "Active";
-            checkBoxActive.UseVisualStyleBackColor = true;
-            checkBoxActive.CheckedChanged += filter_CheckedChanged;
-            // 
-            // checkBoxJunk
-            // 
-            checkBoxJunk.AutoSize = true;
-            checkBoxJunk.Checked = true;
-            checkBoxJunk.CheckState = CheckState.Checked;
-            checkBoxJunk.Location = new Point(6, 91);
-            checkBoxJunk.Name = "checkBoxJunk";
-            checkBoxJunk.Size = new Size(67, 19);
-            checkBoxJunk.TabIndex = 8;
-            checkBoxJunk.Text = "Inactive";
-            checkBoxJunk.UseVisualStyleBackColor = true;
-            checkBoxJunk.CheckedChanged += filter_CheckedChanged;
-            // 
-            // statusStrip
-            // 
-            statusStrip.ImageScalingSize = new Size(20, 20);
-            statusStrip.Items.AddRange(new ToolStripItem[] { toolStripProgressBar, toolStripStatusLabel });
-            statusStrip.Location = new Point(0, 629);
-            statusStrip.Name = "statusStrip";
-            statusStrip.Size = new Size(1264, 22);
-            statusStrip.TabIndex = 9;
-            statusStrip.Text = "statusStrip1";
-            // 
-            // toolStripProgressBar
-            // 
-            toolStripProgressBar.Alignment = ToolStripItemAlignment.Right;
-            toolStripProgressBar.Name = "toolStripProgressBar";
-            toolStripProgressBar.Size = new Size(100, 16);
-            toolStripProgressBar.Style = ProgressBarStyle.Marquee;
-            // 
-            // toolStripStatusLabel
-            // 
-            toolStripStatusLabel.Name = "toolStripStatusLabel";
-            toolStripStatusLabel.Size = new Size(42, 17);
-            toolStripStatusLabel.Text = "Status:";
-            // 
-            // toolStripWarningLabel
-            // 
-            toolStripWarningLabel.Name = "toolStripWarningLabel";
-            toolStripWarningLabel.Size = new Size(23, 23);
-            // 
-            // groupBoxCleanup
-            // 
-            groupBoxCleanup.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            groupBoxCleanup.Controls.Add(checkBoxCleanupBackups);
-            groupBoxCleanup.Controls.Add(checkBoxCleanupCustomizations);
-            groupBoxCleanup.Controls.Add(checkBoxCleanupSnapshots);
-            groupBoxCleanup.Controls.Add(checkBoxCleanupRegistry);
-            groupBoxCleanup.Controls.Add(checkBoxCleanupDatabases);
-            groupBoxCleanup.Controls.Add(checkBoxCleanupAspTemp);
-            groupBoxCleanup.Controls.Add(checkBoxcleanupIISApps);
-            groupBoxCleanup.Controls.Add(checkBoxCleanupFiles);
-            groupBoxCleanup.Controls.Add(buttonDeleteSelected);
-            groupBoxCleanup.Controls.Add(buttonDeleteAll);
-            groupBoxCleanup.Location = new Point(1033, 328);
-            groupBoxCleanup.Name = "groupBoxCleanup";
-            groupBoxCleanup.Size = new Size(225, 298);
-            groupBoxCleanup.TabIndex = 10;
-            groupBoxCleanup.TabStop = false;
-            groupBoxCleanup.Text = "Cleanup";
-            // 
-            // checkBoxCleanupBackups
-            // 
-            checkBoxCleanupBackups.AutoSize = true;
-            checkBoxCleanupBackups.Checked = true;
-            checkBoxCleanupBackups.CheckState = CheckState.Checked;
-            checkBoxCleanupBackups.Location = new Point(6, 147);
-            checkBoxCleanupBackups.Name = "checkBoxCleanupBackups";
-            checkBoxCleanupBackups.Size = new Size(136, 19);
-            checkBoxCleanupBackups.TabIndex = 19;
-            checkBoxCleanupBackups.Text = "Cleanup Backup files";
-            checkBoxCleanupBackups.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxCleanupCustomizations
-            // 
-            checkBoxCleanupCustomizations.AutoSize = true;
-            checkBoxCleanupCustomizations.Checked = true;
-            checkBoxCleanupCustomizations.CheckState = CheckState.Checked;
-            checkBoxCleanupCustomizations.Location = new Point(6, 122);
-            checkBoxCleanupCustomizations.Name = "checkBoxCleanupCustomizations";
-            checkBoxCleanupCustomizations.Size = new Size(174, 19);
-            checkBoxCleanupCustomizations.TabIndex = 18;
-            checkBoxCleanupCustomizations.Text = "Cleanup Customization files";
-            checkBoxCleanupCustomizations.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxCleanupSnapshots
-            // 
-            checkBoxCleanupSnapshots.AutoSize = true;
-            checkBoxCleanupSnapshots.Checked = true;
-            checkBoxCleanupSnapshots.CheckState = CheckState.Checked;
-            checkBoxCleanupSnapshots.Location = new Point(6, 97);
-            checkBoxCleanupSnapshots.Name = "checkBoxCleanupSnapshots";
-            checkBoxCleanupSnapshots.Size = new Size(146, 19);
-            checkBoxCleanupSnapshots.TabIndex = 17;
-            checkBoxCleanupSnapshots.Text = "Cleanup Snapshot files";
-            checkBoxCleanupSnapshots.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxCleanupRegistry
-            // 
-            checkBoxCleanupRegistry.AutoSize = true;
-            checkBoxCleanupRegistry.Checked = true;
-            checkBoxCleanupRegistry.CheckState = CheckState.Checked;
-            checkBoxCleanupRegistry.Location = new Point(6, 197);
-            checkBoxCleanupRegistry.Name = "checkBoxCleanupRegistry";
-            checkBoxCleanupRegistry.Size = new Size(115, 19);
-            checkBoxCleanupRegistry.TabIndex = 16;
-            checkBoxCleanupRegistry.Text = "Cleanup Registry";
-            checkBoxCleanupRegistry.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxCleanupDatabases
-            // 
-            checkBoxCleanupDatabases.AutoSize = true;
-            checkBoxCleanupDatabases.Checked = true;
-            checkBoxCleanupDatabases.CheckState = CheckState.Checked;
-            checkBoxCleanupDatabases.Location = new Point(6, 172);
-            checkBoxCleanupDatabases.Name = "checkBoxCleanupDatabases";
-            checkBoxCleanupDatabases.Size = new Size(126, 19);
-            checkBoxCleanupDatabases.TabIndex = 15;
-            checkBoxCleanupDatabases.Text = "Cleanup Databases";
-            checkBoxCleanupDatabases.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxCleanupAspTemp
-            // 
-            checkBoxCleanupAspTemp.AutoSize = true;
-            checkBoxCleanupAspTemp.Checked = true;
-            checkBoxCleanupAspTemp.CheckState = CheckState.Checked;
-            checkBoxCleanupAspTemp.Location = new Point(6, 72);
-            checkBoxCleanupAspTemp.Name = "checkBoxCleanupAspTemp";
-            checkBoxCleanupAspTemp.Size = new Size(150, 19);
-            checkBoxCleanupAspTemp.TabIndex = 14;
-            checkBoxCleanupAspTemp.Text = "Cleanup Asp Temp files";
-            checkBoxCleanupAspTemp.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxcleanupIISApps
-            // 
-            checkBoxcleanupIISApps.AutoSize = true;
-            checkBoxcleanupIISApps.Checked = true;
-            checkBoxcleanupIISApps.CheckState = CheckState.Checked;
-            checkBoxcleanupIISApps.Location = new Point(6, 22);
-            checkBoxcleanupIISApps.Name = "checkBoxcleanupIISApps";
-            checkBoxcleanupIISApps.Size = new Size(113, 19);
-            checkBoxcleanupIISApps.TabIndex = 13;
-            checkBoxcleanupIISApps.Text = "Cleanup IIS apps";
-            checkBoxcleanupIISApps.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxCleanupFiles
-            // 
-            checkBoxCleanupFiles.AutoSize = true;
-            checkBoxCleanupFiles.Checked = true;
-            checkBoxCleanupFiles.CheckState = CheckState.Checked;
-            checkBoxCleanupFiles.Location = new Point(6, 47);
-            checkBoxCleanupFiles.Name = "checkBoxCleanupFiles";
-            checkBoxCleanupFiles.Size = new Size(96, 19);
-            checkBoxCleanupFiles.TabIndex = 12;
-            checkBoxCleanupFiles.Text = "Cleanup Files";
-            checkBoxCleanupFiles.UseVisualStyleBackColor = true;
-            // 
-            // groupBoxFilter
-            // 
-            groupBoxFilter.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            groupBoxFilter.Controls.Add(checkBoxRegistry);
-            groupBoxFilter.Controls.Add(checkBoxDatabases);
-            groupBoxFilter.Controls.Add(checkBoxBackups);
-            groupBoxFilter.Controls.Add(checkBoxCustomizations);
-            groupBoxFilter.Controls.Add(checkBoxSnapshots);
-            groupBoxFilter.Controls.Add(checkBoxAspTmpFiles);
-            groupBoxFilter.Controls.Add(checkBoxIISFiles);
-            groupBoxFilter.Controls.Add(dateTimePicker);
-            groupBoxFilter.Controls.Add(labelOlderThan);
-            groupBoxFilter.Controls.Add(checkBoxActive);
-            groupBoxFilter.Controls.Add(checkBoxJunk);
-            groupBoxFilter.Location = new Point(1033, 27);
-            groupBoxFilter.Name = "groupBoxFilter";
-            groupBoxFilter.Size = new Size(225, 295);
-            groupBoxFilter.TabIndex = 11;
-            groupBoxFilter.TabStop = false;
-            groupBoxFilter.Text = "Filter";
-            // 
-            // checkBoxRegistry
-            // 
-            checkBoxRegistry.AutoSize = true;
-            checkBoxRegistry.Checked = true;
-            checkBoxRegistry.CheckState = CheckState.Checked;
-            checkBoxRegistry.Location = new Point(6, 266);
-            checkBoxRegistry.Name = "checkBoxRegistry";
-            checkBoxRegistry.Size = new Size(68, 19);
-            checkBoxRegistry.TabIndex = 17;
-            checkBoxRegistry.Text = "Registry";
-            checkBoxRegistry.UseVisualStyleBackColor = true;
-            checkBoxRegistry.CheckedChanged += filter_CheckedChanged;
-            // 
-            // checkBoxDatabases
-            // 
-            checkBoxDatabases.AutoSize = true;
-            checkBoxDatabases.Checked = true;
-            checkBoxDatabases.CheckState = CheckState.Checked;
-            checkBoxDatabases.Location = new Point(6, 241);
-            checkBoxDatabases.Name = "checkBoxDatabases";
-            checkBoxDatabases.Size = new Size(79, 19);
-            checkBoxDatabases.TabIndex = 16;
-            checkBoxDatabases.Text = "Databases";
-            checkBoxDatabases.UseVisualStyleBackColor = true;
-            checkBoxDatabases.CheckedChanged += filter_CheckedChanged;
-            // 
-            // checkBoxBackups
-            // 
-            checkBoxBackups.AutoSize = true;
-            checkBoxBackups.Checked = true;
-            checkBoxBackups.CheckState = CheckState.Checked;
-            checkBoxBackups.Location = new Point(6, 216);
-            checkBoxBackups.Name = "checkBoxBackups";
-            checkBoxBackups.Size = new Size(89, 19);
-            checkBoxBackups.TabIndex = 15;
-            checkBoxBackups.Text = "Backup files";
-            checkBoxBackups.UseVisualStyleBackColor = true;
-            checkBoxBackups.CheckedChanged += filter_CheckedChanged;
-            // 
-            // checkBoxCustomizations
-            // 
-            checkBoxCustomizations.AutoSize = true;
-            checkBoxCustomizations.Checked = true;
-            checkBoxCustomizations.CheckState = CheckState.Checked;
-            checkBoxCustomizations.Location = new Point(6, 191);
-            checkBoxCustomizations.Name = "checkBoxCustomizations";
-            checkBoxCustomizations.Size = new Size(127, 19);
-            checkBoxCustomizations.TabIndex = 14;
-            checkBoxCustomizations.Text = "Customization files";
-            checkBoxCustomizations.UseVisualStyleBackColor = true;
-            checkBoxCustomizations.CheckedChanged += filter_CheckedChanged;
-            // 
-            // checkBoxSnapshots
-            // 
-            checkBoxSnapshots.AutoSize = true;
-            checkBoxSnapshots.Checked = true;
-            checkBoxSnapshots.CheckState = CheckState.Checked;
-            checkBoxSnapshots.Location = new Point(6, 166);
-            checkBoxSnapshots.Name = "checkBoxSnapshots";
-            checkBoxSnapshots.Size = new Size(99, 19);
-            checkBoxSnapshots.TabIndex = 13;
-            checkBoxSnapshots.Text = "Snapshot files";
-            checkBoxSnapshots.UseVisualStyleBackColor = true;
-            checkBoxSnapshots.CheckedChanged += filter_CheckedChanged;
-            // 
-            // checkBoxAspTmpFiles
-            // 
-            checkBoxAspTmpFiles.AutoSize = true;
-            checkBoxAspTmpFiles.Checked = true;
-            checkBoxAspTmpFiles.CheckState = CheckState.Checked;
-            checkBoxAspTmpFiles.Location = new Point(6, 141);
-            checkBoxAspTmpFiles.Name = "checkBoxAspTmpFiles";
-            checkBoxAspTmpFiles.Size = new Size(105, 19);
-            checkBoxAspTmpFiles.TabIndex = 12;
-            checkBoxAspTmpFiles.Text = "Asp Temp Files";
-            checkBoxAspTmpFiles.UseVisualStyleBackColor = true;
-            checkBoxAspTmpFiles.CheckedChanged += filter_CheckedChanged;
-            // 
-            // checkBoxIISFiles
-            // 
-            checkBoxIISFiles.AutoSize = true;
-            checkBoxIISFiles.Checked = true;
-            checkBoxIISFiles.CheckState = CheckState.Checked;
-            checkBoxIISFiles.Location = new Point(6, 116);
-            checkBoxIISFiles.Name = "checkBoxIISFiles";
-            checkBoxIISFiles.Size = new Size(49, 19);
-            checkBoxIISFiles.TabIndex = 11;
-            checkBoxIISFiles.Text = "Files";
-            checkBoxIISFiles.UseVisualStyleBackColor = true;
-            checkBoxIISFiles.CheckedChanged += filter_CheckedChanged;
-            // 
-            // groupBoxInstances
-            // 
-            groupBoxInstances.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            groupBoxInstances.Controls.Add(dataGridView);
-            groupBoxInstances.Location = new Point(12, 27);
-            groupBoxInstances.Name = "groupBoxInstances";
-            groupBoxInstances.Size = new Size(1015, 599);
-            groupBoxInstances.TabIndex = 12;
-            groupBoxInstances.TabStop = false;
-            groupBoxInstances.Text = "Instances";
-            // 
-            // menuStrip
-            // 
-            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, toolsToolStripMenuItem });
-            menuStrip.Location = new Point(0, 0);
-            menuStrip.Name = "menuStrip";
-            menuStrip.Size = new Size(1264, 24);
-            menuStrip.TabIndex = 13;
-            menuStrip.Text = "menuStrip1";
-            // 
-            // fileToolStripMenuItem
-            // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { refreshToolStripMenuItem, toolStripSeparator1, exitToolStripMenuItem });
-            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            fileToolStripMenuItem.Size = new Size(37, 20);
-            fileToolStripMenuItem.Text = "File";
-            // 
-            // refreshToolStripMenuItem
-            // 
-            refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            refreshToolStripMenuItem.ShortcutKeys = Keys.F5;
-            refreshToolStripMenuItem.Size = new Size(134, 22);
-            refreshToolStripMenuItem.Text = "Refresh";
-            refreshToolStripMenuItem.Click += refreshToolStripMenuItem_Click;
-            // 
-            // toolStripSeparator1
-            // 
-            toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(131, 6);
-            // 
-            // exitToolStripMenuItem
-            // 
-            exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.ShortcutKeyDisplayString = "";
-            exitToolStripMenuItem.ShortcutKeys = Keys.Alt | Keys.F4;
-            exitToolStripMenuItem.Size = new Size(134, 22);
-            exitToolStripMenuItem.Text = "Exit";
-            exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
-            // 
-            // toolsToolStripMenuItem
-            // 
-            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { resetToolStripMenuItem, toolStripSeparator2, enableModernUISwitchToolStripMenuItem, toolStripSeparator3, setSessionTimeoutToolStripMenuItem });
-            toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            toolsToolStripMenuItem.Size = new Size(47, 20);
-            toolsToolStripMenuItem.Text = "Tools";
-            // 
-            // resetToolStripMenuItem
-            // 
-            resetToolStripMenuItem.Name = "resetToolStripMenuItem";
-            resetToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.P;
-            resetToolStripMenuItem.Size = new Size(251, 22);
-            resetToolStripMenuItem.Text = "Reset Password";
-            resetToolStripMenuItem.Click += resetToolStripMenuItem_Click;
-            // 
-            // toolStripSeparator2
-            // 
-            toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(248, 6);
-            // 
-            // enableModernUISwitchToolStripMenuItem
-            // 
-            enableModernUISwitchToolStripMenuItem.Name = "enableModernUISwitchToolStripMenuItem";
-            enableModernUISwitchToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.M;
-            enableModernUISwitchToolStripMenuItem.Size = new Size(251, 22);
-            enableModernUISwitchToolStripMenuItem.Text = "Enable Modern UI Switch";
-            enableModernUISwitchToolStripMenuItem.Click += enableModernUISwitchToolStripMenuItem_Click;
-            // 
-            // toolStripSeparator3
-            // 
-            toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new Size(248, 6);
-            // 
-            // setSessionTimeoutToolStripMenuItem
-            // 
-            setSessionTimeoutToolStripMenuItem.Name = "setSessionTimeoutToolStripMenuItem";
-            setSessionTimeoutToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.T;
-            setSessionTimeoutToolStripMenuItem.Size = new Size(251, 22);
-            setSessionTimeoutToolStripMenuItem.Text = "Extend Session Timeout";
-            setSessionTimeoutToolStripMenuItem.Click += setSessionTimeoutToolStripMenuItem_Click;
             // 
             // Id
             // 
@@ -556,6 +138,7 @@ namespace AcuCleaner.Forms
             Status.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             Status.DataPropertyName = "Status";
             Status.HeaderText = "Status";
+            Status.MinimumWidth = 6;
             Status.Name = "Status";
             Status.ReadOnly = true;
             // 
@@ -573,6 +156,7 @@ namespace AcuCleaner.Forms
             Database.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             Database.DataPropertyName = "Database";
             Database.HeaderText = "Database";
+            Database.MinimumWidth = 6;
             Database.Name = "Database";
             Database.ReadOnly = true;
             // 
@@ -590,6 +174,7 @@ namespace AcuCleaner.Forms
             AspTempFilesPath.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             AspTempFilesPath.DataPropertyName = "AspTempFilesPath";
             AspTempFilesPath.HeaderText = "AspTempFiles Path";
+            AspTempFilesPath.MinimumWidth = 6;
             AspTempFilesPath.Name = "AspTempFilesPath";
             AspTempFilesPath.ReadOnly = true;
             // 
@@ -598,6 +183,7 @@ namespace AcuCleaner.Forms
             CustomizationPath.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             CustomizationPath.DataPropertyName = "CustomizationPath";
             CustomizationPath.HeaderText = "Customization Path";
+            CustomizationPath.MinimumWidth = 6;
             CustomizationPath.Name = "CustomizationPath";
             CustomizationPath.ReadOnly = true;
             // 
@@ -606,6 +192,7 @@ namespace AcuCleaner.Forms
             BackupPath.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             BackupPath.DataPropertyName = "BackupPath";
             BackupPath.HeaderText = "BackupPath";
+            BackupPath.MinimumWidth = 6;
             BackupPath.Name = "BackupPath";
             BackupPath.ReadOnly = true;
             // 
@@ -614,6 +201,7 @@ namespace AcuCleaner.Forms
             SnapshotPath.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             SnapshotPath.DataPropertyName = "SnapshotPath";
             SnapshotPath.HeaderText = "Snapshot Path";
+            SnapshotPath.MinimumWidth = 6;
             SnapshotPath.Name = "SnapshotPath";
             SnapshotPath.ReadOnly = true;
             // 
@@ -626,12 +214,463 @@ namespace AcuCleaner.Forms
             RegistryPath.Name = "RegistryPath";
             RegistryPath.ReadOnly = true;
             // 
+            // iISAppBindingSource1
+            // 
+            iISAppBindingSource1.DataSource = typeof(IISApp);
+            // 
+            // iISAppBindingSource
+            // 
+            iISAppBindingSource.DataSource = typeof(IISApp);
+            // 
+            // buttonDeleteSelected
+            // 
+            buttonDeleteSelected.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            buttonDeleteSelected.Location = new Point(72, 359);
+            buttonDeleteSelected.Margin = new Padding(3, 4, 3, 4);
+            buttonDeleteSelected.Name = "buttonDeleteSelected";
+            buttonDeleteSelected.Size = new Size(86, 31);
+            buttonDeleteSelected.TabIndex = 3;
+            buttonDeleteSelected.Text = "Clean";
+            buttonDeleteSelected.UseVisualStyleBackColor = true;
+            buttonDeleteSelected.Click += buttonDeleteSelected_Click;
+            // 
+            // buttonDeleteAll
+            // 
+            buttonDeleteAll.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            buttonDeleteAll.Location = new Point(165, 359);
+            buttonDeleteAll.Margin = new Padding(3, 4, 3, 4);
+            buttonDeleteAll.Name = "buttonDeleteAll";
+            buttonDeleteAll.Size = new Size(86, 31);
+            buttonDeleteAll.TabIndex = 4;
+            buttonDeleteAll.Text = "Clean all";
+            buttonDeleteAll.UseVisualStyleBackColor = true;
+            buttonDeleteAll.Click += buttonDeleteAll_Click;
+            // 
+            // dateTimePicker
+            // 
+            dateTimePicker.Location = new Point(7, 49);
+            dateTimePicker.Margin = new Padding(3, 4, 3, 4);
+            dateTimePicker.Name = "dateTimePicker";
+            dateTimePicker.Size = new Size(239, 27);
+            dateTimePicker.TabIndex = 5;
+            dateTimePicker.ValueChanged += dateTimePicker_ValueChanged;
+            // 
+            // labelOlderThan
+            // 
+            labelOlderThan.AutoSize = true;
+            labelOlderThan.Location = new Point(7, 25);
+            labelOlderThan.Name = "labelOlderThan";
+            labelOlderThan.Size = new Size(82, 20);
+            labelOlderThan.TabIndex = 6;
+            labelOlderThan.Text = "Older than:";
+            // 
+            // checkBoxActive
+            // 
+            checkBoxActive.AutoSize = true;
+            checkBoxActive.Checked = true;
+            checkBoxActive.CheckState = CheckState.Checked;
+            checkBoxActive.Location = new Point(7, 88);
+            checkBoxActive.Margin = new Padding(3, 4, 3, 4);
+            checkBoxActive.Name = "checkBoxActive";
+            checkBoxActive.Size = new Size(72, 24);
+            checkBoxActive.TabIndex = 7;
+            checkBoxActive.Text = "Active";
+            checkBoxActive.UseVisualStyleBackColor = true;
+            checkBoxActive.CheckedChanged += filter_CheckedChanged;
+            // 
+            // checkBoxJunk
+            // 
+            checkBoxJunk.AutoSize = true;
+            checkBoxJunk.Checked = true;
+            checkBoxJunk.CheckState = CheckState.Checked;
+            checkBoxJunk.Location = new Point(7, 121);
+            checkBoxJunk.Margin = new Padding(3, 4, 3, 4);
+            checkBoxJunk.Name = "checkBoxJunk";
+            checkBoxJunk.Size = new Size(82, 24);
+            checkBoxJunk.TabIndex = 8;
+            checkBoxJunk.Text = "Inactive";
+            checkBoxJunk.UseVisualStyleBackColor = true;
+            checkBoxJunk.CheckedChanged += filter_CheckedChanged;
+            // 
+            // statusStrip
+            // 
+            statusStrip.ImageScalingSize = new Size(20, 20);
+            statusStrip.Items.AddRange(new ToolStripItem[] { toolStripProgressBar, toolStripStatusLabel });
+            statusStrip.Location = new Point(0, 841);
+            statusStrip.Name = "statusStrip";
+            statusStrip.Padding = new Padding(1, 0, 16, 0);
+            statusStrip.Size = new Size(1445, 27);
+            statusStrip.TabIndex = 9;
+            statusStrip.Text = "statusStrip1";
+            // 
+            // toolStripProgressBar
+            // 
+            toolStripProgressBar.Alignment = ToolStripItemAlignment.Right;
+            toolStripProgressBar.Name = "toolStripProgressBar";
+            toolStripProgressBar.Size = new Size(114, 19);
+            toolStripProgressBar.Style = ProgressBarStyle.Marquee;
+            // 
+            // toolStripStatusLabel
+            // 
+            toolStripStatusLabel.Name = "toolStripStatusLabel";
+            toolStripStatusLabel.Size = new Size(52, 21);
+            toolStripStatusLabel.Text = "Status:";
+            // 
+            // toolStripWarningLabel
+            // 
+            toolStripWarningLabel.Name = "toolStripWarningLabel";
+            toolStripWarningLabel.Size = new Size(23, 23);
+            // 
+            // groupBoxCleanup
+            // 
+            groupBoxCleanup.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            groupBoxCleanup.Controls.Add(checkBoxCleanupBackups);
+            groupBoxCleanup.Controls.Add(checkBoxCleanupCustomizations);
+            groupBoxCleanup.Controls.Add(checkBoxCleanupSnapshots);
+            groupBoxCleanup.Controls.Add(checkBoxCleanupRegistry);
+            groupBoxCleanup.Controls.Add(checkBoxCleanupDatabases);
+            groupBoxCleanup.Controls.Add(checkBoxCleanupAspTemp);
+            groupBoxCleanup.Controls.Add(checkBoxcleanupIISApps);
+            groupBoxCleanup.Controls.Add(checkBoxCleanupFiles);
+            groupBoxCleanup.Controls.Add(buttonDeleteSelected);
+            groupBoxCleanup.Controls.Add(buttonDeleteAll);
+            groupBoxCleanup.Location = new Point(1181, 437);
+            groupBoxCleanup.Margin = new Padding(3, 4, 3, 4);
+            groupBoxCleanup.Name = "groupBoxCleanup";
+            groupBoxCleanup.Padding = new Padding(3, 4, 3, 4);
+            groupBoxCleanup.Size = new Size(257, 397);
+            groupBoxCleanup.TabIndex = 10;
+            groupBoxCleanup.TabStop = false;
+            groupBoxCleanup.Text = "Cleanup";
+            // 
+            // checkBoxCleanupBackups
+            // 
+            checkBoxCleanupBackups.AutoSize = true;
+            checkBoxCleanupBackups.Checked = true;
+            checkBoxCleanupBackups.CheckState = CheckState.Checked;
+            checkBoxCleanupBackups.Location = new Point(7, 196);
+            checkBoxCleanupBackups.Margin = new Padding(3, 4, 3, 4);
+            checkBoxCleanupBackups.Name = "checkBoxCleanupBackups";
+            checkBoxCleanupBackups.Size = new Size(168, 24);
+            checkBoxCleanupBackups.TabIndex = 19;
+            checkBoxCleanupBackups.Text = "Cleanup Backup files";
+            checkBoxCleanupBackups.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxCleanupCustomizations
+            // 
+            checkBoxCleanupCustomizations.AutoSize = true;
+            checkBoxCleanupCustomizations.Checked = true;
+            checkBoxCleanupCustomizations.CheckState = CheckState.Checked;
+            checkBoxCleanupCustomizations.Location = new Point(7, 163);
+            checkBoxCleanupCustomizations.Margin = new Padding(3, 4, 3, 4);
+            checkBoxCleanupCustomizations.Name = "checkBoxCleanupCustomizations";
+            checkBoxCleanupCustomizations.Size = new Size(215, 24);
+            checkBoxCleanupCustomizations.TabIndex = 18;
+            checkBoxCleanupCustomizations.Text = "Cleanup Customization files";
+            checkBoxCleanupCustomizations.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxCleanupSnapshots
+            // 
+            checkBoxCleanupSnapshots.AutoSize = true;
+            checkBoxCleanupSnapshots.Checked = true;
+            checkBoxCleanupSnapshots.CheckState = CheckState.Checked;
+            checkBoxCleanupSnapshots.Location = new Point(7, 129);
+            checkBoxCleanupSnapshots.Margin = new Padding(3, 4, 3, 4);
+            checkBoxCleanupSnapshots.Name = "checkBoxCleanupSnapshots";
+            checkBoxCleanupSnapshots.Size = new Size(181, 24);
+            checkBoxCleanupSnapshots.TabIndex = 17;
+            checkBoxCleanupSnapshots.Text = "Cleanup Snapshot files";
+            checkBoxCleanupSnapshots.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxCleanupRegistry
+            // 
+            checkBoxCleanupRegistry.AutoSize = true;
+            checkBoxCleanupRegistry.Checked = true;
+            checkBoxCleanupRegistry.CheckState = CheckState.Checked;
+            checkBoxCleanupRegistry.Location = new Point(7, 263);
+            checkBoxCleanupRegistry.Margin = new Padding(3, 4, 3, 4);
+            checkBoxCleanupRegistry.Name = "checkBoxCleanupRegistry";
+            checkBoxCleanupRegistry.Size = new Size(142, 24);
+            checkBoxCleanupRegistry.TabIndex = 16;
+            checkBoxCleanupRegistry.Text = "Cleanup Registry";
+            checkBoxCleanupRegistry.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxCleanupDatabases
+            // 
+            checkBoxCleanupDatabases.AutoSize = true;
+            checkBoxCleanupDatabases.Checked = true;
+            checkBoxCleanupDatabases.CheckState = CheckState.Checked;
+            checkBoxCleanupDatabases.Location = new Point(7, 229);
+            checkBoxCleanupDatabases.Margin = new Padding(3, 4, 3, 4);
+            checkBoxCleanupDatabases.Name = "checkBoxCleanupDatabases";
+            checkBoxCleanupDatabases.Size = new Size(158, 24);
+            checkBoxCleanupDatabases.TabIndex = 15;
+            checkBoxCleanupDatabases.Text = "Cleanup Databases";
+            checkBoxCleanupDatabases.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxCleanupAspTemp
+            // 
+            checkBoxCleanupAspTemp.AutoSize = true;
+            checkBoxCleanupAspTemp.Checked = true;
+            checkBoxCleanupAspTemp.CheckState = CheckState.Checked;
+            checkBoxCleanupAspTemp.Location = new Point(7, 96);
+            checkBoxCleanupAspTemp.Margin = new Padding(3, 4, 3, 4);
+            checkBoxCleanupAspTemp.Name = "checkBoxCleanupAspTemp";
+            checkBoxCleanupAspTemp.Size = new Size(186, 24);
+            checkBoxCleanupAspTemp.TabIndex = 14;
+            checkBoxCleanupAspTemp.Text = "Cleanup Asp Temp files";
+            checkBoxCleanupAspTemp.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxcleanupIISApps
+            // 
+            checkBoxcleanupIISApps.AutoSize = true;
+            checkBoxcleanupIISApps.Checked = true;
+            checkBoxcleanupIISApps.CheckState = CheckState.Checked;
+            checkBoxcleanupIISApps.Location = new Point(7, 29);
+            checkBoxcleanupIISApps.Margin = new Padding(3, 4, 3, 4);
+            checkBoxcleanupIISApps.Name = "checkBoxcleanupIISApps";
+            checkBoxcleanupIISApps.Size = new Size(141, 24);
+            checkBoxcleanupIISApps.TabIndex = 13;
+            checkBoxcleanupIISApps.Text = "Cleanup IIS apps";
+            checkBoxcleanupIISApps.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxCleanupFiles
+            // 
+            checkBoxCleanupFiles.AutoSize = true;
+            checkBoxCleanupFiles.Checked = true;
+            checkBoxCleanupFiles.CheckState = CheckState.Checked;
+            checkBoxCleanupFiles.Location = new Point(7, 63);
+            checkBoxCleanupFiles.Margin = new Padding(3, 4, 3, 4);
+            checkBoxCleanupFiles.Name = "checkBoxCleanupFiles";
+            checkBoxCleanupFiles.Size = new Size(118, 24);
+            checkBoxCleanupFiles.TabIndex = 12;
+            checkBoxCleanupFiles.Text = "Cleanup Files";
+            checkBoxCleanupFiles.UseVisualStyleBackColor = true;
+            // 
+            // groupBoxFilter
+            // 
+            groupBoxFilter.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            groupBoxFilter.Controls.Add(checkBoxRegistry);
+            groupBoxFilter.Controls.Add(checkBoxDatabases);
+            groupBoxFilter.Controls.Add(checkBoxBackups);
+            groupBoxFilter.Controls.Add(checkBoxCustomizations);
+            groupBoxFilter.Controls.Add(checkBoxSnapshots);
+            groupBoxFilter.Controls.Add(checkBoxAspTmpFiles);
+            groupBoxFilter.Controls.Add(checkBoxIISFiles);
+            groupBoxFilter.Controls.Add(dateTimePicker);
+            groupBoxFilter.Controls.Add(labelOlderThan);
+            groupBoxFilter.Controls.Add(checkBoxActive);
+            groupBoxFilter.Controls.Add(checkBoxJunk);
+            groupBoxFilter.Location = new Point(1181, 36);
+            groupBoxFilter.Margin = new Padding(3, 4, 3, 4);
+            groupBoxFilter.Name = "groupBoxFilter";
+            groupBoxFilter.Padding = new Padding(3, 4, 3, 4);
+            groupBoxFilter.Size = new Size(257, 393);
+            groupBoxFilter.TabIndex = 11;
+            groupBoxFilter.TabStop = false;
+            groupBoxFilter.Text = "Filter";
+            // 
+            // checkBoxRegistry
+            // 
+            checkBoxRegistry.AutoSize = true;
+            checkBoxRegistry.Checked = true;
+            checkBoxRegistry.CheckState = CheckState.Checked;
+            checkBoxRegistry.Location = new Point(7, 355);
+            checkBoxRegistry.Margin = new Padding(3, 4, 3, 4);
+            checkBoxRegistry.Name = "checkBoxRegistry";
+            checkBoxRegistry.Size = new Size(84, 24);
+            checkBoxRegistry.TabIndex = 17;
+            checkBoxRegistry.Text = "Registry";
+            checkBoxRegistry.UseVisualStyleBackColor = true;
+            checkBoxRegistry.CheckedChanged += filter_CheckedChanged;
+            // 
+            // checkBoxDatabases
+            // 
+            checkBoxDatabases.AutoSize = true;
+            checkBoxDatabases.Checked = true;
+            checkBoxDatabases.CheckState = CheckState.Checked;
+            checkBoxDatabases.Location = new Point(7, 321);
+            checkBoxDatabases.Margin = new Padding(3, 4, 3, 4);
+            checkBoxDatabases.Name = "checkBoxDatabases";
+            checkBoxDatabases.Size = new Size(100, 24);
+            checkBoxDatabases.TabIndex = 16;
+            checkBoxDatabases.Text = "Databases";
+            checkBoxDatabases.UseVisualStyleBackColor = true;
+            checkBoxDatabases.CheckedChanged += filter_CheckedChanged;
+            // 
+            // checkBoxBackups
+            // 
+            checkBoxBackups.AutoSize = true;
+            checkBoxBackups.Checked = true;
+            checkBoxBackups.CheckState = CheckState.Checked;
+            checkBoxBackups.Location = new Point(7, 288);
+            checkBoxBackups.Margin = new Padding(3, 4, 3, 4);
+            checkBoxBackups.Name = "checkBoxBackups";
+            checkBoxBackups.Size = new Size(110, 24);
+            checkBoxBackups.TabIndex = 15;
+            checkBoxBackups.Text = "Backup files";
+            checkBoxBackups.UseVisualStyleBackColor = true;
+            checkBoxBackups.CheckedChanged += filter_CheckedChanged;
+            // 
+            // checkBoxCustomizations
+            // 
+            checkBoxCustomizations.AutoSize = true;
+            checkBoxCustomizations.Checked = true;
+            checkBoxCustomizations.CheckState = CheckState.Checked;
+            checkBoxCustomizations.Location = new Point(7, 255);
+            checkBoxCustomizations.Margin = new Padding(3, 4, 3, 4);
+            checkBoxCustomizations.Name = "checkBoxCustomizations";
+            checkBoxCustomizations.Size = new Size(157, 24);
+            checkBoxCustomizations.TabIndex = 14;
+            checkBoxCustomizations.Text = "Customization files";
+            checkBoxCustomizations.UseVisualStyleBackColor = true;
+            checkBoxCustomizations.CheckedChanged += filter_CheckedChanged;
+            // 
+            // checkBoxSnapshots
+            // 
+            checkBoxSnapshots.AutoSize = true;
+            checkBoxSnapshots.Checked = true;
+            checkBoxSnapshots.CheckState = CheckState.Checked;
+            checkBoxSnapshots.Location = new Point(7, 221);
+            checkBoxSnapshots.Margin = new Padding(3, 4, 3, 4);
+            checkBoxSnapshots.Name = "checkBoxSnapshots";
+            checkBoxSnapshots.Size = new Size(123, 24);
+            checkBoxSnapshots.TabIndex = 13;
+            checkBoxSnapshots.Text = "Snapshot files";
+            checkBoxSnapshots.UseVisualStyleBackColor = true;
+            checkBoxSnapshots.CheckedChanged += filter_CheckedChanged;
+            // 
+            // checkBoxAspTmpFiles
+            // 
+            checkBoxAspTmpFiles.AutoSize = true;
+            checkBoxAspTmpFiles.Checked = true;
+            checkBoxAspTmpFiles.CheckState = CheckState.Checked;
+            checkBoxAspTmpFiles.Location = new Point(7, 188);
+            checkBoxAspTmpFiles.Margin = new Padding(3, 4, 3, 4);
+            checkBoxAspTmpFiles.Name = "checkBoxAspTmpFiles";
+            checkBoxAspTmpFiles.Size = new Size(130, 24);
+            checkBoxAspTmpFiles.TabIndex = 12;
+            checkBoxAspTmpFiles.Text = "Asp Temp Files";
+            checkBoxAspTmpFiles.UseVisualStyleBackColor = true;
+            checkBoxAspTmpFiles.CheckedChanged += filter_CheckedChanged;
+            // 
+            // checkBoxIISFiles
+            // 
+            checkBoxIISFiles.AutoSize = true;
+            checkBoxIISFiles.Checked = true;
+            checkBoxIISFiles.CheckState = CheckState.Checked;
+            checkBoxIISFiles.Location = new Point(7, 155);
+            checkBoxIISFiles.Margin = new Padding(3, 4, 3, 4);
+            checkBoxIISFiles.Name = "checkBoxIISFiles";
+            checkBoxIISFiles.Size = new Size(60, 24);
+            checkBoxIISFiles.TabIndex = 11;
+            checkBoxIISFiles.Text = "Files";
+            checkBoxIISFiles.UseVisualStyleBackColor = true;
+            checkBoxIISFiles.CheckedChanged += filter_CheckedChanged;
+            // 
+            // groupBoxInstances
+            // 
+            groupBoxInstances.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            groupBoxInstances.Controls.Add(dataGridView);
+            groupBoxInstances.Location = new Point(14, 36);
+            groupBoxInstances.Margin = new Padding(3, 4, 3, 4);
+            groupBoxInstances.Name = "groupBoxInstances";
+            groupBoxInstances.Padding = new Padding(3, 4, 3, 4);
+            groupBoxInstances.Size = new Size(1160, 799);
+            groupBoxInstances.TabIndex = 12;
+            groupBoxInstances.TabStop = false;
+            groupBoxInstances.Text = "Instances";
+            // 
+            // menuStrip
+            // 
+            menuStrip.ImageScalingSize = new Size(20, 20);
+            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, toolsToolStripMenuItem });
+            menuStrip.Location = new Point(0, 0);
+            menuStrip.Name = "menuStrip";
+            menuStrip.Padding = new Padding(7, 3, 0, 3);
+            menuStrip.Size = new Size(1445, 30);
+            menuStrip.TabIndex = 13;
+            menuStrip.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { refreshToolStripMenuItem, toolStripSeparator1, exitToolStripMenuItem });
+            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            fileToolStripMenuItem.Size = new Size(46, 24);
+            fileToolStripMenuItem.Text = "File";
+            // 
+            // refreshToolStripMenuItem
+            // 
+            refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
+            refreshToolStripMenuItem.ShortcutKeys = Keys.F5;
+            refreshToolStripMenuItem.Size = new Size(169, 26);
+            refreshToolStripMenuItem.Text = "Refresh";
+            refreshToolStripMenuItem.Click += refreshToolStripMenuItem_Click;
+            // 
+            // toolStripSeparator1
+            // 
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(166, 6);
+            // 
+            // exitToolStripMenuItem
+            // 
+            exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            exitToolStripMenuItem.ShortcutKeyDisplayString = "";
+            exitToolStripMenuItem.ShortcutKeys = Keys.Alt | Keys.F4;
+            exitToolStripMenuItem.Size = new Size(169, 26);
+            exitToolStripMenuItem.Text = "Exit";
+            exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
+            // 
+            // toolsToolStripMenuItem
+            // 
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { resetToolStripMenuItem, enableModernUISwitchToolStripMenuItem, setSessionTimeoutToolStripMenuItem, toolStripSeparator4, applyAllToolStripMenuItem });
+            toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            toolsToolStripMenuItem.Size = new Size(58, 24);
+            toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // resetToolStripMenuItem
+            // 
+            resetToolStripMenuItem.Name = "resetToolStripMenuItem";
+            resetToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.R;
+            resetToolStripMenuItem.Size = new Size(313, 26);
+            resetToolStripMenuItem.Text = "Reset Password";
+            resetToolStripMenuItem.Click += resetToolStripMenuItem_Click;
+            // 
+            // enableModernUISwitchToolStripMenuItem
+            // 
+            enableModernUISwitchToolStripMenuItem.Name = "enableModernUISwitchToolStripMenuItem";
+            enableModernUISwitchToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.M;
+            enableModernUISwitchToolStripMenuItem.Size = new Size(313, 26);
+            enableModernUISwitchToolStripMenuItem.Text = "Enable Modern UI Switch";
+            enableModernUISwitchToolStripMenuItem.Click += enableModernUISwitchToolStripMenuItem_Click;
+            // 
+            // setSessionTimeoutToolStripMenuItem
+            // 
+            setSessionTimeoutToolStripMenuItem.Name = "setSessionTimeoutToolStripMenuItem";
+            setSessionTimeoutToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.T;
+            setSessionTimeoutToolStripMenuItem.Size = new Size(313, 26);
+            setSessionTimeoutToolStripMenuItem.Text = "Extend Session Timeout";
+            setSessionTimeoutToolStripMenuItem.Click += setSessionTimeoutToolStripMenuItem_Click;
+            // 
+            // toolStripSeparator4
+            // 
+            toolStripSeparator4.Name = "toolStripSeparator4";
+            toolStripSeparator4.Size = new Size(310, 6);
+            // 
+            // applyAllToolStripMenuItem
+            // 
+            applyAllToolStripMenuItem.Name = "applyAllToolStripMenuItem";
+            applyAllToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.A;
+            applyAllToolStripMenuItem.Size = new Size(313, 26);
+            applyAllToolStripMenuItem.Text = "Apply All Patches";
+            applyAllToolStripMenuItem.Click += applyAllToolStripMenuItem_Click;
+            // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(1264, 651);
+            ClientSize = new Size(1445, 868);
             Controls.Add(groupBoxInstances);
             Controls.Add(groupBoxFilter);
             Controls.Add(groupBoxCleanup);
@@ -639,6 +678,7 @@ namespace AcuCleaner.Forms
             Controls.Add(menuStrip);
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip;
+            Margin = new Padding(3, 4, 3, 4);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "AcuCleaner";
@@ -700,8 +740,6 @@ namespace AcuCleaner.Forms
         private ToolStripMenuItem setSessionTimeoutToolStripMenuItem;
         private ToolStripMenuItem refreshToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
-        private ToolStripSeparator toolStripSeparator2;
-        private ToolStripSeparator toolStripSeparator3;
         private ToolStripMenuItem enableModernUISwitchToolStripMenuItem;
         private DataGridViewTextBoxColumn Id;
         private DataGridViewTextBoxColumn Instance;
@@ -714,5 +752,7 @@ namespace AcuCleaner.Forms
         private DataGridViewTextBoxColumn BackupPath;
         private DataGridViewTextBoxColumn SnapshotPath;
         private DataGridViewTextBoxColumn RegistryPath;
+        private ToolStripSeparator toolStripSeparator4;
+        private ToolStripMenuItem applyAllToolStripMenuItem;
     }
 }

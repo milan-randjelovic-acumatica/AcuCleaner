@@ -290,11 +290,11 @@ namespace AcuCleaner.Forms
             await DeleteSelectedAppsAsync();
         }
 
-        private void buttonDeleteAll_Click(object sender, EventArgs e)
+        private async void buttonDeleteAll_Click(object sender, EventArgs e)
         {
             dataGridView.SelectAll();
 
-            DeleteSelectedAppsAsync();
+            await DeleteSelectedAppsAsync();
         }
 
         private void filter_CheckedChanged(object sender, EventArgs e)
@@ -317,7 +317,7 @@ namespace AcuCleaner.Forms
             RefreshAppList();
         }
 
-        private void resetToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ResetPassword()
         {
             FilterSelectedApps();
 
@@ -328,7 +328,7 @@ namespace AcuCleaner.Forms
             }
         }
 
-        private void enableModernUISwitchToolStripMenuItem_Click(object sender, EventArgs e)
+        private void EnableModernUISwitch()
         {
             FilterSelectedApps();
 
@@ -339,7 +339,7 @@ namespace AcuCleaner.Forms
             }
         }
 
-        private void setSessionTimeoutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SetSessionTimeout()
         {
             FilterSelectedApps();
 
@@ -348,6 +348,28 @@ namespace AcuCleaner.Forms
             {
                 AcuManager.WebConfigManager.ExtendSessionTimeout(AcuManager.CleanupParameters);
             }
+        }
+
+        private void resetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ResetPassword();
+        }
+
+        private void enableModernUISwitchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EnableModernUISwitch();
+        }
+
+        private void setSessionTimeoutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetSessionTimeout();
+        }
+
+        private void applyAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ResetPassword();
+            EnableModernUISwitch();
+            SetSessionTimeout();
         }
     }
 }
