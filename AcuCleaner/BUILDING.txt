@@ -1,0 +1,19 @@
+AcuCleaner WinForms CI
+
+The "AcuCleaner WinForms" GitHub Actions workflow runs on pushes to master
+and pull requests targeting master. It can also be started from the Actions
+tab using "Run workflow".
+
+The workflow restores, builds in Release, and publishes AcuCleaner.csproj and
+its referenced projects with .NET 10 on Windows. It does not build the Visual
+Studio extension or the full AcuCleaner.slnx solution.
+
+To run a build, open a successful workflow run in the repository's Actions
+tab and download the AcuCleaner-win-x64 artifact (GitHub sign-in is required).
+Extract the entire ZIP into a folder on Windows x64, then run AcuCleaner.exe.
+Keep all extracted files together: the self-contained application includes
+its .NET runtime and dependencies, so no separate .NET installation is needed.
+The artifact is unsigned; Windows may display a security warning.
+
+CI checks the build and expected publish files, but does not run automated
+tests (there are currently no test projects) or launch the Windows Forms UI.
