@@ -1,0 +1,60 @@
+name: AcuCleaner WinForms
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build and publish Windows x64
+    runs-on: windows-2025
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up .NET 10
+        uses: actions/setup-dotnet@v6.0.0
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore AcuCleaner/AcuCleaner.csproj --runtime win-x64 -p:Configuration=Release -p:SelfContained=true
+
+      - name: Build
+        run: dotnet build AcuCleaner/AcuCleaner.csproj --configuration Release --runtime win-x64 --self-contained true --no-restore
+
+      - name: Publish
+        run: dotnet publish AcuCleaner/AcuCleaner.csproj --configuration Release --runtime win-x64 --self-contained true --no-build --no-restore --output artifacts/AcuCleaner-win-x64
+
+      - name: Verify publish output
+        run: |
+          $publishDirectory = 'artifacts/AcuCleaner-win-x64'
+          foreach ($file in @('AcuCleaner.exe', 'AcuCleaner.dll', 'AcuCleaner.deps.json', 'AcuCleaner.runtimeconfig.json', 'AcuCleaner.Services.dll', 'AcuCleaner.Models.dll', 'Microsoft.Data.SqlClient.dll', 'coreclr.dll', 'hostfxr.dll', 'System.Windows.Forms.dll')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $publishDirectory $file) -PathType Leaf)) {
+              throw "Missing publish file: $file"
+            }
+          }
+
+      - name: Upload Windows x64 application
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: AcuCleaner-win-x64
+          path: artifacts/AcuCleaner-win-x64/
+          if-no-files-found: error
