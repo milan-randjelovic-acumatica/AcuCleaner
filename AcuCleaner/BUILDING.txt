@@ -15,5 +15,26 @@ Keep all extracted files together: the self-contained application includes
 its .NET runtime and dependencies, so no separate .NET installation is needed.
 The artifact is unsigned; Windows may display a security warning.
 
+After a successful push build on master, a separate job automatically creates
+a non-draft GitHub Release named "AcuCleaner Windows x64 - build <run_number>",
+with generated release notes and the tag build-<run_number>. The tag points to
+that workflow run's exact commit, not the latest master. No manual tag or
+version is required. Pull requests and manual runs remain build-only; all
+three triggers still provide the Actions artifact described above.
+
+Open the repository's Releases page and download AcuCleaner-win-x64.zip from
+the release assets (not GitHub's automatically generated source archives).
+This ZIP contains the complete self-contained Windows x64 publish output.
+Extract everything together and run AcuCleaner.exe as described above; the
+release is also unsigned and needs no separately installed .NET runtime.
+
+Rerunning the same workflow run refreshes its Actions artifact, reuses its
+tag/release and replaces only the matching ZIP asset. A tag pointing to another
+commit or a release not marked with that workflow run's URL causes a safe
+failure instead of being changed.
+Only the push-only release job has contents:write, using GITHUB_TOKEN; builds
+retain contents:read and require no extra secrets. Push/manual runs are not
+canceled by newer runs, so publication can finish; outdated PR runs are canceled.
+
 CI checks the build and expected publish files, but does not run automated
 tests (there are currently no test projects) or launch the Windows Forms UI.
