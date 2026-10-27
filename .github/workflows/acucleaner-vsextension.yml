@@ -11,11 +11,6 @@ on:
       - '.github/workflows/acucleaner-vsextension.yml'
   pull_request:
     branches: [master]
-    paths:
-      - 'AcuCleanerVSExtension/**'
-      - 'AcuCleaner.Models/**'
-      - 'AcuCleaner.Services/**'
-      - '.github/workflows/acucleaner-vsextension.yml'
   workflow_dispatch:
 
 permissions:
