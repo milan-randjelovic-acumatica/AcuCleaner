@@ -1,0 +1,137 @@
+name: AcuCleaner VS Extension
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'AcuCleanerVSExtension/**'
+      - 'AcuCleaner.Models/**'
+      - 'AcuCleaner.Services/**'
+      - '.github/workflows/acucleaner-vsextension.yml'
+  pull_request:
+    branches: [master]
+    paths:
+      - 'AcuCleanerVSExtension/**'
+      - 'AcuCleaner.Models/**'
+      - 'AcuCleaner.Services/**'
+      - '.github/workflows/acucleaner-vsextension.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    name: Build VSIX
+    runs-on: windows-2025
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up .NET 10
+        uses: actions/setup-dotnet@v6.0.0
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Restore
+        run: msbuild AcuCleanerVSExtension/AcuCleanerVSExtension.csproj -t:Restore -p:Configuration=Release
+
+      - name: Build VSIX
+        run: msbuild AcuCleanerVSExtension/AcuCleanerVSExtension.csproj -p:Configuration=Release -p:DeployExtension=false -m
+
+      - name: Collect and verify VSIX
+        run: |
+          $outputDirectory = 'artifacts/AcuCleaner-vsix'
+          New-Item -ItemType Directory -Force -Path $outputDirectory | Out-Null
+          $vsix = Get-ChildItem -Path 'AcuCleanerVSExtension/bin/Release' -Filter '*.vsix' -Recurse -File
+          if (-not $vsix) { throw 'No .vsix file was produced' }
+          $vsix | Copy-Item -Destination $outputDirectory
+          Get-ChildItem $outputDirectory | Format-Table Name, Length
+
+      - name: Upload VSIX
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: AcuCleaner-vsix
+          path: artifacts/AcuCleaner-vsix/
+          if-no-files-found: error
+          overwrite: true
+
+  release:
+    name: Release VSIX
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: windows-2025
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - name: Download VSIX
+        uses: actions/download-artifact@v8.0.2
+        with:
+          name: AcuCleaner-vsix
+          path: artifacts/AcuCleaner-vsix
+
+      - name: Create or update release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_SHA: ${{ github.sha }}
+          RUN_NUMBER: ${{ github.run_number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          $tag = "vsix-build-$env:RUN_NUMBER"
+          $marker = "Workflow run: $env:RUN_URL"
+          $asset = (Get-ChildItem 'artifacts/AcuCleaner-vsix' -Filter '*.vsix' -File | Select-Object -First 1).FullName
+          if (-not $asset) { throw 'VSIX asset not found' }
+
+          $refs = gh api "repos/$env:GH_REPO/git/matching-refs/tags/$tag" | ConvertFrom-Json
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to look up release tag' }
+          $tagRef = @($refs | Where-Object { $_.ref -eq "refs/tags/$tag" })
+          if ($tagRef.Count -eq 0) {
+            gh api --method POST "repos/$env:GH_REPO/git/refs" -f "ref=refs/tags/$tag" -f "sha=$env:RELEASE_SHA"
+            if ($LASTEXITCODE -ne 0) { throw 'Unable to create release tag' }
+          }
+
+          $tagInfo = gh api "repos/$env:GH_REPO/git/ref/tags/$tag" | ConvertFrom-Json
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to verify release tag' }
+          $object = $tagInfo.object
+          while ($object.type -eq 'tag') {
+            $tagInfo = gh api "repos/$env:GH_REPO/git/tags/$($object.sha)" | ConvertFrom-Json
+            if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve annotated release tag' }
+            $object = $tagInfo.object
+          }
+          if ($object.type -ne 'commit' -or $object.sha -ne $env:RELEASE_SHA) {
+            throw "Tag $tag does not point to this workflow's commit; refusing to publish"
+          }
+
+          $releaseJson = gh release view $tag --json body,isDraft,isPrerelease 2>$null
+          if ($LASTEXITCODE -eq 0) {
+            $release = $releaseJson | ConvertFrom-Json
+            if ($release.isDraft -or $release.isPrerelease -or
+                ($release.body -split '\r?\n') -notcontains $marker) {
+              throw "Release $tag is not this workflow run's published release; refusing to modify it"
+            }
+            gh release upload $tag $asset --clobber
+            if ($LASTEXITCODE -ne 0) { throw 'Unable to replace release asset' }
+          } else {
+            gh release create $tag $asset --verify-tag --target $env:RELEASE_SHA --title "AcuCleaner VS Extension - build $env:RUN_NUMBER" --generate-notes --notes $marker
+            if ($LASTEXITCODE -ne 0) { throw 'Unable to create release' }
+          }
