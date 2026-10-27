@@ -1,3 +1,0 @@
-﻿Show general (25R2, 26R1) and precise version of instance
-Add first column as checkbox which will allow cleaning selected instances
-Show icons instaed of long text and display text only on hover or show option to open the folder in explorer
