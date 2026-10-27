@@ -171,7 +171,10 @@
 				<Separator/>
 				<MenuItem Header="Apply All Patches"       InputGestureText="Ctrl+P" Click="ApplyAllPatchesMenuItem_Click"/>
 			</MenuItem>
-		</Menu>
+            <MenuItem Header="Help">
+                <MenuItem Header="About" InputGestureText="F1" Click="AboutMenuItem_Click"/>
+            </MenuItem>
+        </Menu>
 
 		<!--Status bar -->
 		<StatusBar DockPanel.Dock="Bottom"

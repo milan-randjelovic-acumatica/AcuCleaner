@@ -85,6 +85,8 @@ namespace AcuCleaner.Forms
             setSessionTimeoutToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator4 = new ToolStripSeparator();
             applyAllToolStripMenuItem = new ToolStripMenuItem();
+            helpToolStripMenuItem = new ToolStripMenuItem();
+            aboutToolStripMenuItem1 = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource).BeginInit();
@@ -584,7 +586,7 @@ namespace AcuCleaner.Forms
             // menuStrip
             // 
             menuStrip.ImageScalingSize = new Size(20, 20);
-            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, toolsToolStripMenuItem });
+            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, toolsToolStripMenuItem, helpToolStripMenuItem });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
             menuStrip.Padding = new Padding(7, 3, 0, 3);
@@ -665,6 +667,22 @@ namespace AcuCleaner.Forms
             applyAllToolStripMenuItem.Text = "Apply All Patches";
             applyAllToolStripMenuItem.Click += applyAllToolStripMenuItem_Click;
             // 
+            // helpToolStripMenuItem
+            // 
+            helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { aboutToolStripMenuItem1 });
+            helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            helpToolStripMenuItem.ShortcutKeys = Keys.F1;
+            helpToolStripMenuItem.Size = new Size(55, 24);
+            helpToolStripMenuItem.Text = "Help";
+            // 
+            // aboutToolStripMenuItem1
+            // 
+            aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
+            aboutToolStripMenuItem1.ShortcutKeys = Keys.F1;
+            aboutToolStripMenuItem1.Size = new Size(224, 26);
+            aboutToolStripMenuItem1.Text = "About";
+            aboutToolStripMenuItem1.Click += aboutToolStripMenuItem1_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -735,6 +753,7 @@ namespace AcuCleaner.Forms
         private MenuStrip menuStrip;
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem toolsToolStripMenuItem;
+        private ToolStripMenuItem helpToolStripMenuItem;
         private ToolStripMenuItem resetToolStripMenuItem;
         private ToolStripMenuItem exitToolStripMenuItem;
         private ToolStripMenuItem setSessionTimeoutToolStripMenuItem;
@@ -754,5 +773,6 @@ namespace AcuCleaner.Forms
         private DataGridViewTextBoxColumn RegistryPath;
         private ToolStripSeparator toolStripSeparator4;
         private ToolStripMenuItem applyAllToolStripMenuItem;
+        private ToolStripMenuItem aboutToolStripMenuItem1;
     }
 }

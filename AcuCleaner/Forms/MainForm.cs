@@ -403,7 +403,15 @@ namespace AcuCleaner.Forms
                 ResetPassword(showWarning: false);
                 EnableModernUISwitch(showWarning: false);
                 SetSessionTimeout(showWarning: false);
-            }   
+            }
+        }
+
+        private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            var location = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            var version = System.Diagnostics.FileVersionInfo.GetVersionInfo(location).FileVersion;
+            MessageBox.Show(this, $"AcuCleaner\nFile version: {version}", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
         }
     }
 }

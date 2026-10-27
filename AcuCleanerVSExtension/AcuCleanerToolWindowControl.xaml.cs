@@ -127,22 +127,22 @@ namespace AcuCleanerVSExtension
             SetCleanupParameters();
         }
 
-        private bool ShowConfirmation(string message, string title)
+        private VSConstants.MessageBoxResult ShowMessageBox(string message, string title, OLEMSGBUTTON buttons, OLEMSGICON icon)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
             if (AcuCleanerToolWindow.Package == null)
-                return false;
+                return VSConstants.MessageBoxResult.IDABORT;
 
             int result = VsShellUtilities.ShowMessageBox(
                 AcuCleanerToolWindow.Package,
                 message,
                 title,
-                OLEMSGICON.OLEMSGICON_WARNING,
-                OLEMSGBUTTON.OLEMSGBUTTON_YESNO,
+                icon,
+                buttons,
                 OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_SECOND);
 
-            return result == (int)VSConstants.MessageBoxResult.IDYES;
+            return (VSConstants.MessageBoxResult)result;
         }
 
         private async Task DeleteSelectedAppsAsync()
@@ -156,11 +156,13 @@ namespace AcuCleanerVSExtension
             }
 
             int count = AcuManager.CleanupParameters.Apps.Count();
-            bool confirmed = ShowConfirmation(
+            var result = ShowMessageBox(
                 $"Delete {count} selected app(s)?",
-                "Confirm delete");
+                "Confirm delete",
+                OLEMSGBUTTON.OLEMSGBUTTON_YESNO,
+                OLEMSGICON.OLEMSGICON_WARNING);
 
-            if (!confirmed)
+            if (result != VSConstants.MessageBoxResult.IDYES)
             {
                 statusLabel.Text = "Delete canceled.";
                 return;
@@ -233,9 +235,12 @@ namespace AcuCleanerVSExtension
             if (showWarning)
             {
                 int count = AcuManager.CleanupParameters.Apps.Count();
-                if (ShowConfirmation(
+                var result = ShowMessageBox(
                     $"This action will reset password for {count} selected instance(s). Are you sure you want to continue?",
-                    "Confirm Action"))
+                    "Confirm Action",
+                    OLEMSGBUTTON.OLEMSGBUTTON_YESNO,
+                    OLEMSGICON.OLEMSGICON_WARNING);
+                if (result == VSConstants.MessageBoxResult.IDYES)
                 {
                     AcuManager.DatabaseManager.ResetPassword(AcuManager.CleanupParameters);
                 }
@@ -253,9 +258,12 @@ namespace AcuCleanerVSExtension
             if (showWarning)
             {
                 int count = AcuManager.CleanupParameters.Apps.Count();
-                if (ShowConfirmation(
+                var result = ShowMessageBox(
                     $"This action will enable Modern UI switch for {count} selected instance(s). Are you sure you want to continue?",
-                    "Confirm Action"))
+                    "Confirm Action",
+                    OLEMSGBUTTON.OLEMSGBUTTON_YESNO,
+                    OLEMSGICON.OLEMSGICON_WARNING);
+                if (result == VSConstants.MessageBoxResult.IDYES)
                 {
                     AcuManager.WebConfigManager.EnableModernUISwitch(AcuManager.CleanupParameters);
                 }
@@ -273,9 +281,12 @@ namespace AcuCleanerVSExtension
             if (showWarning)
             {
                 int count = AcuManager.CleanupParameters.Apps.Count();
-                if (ShowConfirmation(
+                var result = ShowMessageBox(
                     $"This action will set session timeout to 1 day for {count} selected instance(s). Are you sure you want to continue?",
-                    "Confirm Action"))
+                    "Confirm Action",
+                    OLEMSGBUTTON.OLEMSGBUTTON_YESNO,
+                    OLEMSGICON.OLEMSGICON_WARNING);
+                if (result == VSConstants.MessageBoxResult.IDYES)
                 {
                     AcuManager.WebConfigManager.ExtendSessionTimeout(AcuManager.CleanupParameters);
                 }
@@ -306,9 +317,12 @@ namespace AcuCleanerVSExtension
             FilterSelectedApps();
 
             int count = AcuManager.CleanupParameters.Apps.Count();
-            if (ShowConfirmation(
-                     $"This action will set session timeout to 1 day for {count} selected instance(s). Are you sure you want to continue?",
-                     "Confirm Action"))
+            var result = ShowMessageBox(
+                $"This action will apply all patches to {count} selected instance(s). Are you sure you want to continue?",
+                "Confirm Action",
+                OLEMSGBUTTON.OLEMSGBUTTON_YESNO,
+                OLEMSGICON.OLEMSGICON_WARNING);
+            if (result == VSConstants.MessageBoxResult.IDYES)
             {
                 ResetPassword(showWarning: false);
                 EnableModernUISwitch(showWarning: false);
@@ -369,6 +383,14 @@ namespace AcuCleanerVSExtension
             }
 
             return null;
+        }
+
+        private void AboutMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var location = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            var version = System.Diagnostics.FileVersionInfo.GetVersionInfo(location).FileVersion;
+
+            ShowMessageBox($"AcuCleaner\nFile version: {version}", "About", OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGICON.OLEMSGICON_INFO);
         }
     }
 }
