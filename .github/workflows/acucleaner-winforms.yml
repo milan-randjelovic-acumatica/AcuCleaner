@@ -3,6 +3,7 @@ name: AcuCleaner WinForms
 on:
   push:
     branches: [master]
+    tags: ['v[0-9]+.[0-9]+.[0-9]+']
   pull_request:
     branches: [master]
   workflow_dispatch:
@@ -19,6 +20,8 @@ jobs:
     name: Build and publish Windows x64
     runs-on: windows-2025
     timeout-minutes: 20
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     defaults:
       run:
         shell: pwsh
@@ -29,6 +32,29 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Compute version
+        id: version
+        env:
+          REF_TYPE: ${{ github.ref_type }}
+          REF_NAME: ${{ github.ref_name }}
+          RUN_NUMBER: ${{ github.run_number }}
+        run: |
+          if ($env:REF_TYPE -eq 'tag') {
+            if ($env:REF_NAME -cnotmatch '^v((?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*))$') {
+              throw "Tag '$env:REF_NAME' is not in vX.Y.Z format"
+            }
+            $version = $Matches[1]
+          } else {
+            $version = "0.0.$env:RUN_NUMBER"
+          }
+          $assemblyVersion = $null
+          if (-not [version]::TryParse("$version.0", [ref]$assemblyVersion) -or
+              $assemblyVersion.Major -gt 65534 -or $assemblyVersion.Minor -gt 65534 -or $assemblyVersion.Build -gt 65534) {
+            throw "Version '$version' must have components between 0 and 65534"
+          }
+          "version=$version" >> $env:GITHUB_OUTPUT
+          Write-Host "Version: $version"
+
       - name: Set up .NET 10
         uses: actions/setup-dotnet@v6.0.0
         with:
@@ -38,7 +64,7 @@ jobs:
         run: dotnet restore AcuCleaner/AcuCleaner.csproj --runtime win-x64 -p:Configuration=Release -p:SelfContained=true
 
       - name: Build
-        run: dotnet build AcuCleaner/AcuCleaner.csproj --configuration Release --runtime win-x64 --self-contained true --no-restore
+        run: dotnet build AcuCleaner/AcuCleaner.csproj --configuration Release --runtime win-x64 --self-contained true --no-restore -p:Version=${{ steps.version.outputs.version }} -p:AssemblyVersion=${{ steps.version.outputs.version }}.0 -p:FileVersion=${{ steps.version.outputs.version }}.0
 
       - name: Publish
         run: dotnet publish AcuCleaner/AcuCleaner.csproj --configuration Release --runtime win-x64 --self-contained true --no-build --no-restore --output artifacts/AcuCleaner-win-x64
@@ -64,7 +90,7 @@ jobs:
   release:
     name: Release Windows x64
     needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    if: github.event_name == 'push' && github.ref_type == 'tag'
     runs-on: windows-2025
     timeout-minutes: 10
     permissions:
@@ -91,20 +117,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           RELEASE_SHA: ${{ github.sha }}
-          RUN_NUMBER: ${{ github.run_number }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          RELEASE_TAG: ${{ github.ref_name }}
         run: |
-          $tag = "build-$env:RUN_NUMBER"
-          $marker = "Workflow run: $env:RUN_URL"
+          $tag = $env:RELEASE_TAG
           $asset = 'AcuCleaner-win-x64.zip'
-
-          $refs = gh api "repos/$env:GH_REPO/git/matching-refs/tags/$tag" | ConvertFrom-Json
-          if ($LASTEXITCODE -ne 0) { throw 'Unable to look up release tag' }
-          $tagRef = @($refs | Where-Object { $_.ref -eq "refs/tags/$tag" })
-          if ($tagRef.Count -eq 0) {
-            gh api --method POST "repos/$env:GH_REPO/git/refs" -f "ref=refs/tags/$tag" -f "sha=$env:RELEASE_SHA"
-            if ($LASTEXITCODE -ne 0) { throw 'Unable to create release tag' }
-          }
 
           $tagInfo = gh api "repos/$env:GH_REPO/git/ref/tags/$tag" | ConvertFrom-Json
           if ($LASTEXITCODE -ne 0) { throw 'Unable to verify release tag' }
@@ -118,16 +134,14 @@ jobs:
             throw "Tag $tag does not point to this workflow's commit; refusing to publish"
           }
 
-          $releaseJson = gh release view $tag --json body,isDraft,isPrerelease 2>$null
-          if ($LASTEXITCODE -eq 0) {
-            $release = $releaseJson | ConvertFrom-Json
-            if ($release.isDraft -or $release.isPrerelease -or
-                ($release.body -split '\r?\n') -notcontains $marker) {
-              throw "Release $tag is not this workflow run's published release; refusing to modify it"
+          gh release view $tag *> $null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create $tag --verify-tag --target $env:RELEASE_SHA --title "AcuCleaner $tag" --generate-notes
+            if ($LASTEXITCODE -ne 0) {
+              # The sibling workflow may have created the release concurrently.
+              gh release view $tag *> $null
+              if ($LASTEXITCODE -ne 0) { throw 'Unable to create release' }
             }
-            gh release upload $tag $asset --clobber
-            if ($LASTEXITCODE -ne 0) { throw 'Unable to replace release asset' }
-          } else {
-            gh release create $tag $asset --verify-tag --target $env:RELEASE_SHA --title "AcuCleaner Windows x64 - build $env:RUN_NUMBER" --generate-notes --notes $marker
-            if ($LASTEXITCODE -ne 0) { throw 'Unable to create release' }
           }
+          gh release upload $tag $asset --clobber
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to upload release asset' }
