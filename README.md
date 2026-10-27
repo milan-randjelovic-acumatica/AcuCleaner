@@ -2,6 +2,9 @@
 
 AcuCleaner is a utility tool for finding and cleaning Acumatica instance remnants on a local development machine. It brings related IIS applications, folders, SQL Server databases, and Acumatica registry entries together in one list. It can also apply a few maintenance changes to selected instances.
 
+[AcuCleaner Standalone Screenshot](Docs/Standalone.png)
+[AcuCleaner VS Extension Screenshot](Docs/VSExtension.png)
+
 ## What it finds
 
 AcuCleaner combines information from local IIS, configured local folders associated with IIS instances, SQL Server LocalDB, and local registry. The list shows an instance's status and installation date, along with any detected paths and database information.
