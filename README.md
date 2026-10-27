@@ -1,16 +1,16 @@
 # AcuCleaner
 
-AcuCleaner is a Windows administration utility for finding and managing Acumatica instance remnants on a local development machine. It brings related IIS applications, folders, SQL Server databases, and Acumatica registry entries together in one list. It can also apply a few maintenance changes to selected instances.
+AcuCleaner is a utility tool for finding and cleaning Acumatica instance remnants on a local development machine. It brings related IIS applications, folders, SQL Server databases, and Acumatica registry entries together in one list. It can also apply a few maintenance changes to selected instances.
 
 ## What it finds
 
-AcuCleaner combines information from local IIS, configured local folders associated with IIS instances, SQL Server LocalDB and `localhost`, and `HKEY_LOCAL_MACHINE\SOFTWARE\ACUMATICA ERP`. The list shows an instance's status and installation date, along with any detected paths and database information.
+AcuCleaner combines information from local IIS, configured local folders associated with IIS instances, SQL Server LocalDB, and local registry. The list shows an instance's status and installation date, along with any detected paths and database information.
 
 - **Active** entries are found in IIS.
 - **Inactive** entries are remnants found outside IIS, such as on disk, in a database, or in the registry.
 - Folder artifacts include instance files, ASP.NET temporary files, snapshots, customizations, and backups.
 
-Discovery depends on the local machine and the resources accessible to the current Windows account. SQL Server discovery uses Windows integrated authentication and checks LocalDB and `localhost`; there is no UI for configuring other SQL Server hosts.
+Discovery depends on the local machine and the resources accessible to the current Windows account. SQL Server discovery uses Windows integrated authentication and checks LocalDB and `localhost`.
 
 ## Get started
 
@@ -52,7 +52,7 @@ All cleanup categories are enabled by default. The list filters decide which ins
 
 From the **Tools** menu, select rows first, then choose an operation. Each operation asks for confirmation.
 
-- **Reset Password** sets the Acumatica password to `123` for users with `source = 0` in each selected instance database. It also changes the database's password-policy settings and disables scheduled automation and push notification hooks. Change the password promptly and use only on instances you administer.
+- **Reset Password** sets the Acumatica default password for admin user in each selected instance database. It also changes the database's password-policy settings and disables scheduled automation and push notification hooks. Change the password promptly and use only on instances you administer.
 - **Enable Modern UI Switch** sets `EnableSiteMapSwitchUI=true` in the selected instance's `Web.config`.
 - **Extend Session Timeout** sets the session timeout to 1,440 minutes (one day) where a session-state setting exists in `Web.config`.
 - **Apply All Patches** performs all three operations above on the selected instances.
@@ -64,7 +64,3 @@ From the **Tools** menu, select rows first, then choose an operation. Each opera
 - AcuCleaner stops IIS while removing IIS application registrations and starts it again afterward. Plan for a brief interruption to local IIS-hosted sites.
 - Run with administrator rights. The standalone app requests elevation, and the operations may need access to IIS, protected files, the registry, and SQL Server.
 - The utility is intended for local Acumatica development/administration environments. Do not use it against production data or instances unless you have an approved backup and change plan.
-
-## Build information
-
-The repository's [BUILDING.txt](AcuCleaner/BUILDING.txt) explains the Windows x64 CI artifact and release process. The workflow currently publishes the standalone WinForms app; it does not build the Visual Studio extension or run automated tests.
