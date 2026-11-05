@@ -342,6 +342,24 @@ namespace AcuCleaner.Forms
             }
         }
 
+        private void EnableLegacyUI(bool showWarning = true)
+        {
+            FilterSelectedApps();
+
+            if (showWarning)
+            {
+                var result = MessageBox.Show($"This action will enable Legacy UI for {AcuManager.CleanupParameters.Apps.Count()} selected instance(s). Are you sure you want to continue?", "Confirm Action", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
+                {
+                    AcuManager.WebConfigManager.EnableLegacyUI(AcuManager.CleanupParameters);
+                }
+            }
+            else
+            {
+                AcuManager.WebConfigManager.EnableLegacyUI(AcuManager.CleanupParameters);
+            }
+        }
+
         private void EnableModernUISwitch(bool showWarning = true)
         {
             FilterSelectedApps();
@@ -401,6 +419,7 @@ namespace AcuCleaner.Forms
             if (result == DialogResult.Yes)
             {
                 ResetPassword(showWarning: false);
+                EnableLegacyUI(showWarning: false);
                 EnableModernUISwitch(showWarning: false);
                 SetSessionTimeout(showWarning: false);
             }
@@ -412,6 +431,11 @@ namespace AcuCleaner.Forms
             var version = System.Diagnostics.FileVersionInfo.GetVersionInfo(location).FileVersion;
             MessageBox.Show(this, $"AcuCleaner\nFile version: {version}", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+        }
+
+        private void enableLegacyUIToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EnableLegacyUI();
         }
     }
 }

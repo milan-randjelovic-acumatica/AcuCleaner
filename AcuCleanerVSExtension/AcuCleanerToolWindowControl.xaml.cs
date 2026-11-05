@@ -251,6 +251,29 @@ namespace AcuCleanerVSExtension
             }
         }
 
+        private void EnableLegacyUI(bool showWarning = true)
+        {
+            FilterSelectedApps();
+
+            if (showWarning)
+            {
+                int count = AcuManager.CleanupParameters.Apps.Count();
+                var result = ShowMessageBox(
+                    $"This action will enable Legacy UI for {count} selected instance(s). Are you sure you want to continue?",
+                    "Confirm Action",
+                    OLEMSGBUTTON.OLEMSGBUTTON_YESNO,
+                    OLEMSGICON.OLEMSGICON_WARNING);
+                if (result == VSConstants.MessageBoxResult.IDYES)
+                {
+                    AcuManager.WebConfigManager.EnableLegacyUI(AcuManager.CleanupParameters);
+                }
+            }
+            else
+            {
+                AcuManager.WebConfigManager.EnableLegacyUI(AcuManager.CleanupParameters);
+            }
+        }
+
         private void EnableModernUISwitch(bool showWarning = true)
         {
             FilterSelectedApps();
@@ -302,6 +325,11 @@ namespace AcuCleanerVSExtension
             ResetPassword();
         }
 
+        private void EnableLegacyUIMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            EnableLegacyUI();
+        }
+
         private void EnableModernUISwitchMenuItem_Click(object sender, RoutedEventArgs e)
         {
             EnableModernUISwitch();
@@ -325,6 +353,7 @@ namespace AcuCleanerVSExtension
             if (result == VSConstants.MessageBoxResult.IDYES)
             {
                 ResetPassword(showWarning: false);
+                EnableLegacyUI(showWarning: false);
                 EnableModernUISwitch(showWarning: false);
                 ExtendSessionTimeout(showWarning: false);
             }

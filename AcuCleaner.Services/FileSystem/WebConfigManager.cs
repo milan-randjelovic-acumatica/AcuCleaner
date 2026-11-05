@@ -16,6 +16,46 @@ namespace AcuCleaner.Services.FileSystem
             _progressHandler = progressHandler;
         }
 
+        public void EnableLegacyUI(CleanupParameters cleanupParameters)
+        {
+            int i = 1;
+            foreach (var app in cleanupParameters.Apps)
+            {
+                if (!string.IsNullOrEmpty(app.Path) && Directory.Exists(app.Path))
+                {
+                    var webConfigFilePath = Path.Combine(app.Path, Constants.WebConfig);
+                    if (File.Exists(webConfigFilePath))
+                    {
+                        _progressHandler?.Report($"Enabling Legacy UI {i++}/{cleanupParameters.Apps.Count()} for: {app.InstanceName}");
+
+                        var doc = new System.Xml.XmlDocument();
+                        doc.Load(webConfigFilePath);
+
+                        var appSettings = doc.SelectSingleNode("//appSettings");
+                        if (appSettings != null)
+                        {
+                            // Update existing key if present, otherwise add it
+                            var existing = appSettings.SelectSingleNode("add[@key='EnableLegacyUI']");
+                            if (existing != null)
+                            {
+                                existing.Attributes!["value"]!.Value = "true";
+                            }
+                            else
+                            {
+                                var entry = doc.CreateElement("add");
+                                entry.SetAttribute("key", "EnableLegacyUI");
+                                entry.SetAttribute("value", "true");
+                                appSettings.AppendChild(entry);
+                            }
+
+                            doc.Save(webConfigFilePath);
+                            _progressHandler?.Report($"Successfully enabled Legacy UI for: {app.InstanceName}");
+                        }
+                    }
+                }
+            }
+        }
+
         public void EnableModernUISwitch(CleanupParameters cleanupParameters)
         {
             int i = 1;

@@ -87,6 +87,7 @@ namespace AcuCleaner.Forms
             applyAllToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
             aboutToolStripMenuItem1 = new ToolStripMenuItem();
+            enableLegacyUIToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)iISAppBindingSource).BeginInit();
@@ -625,7 +626,7 @@ namespace AcuCleaner.Forms
             // 
             // toolsToolStripMenuItem
             // 
-            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { resetToolStripMenuItem, enableModernUISwitchToolStripMenuItem, setSessionTimeoutToolStripMenuItem, toolStripSeparator4, applyAllToolStripMenuItem });
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { resetToolStripMenuItem, enableLegacyUIToolStripMenuItem, enableModernUISwitchToolStripMenuItem, setSessionTimeoutToolStripMenuItem, toolStripSeparator4, applyAllToolStripMenuItem });
             toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             toolsToolStripMenuItem.Size = new Size(58, 24);
             toolsToolStripMenuItem.Text = "Tools";
@@ -679,9 +680,17 @@ namespace AcuCleaner.Forms
             // 
             aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
             aboutToolStripMenuItem1.ShortcutKeys = Keys.F1;
-            aboutToolStripMenuItem1.Size = new Size(224, 26);
+            aboutToolStripMenuItem1.Size = new Size(157, 26);
             aboutToolStripMenuItem1.Text = "About";
             aboutToolStripMenuItem1.Click += aboutToolStripMenuItem1_Click;
+            // 
+            // enableLegacyUIToolStripMenuItem
+            // 
+            enableLegacyUIToolStripMenuItem.Name = "enableLegacyUIToolStripMenuItem";
+            enableLegacyUIToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.L;
+            enableLegacyUIToolStripMenuItem.Size = new Size(313, 26);
+            enableLegacyUIToolStripMenuItem.Text = "Enable Legacy UI";
+            enableLegacyUIToolStripMenuItem.Click += enableLegacyUIToolStripMenuItem_Click;
             // 
             // MainForm
             // 
@@ -774,5 +783,6 @@ namespace AcuCleaner.Forms
         private ToolStripSeparator toolStripSeparator4;
         private ToolStripMenuItem applyAllToolStripMenuItem;
         private ToolStripMenuItem aboutToolStripMenuItem1;
+        private ToolStripMenuItem enableLegacyUIToolStripMenuItem;
     }
 }
