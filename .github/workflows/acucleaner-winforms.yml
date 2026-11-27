@@ -61,28 +61,31 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Restore
-        run: dotnet restore AcuCleaner/AcuCleaner.csproj --runtime win-x64 -p:Configuration=Release -p:SelfContained=true
+        run: dotnet restore AcuCleaner/AcuCleaner.csproj --runtime win-x64 -p:Configuration=Release -p:PublishProfile=FolderProfile -p:DebugType=embedded
 
       - name: Build
-        run: dotnet build AcuCleaner/AcuCleaner.csproj --configuration Release --runtime win-x64 --self-contained true --no-restore -p:Version=${{ steps.version.outputs.version }} -p:AssemblyVersion=${{ steps.version.outputs.version }}.0 -p:FileVersion=${{ steps.version.outputs.version }}.0
+        run: dotnet build AcuCleaner/AcuCleaner.csproj --configuration Release --runtime win-x64 --self-contained true --no-restore -p:PublishProfile=FolderProfile -p:DebugType=embedded -p:Version=${{ steps.version.outputs.version }} -p:AssemblyVersion=${{ steps.version.outputs.version }}.0 -p:FileVersion=${{ steps.version.outputs.version }}.0
 
       - name: Publish
-        run: dotnet publish AcuCleaner/AcuCleaner.csproj --configuration Release --runtime win-x64 --self-contained true --no-build --no-restore --output artifacts/AcuCleaner-win-x64
+        run: dotnet publish AcuCleaner/AcuCleaner.csproj --configuration Release --runtime win-x64 --self-contained true --no-build --no-restore -p:PublishProfile=FolderProfile -p:DebugType=embedded --output artifacts/AcuCleaner-win-x64
 
       - name: Verify publish output
         run: |
           $publishDirectory = 'artifacts/AcuCleaner-win-x64'
-          foreach ($file in @('AcuCleaner.exe', 'AcuCleaner.dll', 'AcuCleaner.deps.json', 'AcuCleaner.runtimeconfig.json', 'AcuCleaner.Services.dll', 'AcuCleaner.Models.dll', 'Microsoft.Data.SqlClient.dll', 'coreclr.dll', 'hostfxr.dll', 'System.Windows.Forms.dll')) {
-            if (-not (Test-Path -LiteralPath (Join-Path $publishDirectory $file) -PathType Leaf)) {
-              throw "Missing publish file: $file"
-            }
+          $executable = Join-Path $publishDirectory 'AcuCleaner.exe'
+          if (-not (Test-Path -LiteralPath $executable -PathType Leaf)) {
+            throw 'Missing publish file: AcuCleaner.exe'
+          }
+          $files = @(Get-ChildItem -LiteralPath $publishDirectory -File -Recurse -Force)
+          if ($files.Count -ne 1 -or $files[0].Length -eq 0) {
+            throw "Expected a single non-empty AcuCleaner.exe; found: $($files.Name -join ', ')"
           }
 
       - name: Upload Windows x64 application
         uses: actions/upload-artifact@v7.0.2
         with:
           name: AcuCleaner-win-x64
-          path: artifacts/AcuCleaner-win-x64/
+          path: artifacts/AcuCleaner-win-x64/AcuCleaner.exe
           if-no-files-found: error
           include-hidden-files: true
           overwrite: true
@@ -106,12 +109,6 @@ jobs:
           name: AcuCleaner-win-x64
           path: artifacts/AcuCleaner-win-x64
 
-      - name: Package complete application
-        run: |
-          [System.IO.Compression.ZipFile]::CreateFromDirectory(
-            (Join-Path $PWD 'artifacts/AcuCleaner-win-x64'),
-            (Join-Path $PWD 'AcuCleaner-win-x64.zip'))
-
       - name: Create or update release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -120,7 +117,7 @@ jobs:
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
           $tag = $env:RELEASE_TAG
-          $asset = 'AcuCleaner-win-x64.zip'
+          $asset = 'artifacts/AcuCleaner-win-x64/AcuCleaner.exe'
 
           $tagInfo = gh api "repos/$env:GH_REPO/git/ref/tags/$tag" | ConvertFrom-Json
           if ($LASTEXITCODE -ne 0) { throw 'Unable to verify release tag' }
