@@ -19,15 +19,14 @@ Discovery depends on the local machine and the resources accessible to the curre
 ### Standalone Windows app
 
 1. Open the [Releases page](https://github.com/milan-randjelovic-acumatica/AcuCleaner/releases).
-2. Download **`AcuCleaner-win-x64.zip`** from a release's assets. Do not use GitHub's automatically generated source-code archives.
-3. Extract the entire ZIP into a folder on a Windows x64 machine. Keep the extracted files together.
-4. Run `AcuCleaner.exe` and approve the Windows administrator prompt.
+2. Download **`AcuCleaner.exe`** from a release's assets. Do not use GitHub's automatically generated source-code archives.
+3. Run `AcuCleaner.exe` on a Windows x64 machine and approve the Windows administrator prompt.
 
-The published app is self-contained and does not require a separate .NET installation. It is unsigned, so Windows may show a security warning.
+The published app is a single, self-contained executable and does not require a separate .NET installation. Native libraries are bundled and extracted automatically at runtime. It is unsigned, so Windows may show a security warning.
 
 ### Visual Studio extension
 
-The solution also contains an AcuCleaner Visual Studio extension. When its VSIX is available, install it in Visual Studio 2022 version 17.14 or later, then open **Tools > AcuCleaner**. The extension hosts the same instance list, cleanup options, and administrative tools inside a Visual Studio tool window. The release ZIP described above is the standalone app, not the VSIX.
+The solution also contains an AcuCleaner Visual Studio extension. When its VSIX is available, install it in Visual Studio 2022 version 17.14 or later, then open **Tools > AcuCleaner**. The extension hosts the same instance list, cleanup options, and administrative tools inside a Visual Studio tool window. The release executable described above is the standalone app, not the VSIX.
 
 ## Using AcuCleaner
 

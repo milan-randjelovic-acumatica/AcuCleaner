@@ -427,7 +427,7 @@ namespace AcuCleaner.Forms
 
         private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            var location = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            var location = Application.ExecutablePath;
             var version = System.Diagnostics.FileVersionInfo.GetVersionInfo(location).FileVersion;
             MessageBox.Show(this, $"AcuCleaner\nFile version: {version}", "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
